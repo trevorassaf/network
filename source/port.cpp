@@ -1,16 +1,23 @@
 #include "../headers/port.h"
 
 #include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <cstring>
 
-const Network::Port Network::Port::buildFromHostByteOrderNumber(uint16_t port_num) {
-  return Network::Port(port_num);
+const std::string Network::Port::stringifyPort(uint16_t port_number) {
+  return std::to_string(ntohs(port_number));
 }
 
-const Network::Port Network::Port::buildFromNetworkByteOrderNumber(uint16_t port_num) {
-  return Network::Port(ntohs(port_num));
-}
+Network::Port::Port(
+    uint16_t port_number,
+    const std::string & port_string
+) :
+    _portNumber(port_number),
+    _portString(port_string)
+{}
 
-const Network::Port Network::Port::buildFromString(const std::string & port_str) {
-  uint16_t port_num = ::static_cast<uint16_t>(std::stoul(port_str));
-  return Network::Port(port_num);
-}
+Network::Port::Port(
+    uint16_t port_number
+) : 
+    {}

@@ -1,0 +1,58 @@
+#include "../headers/ipv6.h"
+
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <cstring>
+
+void Network::Ipv6::toHostByteOrder(
+    const uint16_t * ipv6_host_order,
+    uint16_t * ipv6_net_order
+) {
+  for (unsigned int i = 0; i < IPV6_NUM_BYTE_PAIRS; ++i) {
+    ipv6_net_order[i] = htons(ipv6_host_order[i]); 
+  }
+}
+
+void Network::Ipv6::toNetworkByteOrder(
+    const uint16_t * ipv6_net_order,
+    uint16_t * ipv6_host_order
+) {
+  for (unsigned int i = 0; i < IPV6_NUM_BYTE_PAIRS; ++i) {
+    ipv6_host_order[i] = ntohs(ipv6_net_order[i]); 
+  }
+}
+
+Network::Ipv6::Ipv6(const uint16_t * ipv6_num) {
+  ::memcpy(
+      static_cast<void *>(_ipv6Number),
+      static_cast<const void *>(ipv6_num),
+      sizeof(_ipv6Number)
+  );
+}
+
+const Network::Ipv6 Network::Ipv6::fromHostByteOrderNumber(
+    const uint16_t * ipv6_num
+) {
+  return Network::Ipv6(ipv6_num);
+}
+
+const Network::Ipv6 Network::Ipv6::fromNetworkByteOrderNumber(
+    const uint16_t * ipv6_num
+) {
+  uint16_t host_byte_order_ipv6[IPV6_NUM_BYTE_PAIRS];
+  Network::Ipv6::toHostByteOrder(ipv6_num, host_byte_order_ipv6);
+  return Network::Ipv6(ipv6_num);
+}
+
+const Network::Ipv6 Network::Ipv6::fromColonSeparatedString(
+    const std::string & ipv6_str
+) {
+  struct sockaddr_in6 ipv6_address;  
+  ::memset(
+      static_cast<void *>(&ipv6_address),
+      0,
+      sizeof(ipv6_address)
+  );
+
+}
