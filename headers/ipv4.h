@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <string>
 
+#define IPV4_NUM_BYTES 4
+
 class Network::Ipv4 {
 
   private:

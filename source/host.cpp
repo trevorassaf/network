@@ -1,5 +1,7 @@
 #include "../headers/host.h"
 
+#include <stdexcept>
+
 /**
  * Network::HostBuilder
  */

@@ -68,6 +68,16 @@ const Network::Ipv6 * Network::Ipv6::fromColonSeparatedString(const std::string 
   return new Network::Ipv6(ipv6_address.sin6_addr.s6_addr, ipv6_str);
 }
 
+const Network::Ipv6 * Network::Ipv6::fromIpv4(const Network::Ipv4 * ipv4) {
+  uint8_t ipv6_bytes[IPV6_NUM_BYTES];
+  uint32_t ipv4_number = ipv4->getNumber();
+  const uint8_t * ipv4_ptr = static_cast<const uint8_t *>(
+      static_cast<const void *>(&ipv4_number));
+  for (int i = 0; i < IPV6_NUM_BYTES; ++i) {
+    ipv6_bytes[i] = *ipv4_ptr++;
+  } 
+}
+
 const uint8_t * Network::Ipv6::getBytes() const {
   return _ipv6Bytes;
 }

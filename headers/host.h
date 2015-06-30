@@ -14,15 +14,15 @@ class Network::HostBuilder {
       bool _isIpv4;
       bool _isPortSpecified;
       bool _isAddressSet;
-      Network::Ipv4 * _ipv4;
-      Network::Ipv6 * _ipv6;
-      Network::Port * _port;
+      const Network::Ipv4 * _ipv4;
+      const Network::Ipv6 * _ipv6;
+      const Network::Port * _port;
 
     public:
       HostBuilder();
-      HostBuilder * setIpv4(const Network::Ipv4 & ipv4);
-      HostBuilder * setIpv6(const Network::Ipv6 & ipv6);
-      HostBuilder * setPort(const Network::Port & port);
+      HostBuilder * setIpv4(const Network::Ipv4 * ipv4);
+      HostBuilder * setIpv6(const Network::Ipv6 * ipv6);
+      HostBuilder * setPort(const Network::Port * port);
       const Network::Host build();
 
 };
@@ -33,11 +33,13 @@ class Network::Host {
       bool _isIpv4;
       bool _isPortSpecified;
       
-      Network::Ipv4 * _ipv4;
-      Network::Ipv6 * _ipv6;
-      Network::Port * _port;
+      const Network::Ipv4 * _ipv4;
+      const Network::Ipv6 * _ipv6;
+      const Network::Port * _port;
 
       Host(
+          bool is_ipv4,
+          bool is_port_specified,
           const Network::Ipv4 * ipv4,
           const Network::Ipv6 * ipv6,
           const Network::Port * port

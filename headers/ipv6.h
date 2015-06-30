@@ -1,9 +1,14 @@
 #include "network.h"
 
+#include "ipv4.h"
+
 #include <stdint.h>
 #include <string>
 
 #define IPV6_NUM_BYTES 0x16
+
+#define IPV4TO6_CONVERSION_NUM_00_BYTES 4
+#define IPV4TO6_CONVERSION_NUM_FF_BYTES 4
 
 class Network::Ipv6 {
 
@@ -59,6 +64,13 @@ class Network::Ipv6 {
      * @return ipv6 object
      */
     static const Ipv6 * fromColonSeparatedString(const std::string & ipv6_str);
+
+    /**
+     * fromIpv4()
+     * @param ipv4 : ipv4 address that we'll translate to ipv6.
+     * @return ipv6 object that represents the ipv4 address
+     */
+    static const Ipv6 * fromIpv4(const Network::Ipv4 * ipv4);
 
     /**
      * getBytes()
