@@ -43,7 +43,7 @@ class Network::Port {
      * @param port_string : string representation of port
      * @return port object
      */
-    static const Port fromString(const std::string & port_string);
+    static const Port * fromString(const std::string & port_string);
 
     /**
      * getNumber()
@@ -55,7 +55,7 @@ class Network::Port {
      * toString()
      * @return string representation of port number
      */
-    const std::string & toString() const;
+    const std::string * toString() const;
 
     /**
      * operator==()

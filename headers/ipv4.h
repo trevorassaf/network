@@ -33,11 +33,17 @@ class Network::Ipv4 {
     Ipv4(uint32_t ipv4_number);
 
     /**
+     * Ipv4()
+     * @param ipv4 : ipv4 peer
+     */
+    Ipv4(const Ipv4 & ipv4);
+
+    /**
      * fromDottedDecimalString()
      * @param ipv4_dotted_decimal : ipv4 string in dotted decimal format
      * @return ipv4 address
      */
-    static const Ipv4 fromDottedDecimalString(const std::string & ipv4_dotted_decimal);
+    static const Ipv4 * fromDottedDecimalString(const std::string & ipv4_dotted_decimal);
 
     /**
      * getNumber()

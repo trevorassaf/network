@@ -16,20 +16,34 @@ class Network::Ipv6 {
     /**
      * Ipv6 address in colon-separated format.
      */
-    std::string _ipv6String;
+    const std::string _ipv6String;
 
     /**
      * Ipv6()
      * @param ipv6_bytes : ipv6 address in network-byte order (IPV6_NUM_BYTES long)
      */
     Ipv6(const uint8_t * ipv6_bytes);
+    
+    /**
+     * Ipv6()
+     * @param ipv6_bytes : ipv6 address in network-byte order (IPV6_NUM_BYTES long)
+     * @param ipv6_str : colon-separated ipv6 string.
+     */
+    Ipv6(const uint8_t * ipv6_bytes, const std::string & ipv6_str);
 
     /**
      * stringifyBytes()
      * @param ipv6_bytes : ipv6 address in network-byte order (IPV6_NUM_BYTES long)
      * @return ipv6 address string in colon-separated format.
      */
-    std::string stringifyBytes(const uint8_t * ipv6_bytes);
+    static const std::string stringifyBytes(const uint8_t * ipv6_bytes);
+
+    /**
+     * copyIpv6Bytes()
+     * - Copy ipv6_bytes into _ipv6Bytes.
+     * @param ipv6_bytes : ipv6 address in network-byte order (IPV6_NUM_BYTES long)
+     */
+    void copyIpv6Bytes(const uint8_t ipv6_bytes);
 
   public:
     /**
@@ -37,14 +51,14 @@ class Network::Ipv6 {
      * @param ipv6_bytes : ipv6 address in network-byte order (IPV6_NUM_BYTES long)
      * @return ipv6 object
      */
-    static const Ipv6 fromBytes(const uint8_t * ipv6_bytes);
+    static const Ipv6 * fromBytes(const uint8_t * ipv6_bytes);
 
     /**
      * fromColonSeparatedString()
      * @param ipv6_str : colon-separated ipv6 string.
      * @return ipv6 object
      */
-    static const Ipv6 fromColonSeparatedString(const std::string & ipv6_str);
+    static const Ipv6 * fromColonSeparatedString(const std::string & ipv6_str);
 
     /**
      * getBytes()
@@ -56,7 +70,7 @@ class Network::Ipv6 {
      * toString()
      * @return ipv6 address in colon-separated string format.
      */
-    const std::string & toString() const;
+    const std::string * toString() const;
 
     /**
      * operator==()

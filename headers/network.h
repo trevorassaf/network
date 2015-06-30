@@ -4,7 +4,8 @@ namespace Network {
   class Ipv4;
   class Ipv6;
   class Port;
-  // class Host;
+  class Host;
+  class HostBuilder;
   // class Socket;
   
   // Exceptions

@@ -24,7 +24,7 @@ Network::Port::Port(
     _portString(Network::Port::stringifyPort(port_number))
 {}
 
-const Network::Port Network::Port::fromString(
+const Network::Port * Network::Port::fromString(
     const std::string & port_string
 ) {
   uint16_t port_number;
@@ -35,7 +35,7 @@ const Network::Port Network::Port::fromString(
     //throw Network::Exception::BadPortString(port_string); 
   }
   
-  return Network::Port(htons(port_number), port_string);
+  return new Network::Port(htons(port_number), port_string);
 }
 
 uint16_t Network::Port::getNumber() const {
