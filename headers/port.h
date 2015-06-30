@@ -2,7 +2,6 @@
 
 #include "network.h"
 
-#include <cstdint>
 #include <string>
 
 class Network::Port {
@@ -56,7 +55,7 @@ class Network::Port {
      * toString()
      * @return string representation of port number
      */
-    const std::string toString() const;
+    const std::string & toString() const;
 
     /**
      * operator==()

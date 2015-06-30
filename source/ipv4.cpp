@@ -12,7 +12,7 @@ Network::Ipv4::Ipv4(
     _ipv4String(Network::Ipv4::stringifyIpv4(ipv4_number))
 {}
 
-const std::string stringifyIpv4(uint32_t ipv4_number) {
+const std::string Network::Ipv4::stringifyIpv4(uint32_t ipv4_number) {
   char ipv4_string_buffer[INET_ADDRSTRLEN];
   ::memset(ipv4_string_buffer, '\0', INET_ADDRSTRLEN);
   ::inet_ntop(

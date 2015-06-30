@@ -10,6 +10,7 @@ namespace Network {
   // Exceptions
   namespace Exception {
     class BadIpv4Address;
+    class BadPortString;
   };
 };
 
