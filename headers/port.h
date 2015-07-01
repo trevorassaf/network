@@ -55,7 +55,7 @@ class Network::Port {
      * toString()
      * @return string representation of port number
      */
-    const std::string * toString() const;
+    const std::string & toString() const;
 
     /**
      * operator==()

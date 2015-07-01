@@ -1,5 +1,7 @@
 #include "../headers/port.h"
 
+#include "../headers/network_except.h"
+
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -32,7 +34,7 @@ const Network::Port * Network::Port::fromString(
   try {
     port_number = static_cast<uint16_t>(std::stoul(port_string)); // host-byte order
   } catch (...) {
-    //throw Network::Exception::BadPortString(port_string); 
+    throw Network::Exception::BadPortString(port_string); 
   }
   
   return new Network::Port(htons(port_number), port_string);

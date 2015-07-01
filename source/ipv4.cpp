@@ -12,10 +12,12 @@ Network::Ipv4::Ipv4(
     _ipv4String(Network::Ipv4::stringifyIpv4(ipv4_number))
 {}
 
-Network::Ipv4::Ipv4(const Network::Ipv4 & ipv4) {
-  _ipv4Number = ipv4._ipv4Number;
-  _ipv4String = ipv4._ipv4String;
-}
+Network::Ipv4::Ipv4(
+    const Network::Ipv4 & ipv4
+) : 
+    _ipv4Number(ipv4._ipv4Number),
+    _ipv4String(ipv4._ipv4String)
+{}
 
 const std::string Network::Ipv4::stringifyIpv4(uint32_t ipv4_number) {
   char ipv4_string_buffer[INET_ADDRSTRLEN];
@@ -38,6 +40,10 @@ const Network::Ipv4 * Network::Ipv4::fromDottedDecimalString(const std::string &
 
 uint32_t Network::Ipv4::getNumber() const {
   return _ipv4Number;
+}
+
+const std::string & Network::Ipv4::toString() const {
+  return _ipv4String;
 }
 
 bool Network::Ipv4::operator==(const Network::Ipv4 & ipv4) const {
