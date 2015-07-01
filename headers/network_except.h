@@ -2,15 +2,31 @@
 
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
+#include <arpa/inet.h>
 
-class Network::Exception::BadIpv4Address : public std::exception {
+class Network::Exception::NetworkRuntimeError : public std::runtime_error {
 
   private:
-    const int _errorCode;
-    const std::string _badIpv4;
+    static const std::string composeErrorMessage(int error_number, const std::string & user_error_str);
 
   public:
-    BadIpv4Address(int error_code, const std::string & bad_ipv4);
+    NetworkRuntimeError(int error_number, const std::string & error_str);
+    NetworkRuntimeError(const std::string & error_str);
+    NetworkRuntimeError(int error_number);
+};
+
+class Network::Exception::BadIpAddressString : public std::exception {
+
+  private:
+    const int _ipVersion;
+    const std::string _badIp;
+
+    typedef std::unordered_map<int, const std::string> ip_version_map;
+    const static ip_version_map IP_VERSIONS;
+
+  public:
+    BadIpAddressString(int ip_version, const std::string & bad_ip);
     virtual const char * what() const throw(); 
 };
 

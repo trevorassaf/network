@@ -9,6 +9,7 @@
 
 #define IPV4TO6_00_BYTE_COUNT 8
 #define IPV4TO6_FF_BYTE_COUNT 4
+#define IPV4TO6_PREFIX "::ffff:"
 
 #define IPV6_LOCALHOST_STRING "::1"
 
@@ -24,14 +25,6 @@ class Network::Ipv6 {
      * Ipv6 address in colon-separated format.
      */
     const std::string _ipv6String;
-    
-    /**
-     * Ipv6()
-     * - Copies ipv6_bytes data to internal buffer.
-     * @param ipv6_bytes : ipv6 address in network-byte order (IPV6_NUM_BYTES long)
-     * @param ipv6_str : colon-separated ipv6 string.
-     */
-    Ipv6(const uint8_t * ipv6_bytes, const std::string & ipv6_str);
 
     /**
      * stringifyBytes()
@@ -41,19 +34,53 @@ class Network::Ipv6 {
     static const std::string stringifyBytes(const uint8_t * ipv6_bytes);
 
     /**
-     * decodeString()
-     * - Translate ipv6 string to numeric ipv6 address.
+     * decodeIpv6String()
+     * - Translate ipv6 string to numeric ipv6 address. 
      * @param ipv6_string : string ipv6 address.
-     * @param ipv6_bytes : buffer to which numeric ipv6 is written. Must be IPV6_NUM_BYTES long
+     * @param ipv6_bytes : buffer in which to store ipv6 bytes. Must be at least
+     *    IPV6_NUM_BYTES long.
      */
-    static void decodeString(const std::string & ipv6_string, uint8_t * ipv6_bytes);
+    static void decodeIpv6String(const std::string & ipv6_str, uint8_t * ipv6_bytes);
 
     /**
-     * copyIpv6Bytes()
+     * decodeIpv6String()
+     * - Translate ipv6 string to numeric ipv6 address and copy numeric address
+     *      into '_ipv6Bytes'.
+     * @param ipv6_string : string ipv6 address.
+     */
+    void decodeIpv6String(const std::string & ipv6_string);
+
+    /**
+     * setIpv6Bytes()
      * - Copy ipv6_bytes into _ipv6Bytes.
      * @param ipv6_bytes : ipv6 address in network-byte order (IPV6_NUM_BYTES long)
      */
-    void copyIpv6Bytes(const uint8_t * ipv6_bytes);
+    void setIpv6Bytes(const uint8_t * ipv6_bytes);
+
+    /**
+     * translateIpv4String()
+     * @param ipv4_str : ipv4 address string. MUST be correct (should come directly
+     *    from Ipv4 object b/c it ensures string validity)
+     */
+    static const std::string translateIpv4String(
+        const std::string & ipv4_str
+    );
+
+    /**
+     * translateIpv4Number()
+     * - Translate ipv4 to compatible ipv6 and copy to '_ipv6Bytes'.
+     * @param ipv4_num : network-byte order ipv4 numeric address.
+     * @param ipv6_bytes : ipv6 address in network-byte order (IPV6_NUM_BYTES long)
+     */
+    static void translateIpv4Number(uint32_t ipv4_num, uint8_t * ipv6_bytes);
+    
+    /**
+     * translateIpv4Number()
+     * - Translate ipv4 to compatible ipv6 and copy to '_ipv6Bytes'.
+     * @param ipv4_num : network-byte order ipv4 numeric address.
+     * @param ipv6_bytes : ipv6 address in network-byte order (IPV6_NUM_BYTES long)
+     */
+    void translateIpv4Number(uint32_t ipv4_num);
 
   public:
     /**
@@ -96,12 +123,18 @@ class Network::Ipv6 {
      * @param ipv6_str : ipv6 address in presentation format.
      */
     Ipv6(const std::string & ipv6_str);
+     
+    /* Ipv6()
+     * - Create ipv4 object that's compatible with the provided 'ipv4'
+     * @param ipv4 : ipv4 address
+     */
+    Ipv6(const Network::Ipv4 & ipv4);
 
     /**
      * getBytes()
      * @return ipv6 bytes in network-byte order (IPV6_NUM_BYTES long)
      */
-    uint8_t * getBytes() const;
+    const uint8_t * getBytes() const;
 
     /**
      * toString()
