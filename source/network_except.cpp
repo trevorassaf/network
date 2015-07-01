@@ -25,8 +25,8 @@ Network::Exception::BadPortString::BadPortString(
 {}
 
 const char * Network::Exception::BadPortString::what() const throw() {
-  std::string error_message = std::string("[Bad port: ")
-      + std::to_string(_badPort)
+  std::string error_message = std::string("[Bad port string: ")
+      + _badPort
       + std::string("]");
   return error_message.c_str();
 }

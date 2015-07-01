@@ -7,6 +7,9 @@
 
 #define IPV4_NUM_BYTES 4
 
+#define IPV4_LOCALHOST_NUMBER 0xFF000001 // network-byte-order
+#define IPV4_LOCALHOST_STRING "127.0.0.1"
+
 class Network::Ipv4 {
 
   private:
@@ -28,6 +31,12 @@ class Network::Ipv4 {
     static const std::string stringifyIpv4(uint32_t ipv4_number);
 
   public:
+    /**
+     * Ipv4()
+     * - Defaults to localhost address.
+     */
+    Ipv4();
+
     /**
      * Ipv4()
      * @param ipv4_number : ipv4 number in network-byte order

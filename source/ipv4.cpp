@@ -5,6 +5,11 @@
 #include <netinet/in.h>
 #include <cstring>
 
+Network::Ipv4::Ipv4() : 
+    _ipv4Number(htonl(IPV4_LOCALHOST_NUMBER)),
+    _ipv4String(IPV4_LOCALHOST_STRING)
+{}
+
 Network::Ipv4::Ipv4(
     uint32_t ipv4_number
 ) : 
