@@ -16,12 +16,12 @@ class Network::Ipv4 {
     /**
      * Ipv4 numerical address in network-byte order.
      */
-    const uint32_t _ipv4Number;
+    uint32_t _ipv4Number;
     
     /**
      * Ipv4 string address in dotted decimal format.
      */
-    const std::string _ipv4String;
+    std::string _ipv4String;
    
     /**
      * stringifyIpv4()
@@ -29,6 +29,13 @@ class Network::Ipv4 {
      * @return dotted decimal ipv4 address string
      */
     static const std::string stringifyIpv4(uint32_t ipv4_number);
+
+    /**
+     * decodeIpv4String()
+     * @param ipv4_str : ipv4 address in dotted-decimal string format.
+     * @return numeric ipv4 address in network byte order
+     */
+    static uint32_t decodeIpv4String(const std::string & ipv4_str);
 
   public:
     /**
@@ -45,16 +52,9 @@ class Network::Ipv4 {
 
     /**
      * Ipv4()
-     * @param ipv4 : ipv4 peer
+     * @param ipv4_str : ipv4 string in dotted-decimal form
      */
-    Ipv4(const Ipv4 & ipv4);
-
-    /**
-     * fromDottedDecimalString()
-     * @param ipv4_dotted_decimal : ipv4 string in dotted decimal format
-     * @return ipv4 address
-     */
-    static const Ipv4 * fromDottedDecimalString(const std::string & ipv4_dotted_decimal);
+    Ipv4(const std::string & ipv_str);
 
     /**
      * getNumber()

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "network.h"
 
 #include "ipv4.h"
@@ -24,7 +26,7 @@ class Network::Ipv6 {
     /**
      * Ipv6 address in colon-separated format.
      */
-    const std::string _ipv6String;
+    std::string _ipv6String;
 
     /**
      * stringifyBytes()
@@ -62,9 +64,7 @@ class Network::Ipv6 {
      * @param ipv4_str : ipv4 address string. MUST be correct (should come directly
      *    from Ipv4 object b/c it ensures string validity)
      */
-    static const std::string translateIpv4String(
-        const std::string & ipv4_str
-    );
+    static const std::string translateIpv4String(const std::string & ipv4_str);
 
     /**
      * translateIpv4Number()
@@ -83,28 +83,6 @@ class Network::Ipv6 {
     void translateIpv4Number(uint32_t ipv4_num);
 
   public:
-    /**
-     * fromBytes()
-     * - Copies ipv6_bytes data to internal buffer.
-     * @param ipv6_bytes : ipv6 address in network-byte order (IPV6_NUM_BYTES long)
-     * @return ipv6 object
-     */
-    static const Ipv6 * fromBytes(const uint8_t * ipv6_bytes);
-
-    /**
-     * fromColonSeparatedString()
-     * @param ipv6_str : colon-separated ipv6 string.
-     * @return ipv6 object
-     */
-    static const Ipv6 * fromString(const std::string & ipv6_str);
-
-    /**
-     * fromIpv4()
-     * @param ipv4 : ipv4 address that we'll translate to ipv6.
-     * @return ipv6 object that represents the ipv4 address
-     */
-    static const Ipv6 * fromIpv4(const Network::Ipv4 * ipv4);
-
     /**
      * Ipv6()
      * - Initialize to localhost.

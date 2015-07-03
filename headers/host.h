@@ -5,41 +5,21 @@
 #include "ipv6.h"
 #include "port.h"
 
-class Network::HostBuilder {
-
-    private:
-      
-      friend class Network::Host;
-
-      bool _isIpv4;
-      bool _isPortSpecified;
-      bool _isAddressSet;
-      const Network::Ipv4 * _ipv4;
-      const Network::Ipv6 * _ipv6;
-      const Network::Port * _port;
-
-    public:
-      /**
-       * HostBuilder()
-       *
-       */
-      HostBuilder();
-      HostBuilder * setIpv4(const Network::Ipv4 * ipv4);
-      HostBuilder * setIpv6(const Network::Ipv6 * ipv6);
-      HostBuilder * setPort(const Network::Port * port);
-      const Network::Host build();
-
-};
-
 class Network::Host {
 
     private:
       bool _isIpv4;
-      bool _isPortSpecified;
-      
-      const Network::Ipv4 * _ipv4;
-      const Network::Ipv6 * _ipv6;
-      const Network::Port * _port;
+      bool _hasPort;
+      const Network::Ipv4 _ipv4;
+      const Network::Ipv6 _ipv6;
+      const Network::Port _port;
+
+    public:
+      /**
+       * Host()
+       * - Defaults to localhost on ipv4 with unspecified port.
+       */
+      Host();
 
       /**
        * Host()
@@ -54,7 +34,7 @@ class Network::Host {
        * - Portless state.
        * @param ipv6 : ipv6 address
        */
-      Host(const Network::Ipv4 & ipv6);
+      Host(const Network::Ipv6 & ipv6);
 
       /**
        * Host()
@@ -69,21 +49,7 @@ class Network::Host {
        * @param ipv6 : ipv6 address
        * @param port : port
        */
-      Host(const Network::Ipv4 & ipv6, const Network::Port & port);
-
-
-    public:
-      /**
-       * Host()
-       * @param host : peer host to deep-clone
-       */
-      Host(const Host & host);
-
-      /**
-       * ~Host()
-       * - Frees ipv4, ipv6, port
-       */
-      ~Host();
+      Host(const Network::Ipv6 & ipv6, const Network::Port & port);
 
       /**
        * isIpv4()
@@ -93,10 +59,10 @@ class Network::Host {
       bool isIpv4() const;
 
       /**
-       * isPortSpecified()
+       * hasPort()
        * @return true iff no port was indicated.
        */
-      bool isPortSpecified() const;
+      bool hasPort() const;
 
       /**
        * getIpv4()
@@ -104,19 +70,32 @@ class Network::Host {
        * @throw runtime_error if no valid ipv4 address is available. Check first with
        *    Network::Ipv4::isIpv4()
        */
-      const Network::Ipv4 * getIpv4() const;
+      const Network::Ipv4 & getIpv4() const;
 
       /**
        * getIpv6()
        * @return ipv6 address (always valid due to ipv4 -> ipv6 compatibility mapping)
        */
-      const Network::Ipv6 * getIpv6() const;
+      const Network::Ipv6 & getIpv6() const;
 
       /**
        * getPort()
        * @return port
        * @throw std::runtime_error if port is unspecified. Check first with
-       *    Network::Ipv4::isPortSpecified()
+       *    Network::Ipv4::hasPort()
        */
-      const Network::Port * getPort() const;
+      const Network::Port & getPort() const;
+
+      /**
+       * operator==()
+       * @return true iff flags are equal and active fields are identical. By "active", we mean
+       *    the fields indicated by the flags.
+       */
+      bool operator==(const Host & host);
+
+      /**
+       * operator!=()
+       * @return true iff == operator fails.
+       */
+      bool operator!=(const Host & host);
 };

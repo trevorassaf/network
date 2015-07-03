@@ -4,18 +4,20 @@
 
 #include <string>
 
+#define DEFAULT_PORT_NUMBER 0
+
 class Network::Port {
 
   private:
     /**
      * Port number in network-byte order.
      */
-    const uint16_t _portNumber; 
+    uint16_t _portNumber; 
 
     /**
      * Port string
      */
-    const std::string _portString;
+    std::string _portString;
 
     /**
      * stringifyPort()
@@ -23,6 +25,13 @@ class Network::Port {
      * @return string port number
      */
     static const std::string stringifyPort(uint16_t port_number);
+
+    /**
+     * decodePort()
+     * @param port_str : port in human-readable string format
+     * @return numeric port address in network-byte order
+     */
+    uint16_t decodePort(const std::string & port_str);
 
     /**
      * Port()
@@ -34,17 +43,22 @@ class Network::Port {
   public:
     /**
      * Port()
+     * - Initializes port to default value.
+     */
+    Port();
+
+    /**
+     * Port()
      * @param port_number : network-byte order port number.
      */
     Port(uint16_t port_number);
     
     /**
-     * fromString()
-     * @param port_string : string representation of port
-     * @return port object
+     * Port()
+     * @param port_str : human-readable port string.
      */
-    static const Port * fromString(const std::string & port_string);
-
+    Port(const std::string & port_str);
+    
     /**
      * getNumber()
      * @return network-byte order for port number
@@ -53,7 +67,7 @@ class Network::Port {
 
     /**
      * toString()
-     * @return string representation of port number
+     * @return port number in human-readable string format 
      */
     const std::string & toString() const;
 

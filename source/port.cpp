@@ -11,6 +11,20 @@ const std::string Network::Port::stringifyPort(uint16_t port_number) {
   return std::to_string(ntohs(port_number));
 }
 
+uint16_t Network::Port::decodePort(const std::string & port_str) {
+  try {
+    uint16_t port_num = static_cast<uint16_t>(std::stoul(port_str)); // host-byte order
+    return htons(port_num);
+  } catch (...) {
+    throw Network::Exception::BadPortString(port_str); 
+  }
+}
+
+Network::Port::Port() : 
+    _portNumber(DEFAULT_PORT_NUMBER),
+    _portString(Network::Port::stringifyPort(_portNumber))
+{}
+
 Network::Port::Port(
     uint16_t port_number,
     const std::string & port_string
@@ -26,19 +40,10 @@ Network::Port::Port(
     _portString(Network::Port::stringifyPort(port_number))
 {}
 
-const Network::Port * Network::Port::fromString(
-    const std::string & port_string
-) {
-  uint16_t port_number;
-  
-  try {
-    port_number = static_cast<uint16_t>(std::stoul(port_string)); // host-byte order
-  } catch (...) {
-    throw Network::Exception::BadPortString(port_string); 
-  }
-  
-  return new Network::Port(htons(port_number), port_string);
-}
+Network::Port::Port(const std::string & port_str) :
+    _portNumber(Network::Port::decodePort(port_str)),
+    _portString(port_str)
+{}
 
 uint16_t Network::Port::getNumber() const {
   return _portNumber;

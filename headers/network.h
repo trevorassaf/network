@@ -5,8 +5,7 @@ namespace Network {
   class Ipv6;
   class Port;
   class Host;
-  class HostBuilder;
-  // class Socket;
+  class Socket;
   
   // Exceptions
   namespace Exception {
