@@ -1,5 +1,8 @@
 #pragma once
 
+#include <unordered_map>
+#include <functional>
+
 #include "network.h"
 #include "ipv4.h"
 #include "ipv6.h"
@@ -7,35 +10,33 @@
 
 class Network::Host {
 
+    public:
+      enum class AddressType {
+        IPV4,
+        IPV6
+      };
+
     private:
-      bool _isIpv4;
-      bool _hasPort;
-      const Network::Ipv4 _ipv4;
-      const Network::Ipv6 _ipv6;
-      const Network::Port _port;
+      struct AddressTypeKeyer {
+        template <typename T>
+        std::size_t operator()(const T & t) const {
+          return static_cast<std::size_t>(t);
+        }
+      };
+
+      AddressType _addressType;
+
+      typedef std::unordered_map<AddressType, int, AddressTypeKeyer> AddressFamilyMap; 
+      typedef std::unordered_map<int, AddressType> ReverseAddressFamilyMap; 
+     
+      static const AddressFamilyMap ADDRESS_FAMILY_MAP;
+      static const ReverseAddressFamilyMap REVERSE_ADDRESS_FAMILY_MAP;
+
+      Network::Ipv4 _ipv4;
+      Network::Ipv6 _ipv6;
+      Network::Port _port;
 
     public:
-      /**
-       * Host()
-       * - Defaults to localhost on ipv4 with unspecified port.
-       */
-      Host();
-
-      /**
-       * Host()
-       * - Derives compatible ipv6 address from ipv4 address.
-       * - Portless state
-       * @param ipv4 : ipv4 address
-       */
-      Host(const Network::Ipv4 & ipv4);
-      
-      /**
-       * Host()
-       * - Portless state.
-       * @param ipv6 : ipv6 address
-       */
-      Host(const Network::Ipv6 & ipv6);
-
       /**
        * Host()
        * - Derives compatible ipv6 address from ipv4 address.
@@ -50,19 +51,6 @@ class Network::Host {
        * @param port : port
        */
       Host(const Network::Ipv6 & ipv6, const Network::Port & port);
-
-      /**
-       * isIpv4()
-       * @return true iff the ipv4 address is enabled. All ipv4 addresses can be translated
-       *    to ipv6, but not the other way around.
-       */
-      bool isIpv4() const;
-
-      /**
-       * hasPort()
-       * @return true iff no port was indicated.
-       */
-      bool hasPort() const;
 
       /**
        * getIpv4()
@@ -87,9 +75,20 @@ class Network::Host {
       const Network::Port & getPort() const;
 
       /**
+       * getAddressFamily()
+       * @return os code for this address family 
+       */
+      int getAddressFamily() const;
+
+      /**
+       * getAddressType()
+       * @return address type of this host
+       */
+      AddressType getAddressType() const;
+
+      /**
        * operator==()
-       * @return true iff flags are equal and active fields are identical. By "active", we mean
-       *    the fields indicated by the flags.
+       * @return true iff ip address and port are identical.
        */
       bool operator==(const Host & host);
 

@@ -5,13 +5,19 @@ namespace Network {
   class Ipv6;
   class Port;
   class Host;
-  class Socket;
+  class ClientConfig;
+  
+  namespace Tcp {
+    class Socket;
+  };
   
   // Exceptions
   namespace Exception {
     class NetworkRuntimeError;
     class BadIpAddressString;
     class BadPortString;
+    class GetAddrInfoError;
+    class SocketError;
   };
 };
 

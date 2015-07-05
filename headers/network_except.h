@@ -1,5 +1,6 @@
 #include "network.h"
 
+#include <vector>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
@@ -37,5 +38,24 @@ class Network::Exception::BadPortString : public std::exception {
 
   public:
     BadPortString(const std::string & bad_port);
+    virtual const char * what() const throw(); 
+};
+
+class Network::Exception::GetAddrInfoError : public std::exception {
+  private:
+    const int _errorCode; 
+
+  public:
+    GetAddrInfoError(int error_code);
+    virtual const char * what() const throw(); 
+};
+
+class Network::Exception::SocketError : public std::exception {
+
+  private:
+    const std::vector<int> _errorNumbers;
+
+  public:
+    SocketError(const std::vector<int> error_numbers);
     virtual const char * what() const throw(); 
 };

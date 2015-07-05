@@ -63,6 +63,12 @@ class Network::Ipv4 {
     uint32_t getNumber() const;
 
     /**
+     * isLocalHost()
+     * @return true iff this address represents localhost.
+     */
+    bool isLocalHost() const;
+
+    /**
      * toString()
      * @return string representation of ipv4 address in dotted decimal format.
      */

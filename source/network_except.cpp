@@ -3,6 +3,8 @@
 #include <string.h>
 #include <string>
 
+#include <netdb.h>
+
 const std::string Network::Exception::NetworkRuntimeError::composeErrorMessage(
     int error_number,
     const std::string & user_error_str
@@ -73,4 +75,20 @@ const char * Network::Exception::BadPortString::what() const throw() {
       + _badPort
       + std::string("]");
   return error_message.c_str();
+}
+
+Network::Exception::GetAddrInfoError::GetAddrInfoError(int error_code) : _errorCode(error_code) {}
+
+const char * Network::Exception::GetAddrInfoError::what() const throw() {
+  return ::gai_strerror(_errorCode);
+}
+
+Network::Exception::SocketError::SocketError(const std::vector<int> error_numbers) : _errorNumbers(error_numbers) {}
+
+const char * Network::Exception::SocketError::what() const throw() {
+  std::string error_string;
+  for (int error_number : _errorNumbers) {
+    error_string += std::string("Error: ") + std::string(::strerror(error_number)) + std::string("\n");
+  }
+  return error_string.c_str();
 }
