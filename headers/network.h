@@ -6,6 +6,7 @@ namespace Network {
   class Port;
   class Host;
   class ClientConfig;
+  class ServerConfig;
   
   namespace Tcp {
     class Socket;
