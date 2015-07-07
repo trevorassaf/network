@@ -5,6 +5,7 @@
 #include <string>
 
 #define DEFAULT_PORT_NUMBER 0
+#define DEFAULT_PORT_STRING "0"
 
 class Network::Port {
 

@@ -3,9 +3,10 @@
 #include "../headers/network.h"
 #include "../headers/network_except.h"
 #include "../headers/host.h"
-#include "../client_config.h"
-#include "../server_config.h"
+#include "../headers/client_config.h"
+#include "../headers/server_config.h"
 
+#include <netdb.h>
 #include <unordered_map>
 #include <cstdint>
 
@@ -22,7 +23,7 @@ class Network::Tcp::Socket {
      */
     uint32_t _socketDescriptor;
 
-    class enum Status {
+    enum class Status {
       CLOSED,
       OPEN,
       LISTENING,
@@ -38,23 +39,22 @@ class Network::Tcp::Socket {
     const Host * _client;
     const Host * _server;
 
+    const Network::Host * initHost(const addrinfo * addr);
+
   public:
     Socket();
     Socket & open();
-    Socket & open(const Network::ClientConfig & client_config);
-
-    Socket & connect(const Network::ServerConfig & server_config);
+    Socket & open(const Network::ClientConfig & host_config);
+    Socket & connect(const Network::ServerConfig & named_host_config);
 
     // Socket & write();
     // Serializeable read()
 
-   Socket & listen();
-    
-   Socket accept() const;
-  
-   Socket & close();
-  
-   const Network::Host & getServer() const;
-   const Network::Host & getClient() const;
+    Socket & listen();
+    Socket accept() const;
+    Socket & close();
+
+    const Network::Host & getServer() const;
+    const Network::Host & getClient() const;
 
 };

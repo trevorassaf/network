@@ -7,6 +7,7 @@ namespace Network {
   class Host;
   class ClientConfig;
   class ServerConfig;
+  class ServerConfigBuilder;
   
   namespace Tcp {
     class Socket;

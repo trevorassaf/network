@@ -8,14 +8,15 @@
 #include "ipv6.h"
 #include "port.h"
 
-class Network::HostConfig {
-
-    private:
+class Network::ClientConfig {
+    public:
       enum class AddressType {
         IPV4,
         IPV6,
         UNSPECIFIED
       };
+
+    private:
 
       struct AddressTypeKeyer {
         template <typename T>
@@ -41,10 +42,10 @@ class Network::HostConfig {
 
     public:
       /**
-       * HostConfig()
+       * ClientConfig()
        * - Defaults to localhost with unspecified ip with unspecified port.
        */
-      HostConfig();
+      ClientConfig();
 
       /**
        * hasAddress()
@@ -63,55 +64,55 @@ class Network::HostConfig {
        * @param ipv4 : ipv4 address
        * @return self
        */
-      HostConfig & setIpv4(const Network::Ipv4 & ipv4);
+      ClientConfig & setIpv4(const Network::Ipv4 & ipv4);
 
       /**
        * setIpv6()
        * @param ipv6 : ipv6 address
        * @return self
        */
-      HostConfig & setIpv6(const Network::Ipv6 & ipv6);
+      ClientConfig & setIpv6(const Network::Ipv6 & ipv6);
       
       /**
        * setPort()
        * @param port : port of host
        * @return self
        */
-      HostConfig & setPort(const Network::Port & port);
+      ClientConfig & setPort(const Network::Port & port);
 
       /**
        * unsetAddress()
        * - Dissable ip address.
        * @return self
        */
-      HostConfig & unsetAddress();
+      ClientConfig & unsetAddress();
 
       /**
        * unsetPort()
        * - Dissables port.
        * @return self
        */
-      HostConfig & unsetPort();
+      ClientConfig & unsetPort();
 
       /**
        * setIpv4()
        * - Configure address type for ipv4.
        */
-      HostConfig & setIpv4();
+      ClientConfig & setIpv4();
       
       /**
        * setIpv6()
        * - Configure address type for ipv6.
        * @return self
        */
-      HostConfig & setIpv6();
+      ClientConfig & setIpv6();
 
       /**
        * unsetAddressType()
        * - Configure address type for 'unspecified'
        * @return self
        */
-      HostConfig & setAddressUnspecified();
+      ClientConfig & setAddressUnspecified();
 
       /**
        * getAddressType()

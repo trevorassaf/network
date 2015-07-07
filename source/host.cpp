@@ -5,6 +5,18 @@
 #include <sys/socket.h>
 #include <stdexcept>
 
+Network::Host::AddressType Network::Host::reverseAddressFamilyLookup(
+    int os_address_family
+) {
+  return Network::Host::REVERSE_ADDRESS_FAMILY_MAP.at(os_address_family);
+}
+
+int Network::Host::addressFamilyLookup(
+    Network::Host::AddressType address_type
+) {
+  return Network::Host::ADDRESS_FAMILY_MAP.at(address_type);
+}
+
 const Network::Host::AddressFamilyMap Network::Host::ADDRESS_FAMILY_MAP = {
   {Network::Host::AddressType::IPV4, AF_INET},
   {Network::Host::AddressType::IPV6, AF_INET6},

@@ -83,10 +83,16 @@ const char * Network::Exception::GetAddrInfoError::what() const throw() {
   return ::gai_strerror(_errorCode);
 }
 
-Network::Exception::SocketError::SocketError(const std::vector<int> error_numbers) : _errorNumbers(error_numbers) {}
+Network::Exception::SocketError::SocketError(
+    const std::string & error_message,
+    const std::vector<int> error_numbers
+) : 
+    _errorMessage(error_message),
+    _errorNumbers(error_numbers)
+{}
 
 const char * Network::Exception::SocketError::what() const throw() {
-  std::string error_string;
+  std::string error_string = _errorMessage;
   for (int error_number : _errorNumbers) {
     error_string += std::string("Error: ") + std::string(::strerror(error_number)) + std::string("\n");
   }

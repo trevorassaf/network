@@ -8,30 +8,75 @@
 #include "ipv6.h"
 #include "port.h"
 
-class Network::HostConfig {
+class Network::ServerConfig {
+
+  friend class ServerConfigBuilder;
+
+  public:
+    
+    enum class IpVersion {
+      IPV4,
+      IPV6,
+      UNSPECIFIED
+    };
+
+    enum class AddressType {
+      IP,
+      DOMAIN
+    };
+
+  private:
+    struct IpVersionKeyer {
+      template <typename T>
+      std::size_t operator()(const T & t) const {
+        return static_cast<std::size_t>(t);
+      }
+    };
+    
+    typedef std::unordered_map<IpVersion, int, IpVersionKeyer> IpAddressFamilyMap; 
+    typedef std::unordered_map<int, IpVersion> ReverseIpAddressFamilyMap; 
+   
+    static const IpAddressFamilyMap IP_ADDRESS_FAMILY_MAP;
+    static const ReverseIpAddressFamilyMap REVERSE_IP_ADDRESS_FAMILY_MAP;
+
+    const IpVersion _ipVersion;
+    const AddressType _addressType;
+    const bool _hasPort;
+    const std::string _domain;
+    const Network::Ipv4 _ipv4;
+    const Network::Ipv6 _ipv6;
+    const Network::Port _port;
+
+    ServerConfig(
+      IpVersion ip_version,
+      AddressType address_type,
+      bool has_port,
+      const std::string & domain,
+      const Network::Ipv4 & ipv4,
+      const Network::Ipv6 & ipv6,
+      const Network::Port & port
+    );
+
+  public:
+    ServerConfig(const ServerConfig & server_config);
+
+    IpVersion getIpVersion() const;
+    AddressType getAddressType() const;
+    bool hasPort() const;
+    int getIpAddressFamily() const;
+    const std::string & getDomain() const;
+    const Network::Ipv4 & getIpv4() const;
+    const Network::Ipv6 & getIpv6() const;
+    const Network::Port & getPort() const;
+    const std::string & getAddressStr() const;
+};
+
+class Network::ServerConfigBuilder {
 
     private:
-      enum class AddressType {
-        IPV4,
-        IPV6,
-        UNSPECIFIED
-      };
-
-      struct AddressTypeKeyer {
-        template <typename T>
-        std::size_t operator()(const T & t) const {
-          return static_cast<std::size_t>(t);
-        }
-      };
-
-      AddressType _addressType;
-
-      typedef std::unordered_map<AddressType, int, AddressTypeKeyer> AddressFamilyMap; 
-      typedef std::unordered_map<int, AddressType> ReverseAddressFamilyMap; 
-     
-      static const AddressFamilyMap ADDRESS_FAMILY_MAP;
-      static const ReverseAddressFamilyMap REVERSE_ADDRESS_FAMILY_MAP;
-
+      Network::ServerConfig::IpVersion _ipVersion;      
+      Network::ServerConfig::AddressType _addressType;
+      
       bool _hasAddress;
       bool _hasPort;
 
@@ -39,111 +84,60 @@ class Network::HostConfig {
       Network::Ipv6 _ipv6;
       Network::Port _port;
 
+      std::string _domain;
+
+      void validateStateOrThrow() const;
+
     public:
       /**
-       * HostConfig()
+       * ServerConfigBuilder()
        * - Defaults to localhost with unspecified ip with unspecified port.
        */
-      HostConfig();
-
-      /**
-       * hasAddress()
-       * @return true iff address is set.
-       */
-      bool hasAddress() const;
-      
-      /**
-       * hasPort()
-       * @return true iff no port was indicated.
-       */
-      bool hasPort() const;
+      ServerConfigBuilder();
 
       /**
        * setIpv4()
        * @param ipv4 : ipv4 address
        * @return self
        */
-      HostConfig & setIpv4(const Network::Ipv4 & ipv4);
+      ServerConfigBuilder & setIpv4(const Network::Ipv4 & ipv4);
 
       /**
        * setIpv6()
        * @param ipv6 : ipv6 address
        * @return self
        */
-      HostConfig & setIpv6(const Network::Ipv6 & ipv6);
+      ServerConfigBuilder & setIpv6(const Network::Ipv6 & ipv6);
       
       /**
        * setPort()
        * @param port : port of host
        * @return self
        */
-      HostConfig & setPort(const Network::Port & port);
-
-      /**
-       * unsetAddress()
-       * - Dissable ip address.
-       * @return self
-       */
-      HostConfig & unsetAddress();
-
-      /**
-       * unsetPort()
-       * - Dissables port.
-       * @return self
-       */
-      HostConfig & unsetPort();
-
-      /**
-       * setIpv4()
-       * - Configure address type for ipv4.
-       */
-      HostConfig & setIpv4();
+      ServerConfigBuilder & setPort(const Network::Port & port);
       
       /**
-       * setIpv6()
-       * - Configure address type for ipv6.
+       * setDomain()
+       * @param domain : domain name of the remote
        * @return self
        */
-      HostConfig & setIpv6();
+      ServerConfigBuilder & setDomain(const std::string & domain);
 
       /**
-       * unsetAddressType()
-       * - Configure address type for 'unspecified'
+       * enableIpv4()
+       * - Set ip type to ipv4
        * @return self
        */
-      HostConfig & setAddressUnspecified();
-
+      ServerConfigBuilder & enableIpv4();
+      
       /**
-       * getAddressType()
-       * @return address type for this host
+       * enableIpv6()
+       * - Set ip type to ipv6
+       * @return self
        */
-      AddressType getAddressType() const;
+      ServerConfigBuilder & enableIpv6();
+      
+      const Network::ServerConfig build() const;
+      const Network::ServerConfig * buildNew() const;
 
-      /**
-       * getIpv4()
-       * @return ipv4 address
-       * @throw runtime_error if no valid ipv4 address is available. Check first with
-       *    Network::Ipv4::isIpv4()
-       */
-      const Network::Ipv4 & getIpv4() const;
-
-      /**
-       * getIpv6()
-       * @return ipv6 address (always valid due to ipv4 -> ipv6 compatibility mapping)
-       */
-      const Network::Ipv6 & getIpv6() const;
-
-      /**
-       * getPort()
-       * @return port
-       * @throw std::runtime_error if port is unspecified. Check first with
-       *    Network::Ipv4::hasPort()
-       */
-      const Network::Port & getPort() const;
-
-      /**
-       * getAddressFamily()
-       * @return os code for this address family 
-       */
-      int getAddressFamily() const;
 };

@@ -53,9 +53,13 @@ class Network::Exception::GetAddrInfoError : public std::exception {
 class Network::Exception::SocketError : public std::exception {
 
   private:
+    const std::string _errorMessage;
     const std::vector<int> _errorNumbers;
 
   public:
-    SocketError(const std::vector<int> error_numbers);
+    SocketError(
+        const std::string & error_message,
+        const std::vector<int> error_numbers
+    );
     virtual const char * what() const throw(); 
 };

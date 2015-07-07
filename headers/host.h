@@ -38,6 +38,20 @@ class Network::Host {
 
     public:
       /**
+       * reverseAddressFamilyLookup()
+       * @param os_address_family : os-specific address flag 
+       * @return internal address mode
+       */
+      static AddressType reverseAddressFamilyLookup(int os_address_family);
+      
+      /**
+       * addressFamilyLookup()
+       * @param address_family : internal address family mode 
+       * @return os-specific address family 
+       */
+      static int addressFamilyLookup(const AddressType address_family);
+
+      /**
        * Host()
        * - Derives compatible ipv6 address from ipv4 address.
        * @param ipv4 : ipv4 address
