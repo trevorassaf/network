@@ -45,7 +45,9 @@ Network::Tcp::Socket::Socket() :
   _status(Network::Tcp::Socket::Status::CLOSED),
   _isReuseAddr(false),
   _isReusePort(false),
-  _isKeepAlive(false)
+  _isKeepAlive(false),
+  _client(nullptr),
+  _server(nullptr)
 {}
 
 Network::Tcp::Socket & Network::Tcp::Socket::open() {
@@ -194,4 +196,26 @@ Network::Tcp::Socket & Network::Tcp::Socket::connect(
   ::freeaddrinfo(addrinfo_result_list);
 
   return *this;
+}
+
+Network::Tcp::Socket & Network::Tcp::Socket::close() {
+  if (_status == Network::Tcp::Socket::Status::CLOSED) {
+    throw std::runtime_error("Socket already closed! Can't close socket if it's not open!");
+  }
+  ::close(_socketDescriptor);
+  _status = Network::Tcp::Socket::Status::CLOSED;
+}
+
+const Network::Host * Network::Tcp::Socket::getServer() const {
+  if (!_server) {
+    throw std::runtime_error("Server not set yet! Must invoke connect() in order to establish connection to server.");
+  }
+  return _server;
+}
+
+const Network::Host * Network::Tcp::Socket::getClient() const {
+  if (!_client) {
+    throw std::runtime_error("Client not set yet! Must call open() in order to establish client.");
+  }
+  return _client;
 }

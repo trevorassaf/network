@@ -54,7 +54,7 @@ class Network::Tcp::Socket {
     Socket accept() const;
     Socket & close();
 
-    const Network::Host & getServer() const;
-    const Network::Host & getClient() const;
+    const Network::Host * getServer() const;
+    const Network::Host * getClient() const;
 
 };
