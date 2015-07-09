@@ -1,5 +1,11 @@
 #include "../headers/socket.h"
 
+#include "../headers/packet_writer.h"
+#include "../headers/packet_reader.h"
+#include "../headers/network_except.h"
+
+#include <cassert>
+#include <cstdint>
 #include <stdexcept>
 #include <cstring>
 #include <unistd.h>
@@ -216,6 +222,52 @@ Network::Tcp::Socket & Network::Tcp::Socket::connect(
   ::freeaddrinfo(addrinfo_result_list);
 
   return *this;
+}
+
+template <class Tdata> Network::Tcp::Socket & Network::Tcp::Socket::write(
+    const Network::Packet<Tdata> & packet    
+) {
+  if (_status != Network::Tcp::Socket::Status::CONNECTED) {
+    throw std::runtime_error("Socket must be connected in order to write!");
+  } 
+
+  Network::PacketWriter<Tdata> packet_writer(packet);
+  do {
+    int bytes_sent = ::send(
+        _socketDescriptor,
+        packet_writer.serialize(),
+        packet_writer.getBytesRemaining(),
+        0
+    );
+    if (bytes_sent == -1) {
+      throw Network::Exception::NetworkRuntimeError(
+          errno,
+          "Encountered error while writing to wire."
+      );
+    }
+    packet_writer.accumulate(bytes_sent);
+  } while (!packet_writer.isFinished());
+  return *this;
+}
+
+template <class Tdata> const Network::Packet<Tdata> Network::Tcp::Socket::read() const {
+  Network::PacketReader<Tdata> packet_reader;
+  do {
+    int bytes_read = ::recv(
+        _socketDescriptor,
+        packet_reader.getBuffer(),
+        packet_reader.getBytesRemaining(),
+        0
+    ); 
+    if (bytes_read == -1) {
+      throw Network::Exception::NetworkRuntimeError(
+          errno,
+          "Encountered error while reading from wire."
+      );
+    }
+    packet_reader.accumuldate(bytes_read);
+  } while (!packet_reader.isFinished());
+  return packet_reader.getPacket();
 }
 
 Network::Tcp::Socket & Network::Tcp::Socket::listen() {

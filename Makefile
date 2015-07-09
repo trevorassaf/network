@@ -13,7 +13,9 @@ NETWORK_OBJS = \
 	client_config.o \
 	server_config.o \
 	socket.o \
-	packet.o
+	packet.o \
+	packet_writer.o \
+	packet_reader.o
 
 NETWORK_HEADERS = \
 	$(H_PATH)/network.h \
@@ -25,7 +27,9 @@ NETWORK_HEADERS = \
 	$(H_PATH)/client_config.h \
 	$(H_PATH)/server_config.h \
 	$(H_PATH)/socket.h \
-	$(H_PATH)/packet.h
+	$(H_PATH)/packet.h \
+	$(H_PATH)/packet_writer.h \
+	$(H_PATH)/packet_reader.h
 
 NETWORK_EXE = nwk
 
@@ -94,8 +98,19 @@ server_config.o: \
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/server_config.cpp
 
 packet.o: \
-		$(H_PATH)/network.h
+		$(H_PATH)/network.h \
+		$(H_PATH)/packet_writer.h
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/packet.cpp
+
+packet_writer.o: \
+		$(H_PATH)/network.h \
+		$(H_PATH)/packet.h
+	$(CXX) $(CXXFLAGS) -c $(S_PATH)/packet_writer.cpp
+
+packet_reader.o: \
+		$(H_PATH)/network.h \
+		$(H_PATH)/packet.h
+	$(CXX) $(CXXFLAGS) -c $(S_PATH)/packet_reader.cpp
 
 socket.o: \
 		$(H_PATH)/socket.h \
@@ -107,7 +122,9 @@ socket.o: \
 		$(H_PATH)/host.h \
 		$(H_PATH)/server_config.h \
 		$(H_PATH)/client_config.h \
-		$(H_PATH)/packet.h
+		$(H_PATH)/packet.h \
+		$(H_PATH)/packet_writer.h \
+		$(H_PATH)/packet_reader.h
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/socket.cpp
 
 clean:

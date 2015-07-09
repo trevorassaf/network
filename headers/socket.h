@@ -5,6 +5,7 @@
 #include "../headers/host.h"
 #include "../headers/client_config.h"
 #include "../headers/server_config.h"
+#include "../headers/packet.h"
 
 #include <netdb.h>
 #include <unordered_map>
@@ -52,8 +53,9 @@ class Network::Tcp::Socket {
 
     Socket & connect(const Network::ServerConfig & named_host_config);
 
-    //Socket & write();
-    //const Serializeable<T> read()
+
+    template <class Tdata> Socket & write(const Network::Packet<Tdata> & packet);
+    template <class Tdata> const Network::Packet<Tdata> read() const;
 
     Socket & listen();
     Socket & listen(const Network::ClientConfig & client_config);

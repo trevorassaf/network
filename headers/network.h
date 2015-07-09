@@ -9,6 +9,8 @@ namespace Network {
   class ServerConfig;
   class ServerConfigBuilder;
   template <class Tdata> class Packet;
+  template <class Tdata> class PacketWriter;
+  template <class Tdata> class PacketReader;
   
   namespace Tcp {
     class Socket;
