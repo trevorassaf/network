@@ -8,6 +8,7 @@ namespace Network {
   class ClientConfig;
   class ServerConfig;
   class ServerConfigBuilder;
+  template <class Tdata> class Packet;
   
   namespace Tcp {
     class Socket;

@@ -12,7 +12,8 @@ NETWORK_OBJS = \
 	host.o \
 	client_config.o \
 	server_config.o \
-	socket.o
+	socket.o \
+	packet.o
 
 NETWORK_HEADERS = \
 	$(H_PATH)/network.h \
@@ -23,7 +24,8 @@ NETWORK_HEADERS = \
 	$(H_PATH)/host.h \
 	$(H_PATH)/client_config.h \
 	$(H_PATH)/server_config.h \
-	$(H_PATH)/socket.h
+	$(H_PATH)/socket.h \
+	$(H_PATH)/packet.h
 
 NETWORK_EXE = nwk
 
@@ -48,53 +50,64 @@ ipv4.o: \
 		$(H_PATH)/port.h
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/ipv4.cpp
 
-ipv6.o: $(H_PATH)/ipv6.h \
-				$(H_PATH)/network.h \
-				$(H_PATH)/network_except.h \
-				$(H_PATH)/ipv4.h \
-				$(H_PATH)/port.h 
+ipv6.o: \
+		$(H_PATH)/ipv6.h \
+		$(H_PATH)/network.h \
+		$(H_PATH)/network_except.h \
+		$(H_PATH)/ipv4.h \
+		$(H_PATH)/port.h 
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/ipv6.cpp
 
-port.o: $(H_PATH)/port.h \
-				$(H_PATH)/network.h \
-				$(H_PATH)/network_except.h
+port.o: \
+		$(H_PATH)/port.h \
+		$(H_PATH)/network.h \
+		$(H_PATH)/network_except.h
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/port.cpp
 
-host.o: $(H_PATH)/host.h \
-				$(H_PATH)/network.h \
-				$(H_PATH)/network_except.h \
-				$(H_PATH)/ipv4.h \
-				$(H_PATH)/ipv6.h \
-				$(H_PATH)/port.h 
+host.o: \
+		$(H_PATH)/host.h \
+		$(H_PATH)/network.h \
+		$(H_PATH)/network_except.h \
+		$(H_PATH)/ipv4.h \
+		$(H_PATH)/ipv6.h \
+		$(H_PATH)/port.h 
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/host.cpp
 
-client_config.o: $(H_PATH)/client_config.h \
-								 $(H_PATH)/network.h \
-								 $(H_PATH)/network_except.h \
-								 $(H_PATH)/ipv4.h \
-								 $(H_PATH)/ipv6.h \
-								 $(H_PATH)/port.h \
-								 $(H_PATH)/host.h
+client_config.o: \
+		$(H_PATH)/client_config.h \
+		$(H_PATH)/network.h \
+		$(H_PATH)/network_except.h \
+		$(H_PATH)/ipv4.h \
+		$(H_PATH)/ipv6.h \
+		$(H_PATH)/port.h \
+		$(H_PATH)/host.h
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/client_config.cpp
 
-server_config.o: $(H_PATH)/server_config.h \
-								 $(H_PATH)/network.h \
-								 $(H_PATH)/network_except.h \
-								 $(H_PATH)/ipv4.h \
-								 $(H_PATH)/ipv6.h \
-								 $(H_PATH)/port.h \
-								 $(H_PATH)/host.h
+server_config.o: \
+		$(H_PATH)/server_config.h \
+		$(H_PATH)/network.h \
+		$(H_PATH)/network_except.h \
+		$(H_PATH)/ipv4.h \
+		$(H_PATH)/ipv6.h \
+		$(H_PATH)/port.h \
+		$(H_PATH)/host.h
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/server_config.cpp
 
-socket.o: $(H_PATH)/socket.h \
-					$(H_PATH)/network.h \
-					$(H_PATH)/network_except.h \
-					$(H_PATH)/ipv4.h \
-					$(H_PATH)/ipv6.h \
-					$(H_PATH)/port.h \
-					$(H_PATH)/host.h \
-					$(H_PATH)/server_config.h \
-					$(H_PATH)/client_config.h
+packet.o: \
+		$(H_PATH)/network.h
+	$(CXX) $(CXXFLAGS) -c $(S_PATH)/packet.cpp
+
+socket.o: \
+		$(H_PATH)/socket.h \
+		$(H_PATH)/network.h \
+		$(H_PATH)/network_except.h \
+		$(H_PATH)/ipv4.h \
+		$(H_PATH)/ipv6.h \
+		$(H_PATH)/port.h \
+		$(H_PATH)/host.h \
+		$(H_PATH)/server_config.h \
+		$(H_PATH)/client_config.h \
+		$(H_PATH)/packet.h
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/socket.cpp
 
 clean:
