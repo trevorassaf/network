@@ -20,7 +20,8 @@ const Network::ClientConfig::ReverseAddressFamilyMap Network::ClientConfig::REVE
 Network::ClientConfig::ClientConfig() :
     _addressType(Network::ClientConfig::AddressType::UNSPECIFIED),
     _hasAddress(false),
-    _hasPort(false)
+    _hasPort(false),
+    _backlog(CLIENT_DEFAULT_BACKLOG)
 {}
 
 bool Network::ClientConfig::hasAddress() const {
@@ -48,6 +49,14 @@ Network::ClientConfig & Network::ClientConfig::setIpv6(const Network::Ipv6 & ipv
 Network::ClientConfig & Network::ClientConfig::setPort(const Network::Port & port) {
   _port = port;
   _hasPort = true;
+  return *this;
+}
+
+Network::ClientConfig & Network::ClientConfig::setBacklog(int backlog) {
+  if (backlog <= 0) {
+    throw std::runtime_error("Backlog must be greater than 0!");
+  }
+  _backlog = backlog;
   return *this;
 }
 
@@ -104,4 +113,8 @@ const Network::Port & Network::ClientConfig::getPort() const {
 
 int Network::ClientConfig::getAddressFamily() const {
   return Network::ClientConfig::ADDRESS_FAMILY_MAP.at(_addressType);
+}
+
+int Network::ClientConfig::getBacklog() const {
+  return _backlog;
 }

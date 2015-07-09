@@ -8,6 +8,8 @@
 #include "ipv6.h"
 #include "port.h"
 
+#define CLIENT_DEFAULT_BACKLOG 10
+
 class Network::ClientConfig {
     public:
       enum class AddressType {
@@ -39,6 +41,8 @@ class Network::ClientConfig {
       Network::Ipv4 _ipv4;
       Network::Ipv6 _ipv6;
       Network::Port _port;
+
+      int _backlog;
 
     public:
       /**
@@ -79,6 +83,14 @@ class Network::ClientConfig {
        * @return self
        */
       ClientConfig & setPort(const Network::Port & port);
+
+      /**
+       * setBacklog()
+       * @param backlog : number of allowed connections.
+       *    Must be greater than 0.
+       * @return self
+       */
+      ClientConfig & setBacklog(int backlog);
 
       /**
        * unsetAddress()
@@ -147,4 +159,10 @@ class Network::ClientConfig {
        * @return os code for this address family 
        */
       int getAddressFamily() const;
+
+      /**
+       * getBacklog()
+       * @return the number of queued connections allowable.
+       */
+      int getBacklog() const;
 };

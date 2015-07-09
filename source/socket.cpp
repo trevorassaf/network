@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <cstring>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -41,21 +42,42 @@ const Network::Host * Network::Tcp::Socket::initHost(const addrinfo * addr) {
   return host;
 }
 
+Network::Tcp::Socket::Socket(
+  int socket_descriptor,
+  const Network::Host * local
+) :
+  _socketDescriptor(socket_descriptor),
+  _status(Network::Tcp::Socket::Status::CONNECTED),
+  _isReuseAddr(false),
+  _isReusePort(false),
+  _isKeepAlive(false),
+  _local(new Network::Host(*local)),
+  _remote(nullptr)
+{}
+
 Network::Tcp::Socket::Socket() :
   _status(Network::Tcp::Socket::Status::CLOSED),
   _isReuseAddr(false),
   _isReusePort(false),
   _isKeepAlive(false),
-  _client(nullptr),
-  _server(nullptr)
+  _local(nullptr),
+  _remote(nullptr)
 {}
 
-Network::Tcp::Socket & Network::Tcp::Socket::open() {
-  const Network::ClientConfig client_config;
-  return Network::Tcp::Socket::open(client_config);
+Network::Tcp::Socket::~Socket() {
+  delete _local;
+  _local = nullptr;
+  
+  delete _remote;
+  _remote = nullptr;
 }
 
-Network::Tcp::Socket & Network::Tcp::Socket::open(
+void Network::Tcp::Socket::open() {
+  const Network::ClientConfig client_config;
+  Network::Tcp::Socket::open(client_config);
+}
+
+void Network::Tcp::Socket::open(
     const Network::ClientConfig & client_config
 ) {
   if (_status != Network::Tcp::Socket::Status::CLOSED) {
@@ -137,8 +159,6 @@ Network::Tcp::Socket & Network::Tcp::Socket::open(
   
   initHost(addrinfo_result);
   ::freeaddrinfo(addrinfo_result_list);
-
-  return *this;
 }
 
 Network::Tcp::Socket & Network::Tcp::Socket::connect(
@@ -198,24 +218,101 @@ Network::Tcp::Socket & Network::Tcp::Socket::connect(
   return *this;
 }
 
+Network::Tcp::Socket & Network::Tcp::Socket::listen() {
+  const Network::ClientConfig client_config;
+  listen(client_config); 
+  return *this;
+}
+
+Network::Tcp::Socket & Network::Tcp::Socket::listen(const Network::ClientConfig & client_config) {
+  if (_status != Network::Tcp::Socket::Status::CLOSED) {
+    throw std::runtime_error("Socket already open! Must close socket before listening!");
+  }
+
+  // Open socket
+  open(client_config);
+
+  int listen_error_code = ::listen(_socketDescriptor, client_config.getBacklog());
+  if (listen_error_code == -1) {
+    throw Network::Exception::NetworkRuntimeError(
+        errno,
+        "Failed while attempting to listen on socket."
+    );
+  }
+  return *this;
+}
+
+Network::Tcp::Socket Network::Tcp::Socket::accept() const {
+  if (_status != Network::Tcp::Socket::Status::LISTENING) {
+    throw std::runtime_error("Must be in listening state before we try to accept incomming connections");
+  }
+  
+  sockaddr_storage remote_info;
+  socklen_t remote_info_size = sizeof(remote_info);
+  int accept_error_code = ::accept(
+      _socketDescriptor,
+      reinterpret_cast<sockaddr *>(&remote_info),
+      &remote_info_size
+  );
+
+  if (accept_error_code == -1)  {
+    throw Network::Exception::NetworkRuntimeError(
+        errno,
+        "Failed while attempting to accept incomming connection."
+    );
+  }
+
+  Network::Tcp::Socket socket(accept_error_code, _local);
+  Network::Host::AddressType address_type = 
+      Network::Host::reverseAddressFamilyLookup(remote_info.ss_family);
+
+  switch (address_type) {
+    case Network::Host::AddressType::IPV4: 
+      {
+        const sockaddr_in & ipv4_local_info = 
+            reinterpret_cast<sockaddr_in &>(remote_info);
+        socket._remote = new Network::Host(
+            Network::Ipv4(ipv4_local_info.sin_addr.s_addr),
+            Network::Port(ipv4_local_info.sin_port)
+        ); 
+        break;
+      }
+    case Network::Host::AddressType::IPV6:  
+      {
+        const sockaddr_in6 & ipv6_local_info = 
+            reinterpret_cast<sockaddr_in6 &>(remote_info);
+        socket._remote = new Network::Host(
+            Network::Ipv6(ipv6_local_info.sin6_addr.s6_addr),
+            Network::Port(ipv6_local_info.sin6_port)
+        ); 
+        break;
+      }
+    default:
+      throw std::runtime_error("Unknown ip type encountered while accepting connection!");
+      break;
+  }
+  return socket;
+}
+
 Network::Tcp::Socket & Network::Tcp::Socket::close() {
   if (_status == Network::Tcp::Socket::Status::CLOSED) {
     throw std::runtime_error("Socket already closed! Can't close socket if it's not open!");
   }
   ::close(_socketDescriptor);
   _status = Network::Tcp::Socket::Status::CLOSED;
+  return *this;
 }
 
-const Network::Host * Network::Tcp::Socket::getServer() const {
-  if (!_server) {
+const Network::Host * Network::Tcp::Socket::getRemote() const {
+  if (!_remote) {
     throw std::runtime_error("Server not set yet! Must invoke connect() in order to establish connection to server.");
   }
-  return _server;
+  return _remote;
 }
 
-const Network::Host * Network::Tcp::Socket::getClient() const {
-  if (!_client) {
+const Network::Host * Network::Tcp::Socket::getLocal() const {
+  if (!_local) {
     throw std::runtime_error("Client not set yet! Must call open() in order to establish client.");
   }
-  return _client;
+  return _local;
 }
