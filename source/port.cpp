@@ -21,7 +21,7 @@ uint16_t Network::Port::decodePort(const std::string & port_str) {
 }
 
 Network::Port::Port() : 
-    _portNumber(DEFAULT_PORT_NUMBER),
+    _portNumber(DYNAMIC_PORT_NUMBER),
     _portString(Network::Port::stringifyPort(_portNumber))
 {}
 
@@ -59,4 +59,8 @@ bool Network::Port::operator==(const Network::Port & port) const {
 
 bool Network::Port::operator!=(const Network::Port & port) const {
   return !(*this == port);
+}
+
+bool Network::Port::isStatic() const {
+  return _portNumber != DYNAMIC_PORT_NUMBER;
 }

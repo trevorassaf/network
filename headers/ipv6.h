@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <string>
 
-#define IPV6_NUM_BYTES 0x16
+#define IPV6_NUM_BYTES 0x10
 
 #define IPV4TO6_00_BYTE_COUNT 8
 #define IPV4TO6_FF_BYTE_COUNT 4

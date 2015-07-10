@@ -9,17 +9,26 @@
 #include <netinet/in.h>
 #include <cstring>
 
+#include <iostream>
+
 const std::string Network::Ipv6::stringifyBytes(const uint8_t * ipv6_bytes) {
+  in6_addr ipv6_addr;
+  ::memcpy(
+      static_cast<void *>(&ipv6_addr.s6_addr),
+      static_cast<const void *>(ipv6_bytes),
+      IPV6_NUM_BYTES
+  );
+
   char ipv6_string_buffer[INET6_ADDRSTRLEN];
   ::memset(ipv6_string_buffer, '\0', INET6_ADDRSTRLEN);
+
   const char * result = ::inet_ntop(
       AF_INET6,
-      static_cast<const void *>(&ipv6_bytes),
+      static_cast<const void *>(&ipv6_addr),
       ipv6_string_buffer,
       INET6_ADDRSTRLEN
   );
 
-  // Validate conversion
   if (!result) {
     throw Network::Exception::NetworkRuntimeError(errno); 
   }
@@ -36,12 +45,13 @@ void Network::Ipv6::decodeIpv6String(
       0,
       IPV6_NUM_BYTES 
   );
+  in6_addr ipv6_addr;
   
   // Validate ipv4 address
   int result = ::inet_pton(
       AF_INET6,
       ipv6_str.c_str(),
-      static_cast<void *>(ipv6_bytes)
+      static_cast<void *>(&ipv6_addr)
   );
  
   switch (result) {
@@ -55,6 +65,12 @@ void Network::Ipv6::decodeIpv6String(
       );
       break;
   }
+
+  ::memcpy(
+      static_cast<void *>(ipv6_bytes),
+      static_cast<const void *>(&ipv6_addr),
+      IPV6_NUM_BYTES
+  );
 }
 
 void Network::Ipv6::decodeIpv6String(const std::string & ipv6_str) {

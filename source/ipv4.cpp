@@ -11,6 +11,12 @@
 const std::string Network::Ipv4::stringifyIpv4(uint32_t ipv4_number) {
   char ipv4_string_buffer[INET_ADDRSTRLEN];
   ::memset(ipv4_string_buffer, '\0', INET_ADDRSTRLEN);
+  in_addr ipv4_addr;
+  ::memcpy(
+      static_cast<void *>(&ipv4_addr.s_addr),
+      static_cast<const void *>(&ipv4_number),
+      IPV4_NUM_BYTES
+  );
   const char * result = ::inet_ntop(
       AF_INET,
       static_cast<const void *>(&ipv4_number),
@@ -26,11 +32,11 @@ const std::string Network::Ipv4::stringifyIpv4(uint32_t ipv4_number) {
 }
 
 uint32_t Network::Ipv4::decodeIpv4String(const std::string & ipv4_str) {
-  uint32_t ipv4_num;
+  in_addr ipv4_addr;
   int result = ::inet_pton(
       AF_INET,
       ipv4_str.c_str(),
-      static_cast<void *>(&ipv4_num)
+      static_cast<void *>(&ipv4_addr)
   );
   
   switch (result) {
@@ -44,8 +50,7 @@ uint32_t Network::Ipv4::decodeIpv4String(const std::string & ipv4_str) {
       );
       break;
   }
-
-  return ipv4_num;
+  return ipv4_addr.s_addr; 
 }
 
 Network::Ipv4::Ipv4() : 

@@ -17,35 +17,41 @@
 
 const int Network::Tcp::Socket::TYPE = SOCK_STREAM;
 
-const Network::Host * Network::Tcp::Socket::initHost(const addrinfo * addr) {
-  const Network::Host * host = nullptr;
-
-  switch (Network::Host::reverseAddressFamilyLookup(addr->ai_family)) {
+const Network::Host * Network::Tcp::Socket::initHost(const sockaddr * addr) {
+  switch (Network::Host::reverseAddressFamilyLookup(addr->sa_family)) {
     case Network::Host::AddressType::IPV4: {
-      sockaddr_in * ipv4_addr = reinterpret_cast<sockaddr_in *>(addr->ai_addr);
-      host = new Network::Host(
+      const sockaddr_in * ipv4_addr = reinterpret_cast<const sockaddr_in *>(addr);
+      return new Network::Host(
           Network::Ipv4(ipv4_addr->sin_addr.s_addr),
           Network::Port(ipv4_addr->sin_port)
       );
-      break;
     }
     case Network::Host::AddressType::IPV6: {
-      sockaddr_in6 * ipv6_addr = reinterpret_cast<sockaddr_in6 *>(addr->ai_addr);
-      host = new Network::Host(
+      const sockaddr_in6 * ipv6_addr = reinterpret_cast<const sockaddr_in6 *>(addr);
+      return new Network::Host(
           Network::Ipv6(ipv6_addr->sin6_addr.s6_addr),
           Network::Port(ipv6_addr->sin6_port)
       );
-      break;                                       
     }
     default:
       throw std::runtime_error(
           std::string("Invalid Network::Host::AddressType encountered: ") +
-          std::to_string(addr->ai_family)
+          std::to_string(addr->sa_family)
       );
-      break;
   } 
-
-  return host;
+}
+const Network::Host * Network::Tcp::Socket::initLocal() {
+  socklen_t addr_len = sizeof(sockaddr_storage);
+  sockaddr_storage addr_storage;
+  int error_code = ::getsockname(
+      _socketDescriptor,
+      reinterpret_cast<sockaddr *>(&addr_storage),
+      &addr_len
+  );
+  if (error_code == -1) {
+    throw Network::Exception::NetworkRuntimeError(errno, "Failed during getsockname()"); 
+  }
+  return initHost(reinterpret_cast<const sockaddr *>(&addr_storage));
 }
 
 Network::Tcp::Socket::Socket(
@@ -109,13 +115,20 @@ void Network::Tcp::Socket::open(
       default:
         throw std::runtime_error("Either ipv4 or ipv6 must be enabled if client has a valid address!");
     }
+  } else {
+    hints.ai_flags = AI_PASSIVE;
   }
 
   // Port config 
-  const char * port_str = (client_config.hasPort()) ? client_config.getPort().toString().c_str() : nullptr;
+  const char * port_str = client_config.getPort().toString().c_str();
 
   struct addrinfo *addrinfo_result_list = nullptr;
-  int error_code = ::getaddrinfo(ip_address_str, port_str, &hints, &addrinfo_result_list);
+  int error_code = ::getaddrinfo(
+      ip_address_str,
+      port_str,
+      &hints,
+      &addrinfo_result_list
+  );
 
   if (error_code) {
     throw Network::Exception::GetAddrInfoError(error_code);
@@ -151,7 +164,7 @@ void Network::Tcp::Socket::open(
   _status = Network::Tcp::Socket::Status::OPEN;
 
   // Bind to port, if set
-  if (client_config.hasPort()) {
+//  if (client_config.getPort().isStatic()) {
     int bind_output = ::bind(
         _socketDescriptor,
         addrinfo_result->ai_addr,
@@ -159,21 +172,27 @@ void Network::Tcp::Socket::open(
     );
 
     if (bind_output == -1) {
-      throw Network::Exception::NetworkRuntimeError(errno);
+      throw Network::Exception::NetworkRuntimeError(errno, "Failed to bind socket.");
     }
-  }
-  
-  initHost(addrinfo_result);
+ // }
   ::freeaddrinfo(addrinfo_result_list);
 }
 
 Network::Tcp::Socket & Network::Tcp::Socket::connect(
     const Network::ServerConfig & server_config
 ) {
-  if (_status == Network::Tcp::Socket::Status::OPEN) {
-    throw std::runtime_error("Can't connect without opening connection first! Call socket.open()"); 
-  }
- 
+  const Network::ClientConfig client_config;
+  return connect(client_config, server_config);
+}
+
+Network::Tcp::Socket & Network::Tcp::Socket::connect(
+    const Network::ClientConfig & client_config,
+    const Network::ServerConfig & server_config
+) {
+  open(client_config);
+
+  assert(_status == Network::Tcp::Socket::Status::OPEN); 
+
   struct addrinfo hints, * addrinfo_result_list = nullptr;
   ::memset(&hints, 0, sizeof(hints));
   hints.ai_family = server_config.getIpAddressFamily();
@@ -181,9 +200,7 @@ Network::Tcp::Socket & Network::Tcp::Socket::connect(
 
   int getaddrinfo_error_code = ::getaddrinfo(
     server_config.getAddressStr().c_str(),
-    (server_config.hasPort())
-        ? server_config.getPort().toString().c_str()
-        : DEFAULT_PORT_STRING,
+    server_config.getPort().toString().c_str(),
     &hints,
     &addrinfo_result_list
   );
@@ -217,8 +234,8 @@ Network::Tcp::Socket & Network::Tcp::Socket::connect(
     ::freeaddrinfo(addrinfo_result_list);
     throw Network::Exception::SocketError("Failed to connect", error_codes);
   }
-
-  initHost(addrinfo_result);
+  _local = initLocal();
+  _remote = initHost(addrinfo_result->ai_addr);
   ::freeaddrinfo(addrinfo_result_list);
 
   return *this;
@@ -281,8 +298,8 @@ Network::Tcp::Socket & Network::Tcp::Socket::listen(const Network::ClientConfig 
     throw std::runtime_error("Socket already open! Must close socket before listening!");
   }
 
-  // Open socket
   open(client_config);
+  assert(_status == Network::Tcp::Socket::Status::OPEN); 
 
   int listen_error_code = ::listen(_socketDescriptor, client_config.getBacklog());
   if (listen_error_code == -1) {
@@ -291,6 +308,7 @@ Network::Tcp::Socket & Network::Tcp::Socket::listen(const Network::ClientConfig 
         "Failed while attempting to listen on socket."
     );
   }
+  _local = initLocal();
   return *this;
 }
 
@@ -355,16 +373,16 @@ Network::Tcp::Socket & Network::Tcp::Socket::close() {
   return *this;
 }
 
-const Network::Host * Network::Tcp::Socket::getRemote() const {
+const Network::Host & Network::Tcp::Socket::getRemote() const {
   if (!_remote) {
     throw std::runtime_error("Server not set yet! Must invoke connect() in order to establish connection to server.");
   }
-  return _remote;
+  return *_remote;
 }
 
-const Network::Host * Network::Tcp::Socket::getLocal() const {
+const Network::Host & Network::Tcp::Socket::getLocal() const {
   if (!_local) {
     throw std::runtime_error("Client not set yet! Must call open() in order to establish client.");
   }
-  return _local;
+  return *_local;
 }

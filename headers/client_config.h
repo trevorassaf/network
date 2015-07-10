@@ -36,7 +36,6 @@ class Network::ClientConfig {
       static const ReverseAddressFamilyMap REVERSE_ADDRESS_FAMILY_MAP;
 
       bool _hasAddress;
-      bool _hasPort;
 
       Network::Ipv4 _ipv4;
       Network::Ipv6 _ipv6;
@@ -57,12 +56,6 @@ class Network::ClientConfig {
        */
       bool hasAddress() const;
       
-      /**
-       * hasPort()
-       * @return true iff no port was indicated.
-       */
-      bool hasPort() const;
-
       /**
        * setIpv4()
        * @param ipv4 : ipv4 address
@@ -149,8 +142,6 @@ class Network::ClientConfig {
       /**
        * getPort()
        * @return port
-       * @throw std::runtime_error if port is unspecified. Check first with
-       *    Network::Ipv4::hasPort()
        */
       const Network::Port & getPort() const;
 

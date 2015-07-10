@@ -33,11 +33,16 @@ NETWORK_HEADERS = \
 
 NETWORK_EXE = nwk
 
-CXXFLAGS = -Wall -Wno-deprecated -std=c++11
+CXXFLAGS = -Wall -Wno-deprecated -std=c++11 -ggdb
+
 LFLAGS = $(CXXFLAGS)
+DEBUG_LFLAGS = $(LFLAGS) -ggdb
 
 nwk: $(NETWORK_OBJS)
 	$(CXX) $(LFLAGS) -o $(NETWORK_EXE) $(NETWORK_OBJS)
+
+debug: $(NETWORK_OBJS)
+	$(CXX) $(DEBUG_LFLAGS) -o $(NETWORK_EXE) $(NETWORK_OBJS)
 
 main.o: $(S_PATH)/main.cpp $(NETWORK_HEADERS)
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/main.cpp

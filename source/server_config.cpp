@@ -24,7 +24,6 @@ const Network::ServerConfig::ReverseIpAddressFamilyMap Network::ServerConfig::RE
 Network::ServerConfig::ServerConfig(
     IpVersion ip_version,
     AddressType address_type,
-    bool has_port,
     const std::string & domain,
     const Network::Ipv4 & ipv4,
     const Network::Ipv6 & ipv6,
@@ -32,7 +31,6 @@ Network::ServerConfig::ServerConfig(
 ) :
     _ipVersion(ip_version),
     _addressType(address_type),
-    _hasPort(has_port),
     _domain(domain),
     _ipv4(ipv4),
     _ipv6(ipv6),
@@ -44,7 +42,6 @@ Network::ServerConfig::ServerConfig(
 ) : 
     _ipVersion(server_config._ipVersion),
     _addressType(server_config._addressType),
-    _hasPort(server_config._hasPort),
     _domain(server_config._domain),
     _ipv4(server_config._ipv4),
     _ipv6(server_config._ipv6),
@@ -57,10 +54,6 @@ Network::ServerConfig::IpVersion Network::ServerConfig::getIpVersion() const {
 
 Network::ServerConfig::AddressType Network::ServerConfig::getAddressType() const {
   return _addressType;
-}
-
-bool Network::ServerConfig::hasPort() const {
-  return _hasPort;
 }
 
 int Network::ServerConfig::getIpAddressFamily() const {
@@ -115,10 +108,12 @@ void Network::ServerConfigBuilder::validateStateOrThrow() const {
   if (!_hasAddress) {
     throw std::runtime_error("Must provide address to builder before constructing ServerConfig!");
   }
-
   if (_ipVersion == Network::ServerConfig::IpVersion::UNSPECIFIED &&
       _addressType == Network::ServerConfig::AddressType::IP) {
     throw std::runtime_error("Must specify ip version if using ip address.");
+  }
+  if (!_hasPort) {
+    throw std::runtime_error("Must specify server port!");
   }
 }
 
@@ -163,7 +158,6 @@ const Network::ServerConfig Network::ServerConfigBuilder::build() const {
   return Network::ServerConfig(
     _ipVersion,
     _addressType,
-    _hasPort,
     _domain,
     _ipv4,
     _ipv6,
@@ -176,7 +170,6 @@ const Network::ServerConfig * Network::ServerConfigBuilder::buildNew() const {
   return new Network::ServerConfig(
     _ipVersion,
     _addressType,
-    _hasPort,
     _domain,
     _ipv4,
     _ipv6,

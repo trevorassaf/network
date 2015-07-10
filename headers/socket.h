@@ -40,10 +40,11 @@ class Network::Tcp::Socket {
     const Host * _local;
     const Host * _remote;
 
-    const Network::Host * initHost(const addrinfo * addr);
+    const Network::Host * initHost(const sockaddr * addr);
+    const Network::Host * initLocal();
     
     void open();
-    void open(const Network::ClientConfig & host_config);
+    void open(const Network::ClientConfig & client_config);
 
     Socket(int socket_descriptor, const Network::Host * local);
 
@@ -51,7 +52,11 @@ class Network::Tcp::Socket {
     Socket();
     ~Socket();
 
-    Socket & connect(const Network::ServerConfig & named_host_config);
+    Socket & connect(const Network::ServerConfig & server_config);
+    Socket & connect(
+        const Network::ClientConfig & client_config,
+        const Network::ServerConfig & server_config 
+    );
 
 
     template <class Tdata> Socket & write(const Network::Packet<Tdata> & packet);
@@ -62,7 +67,7 @@ class Network::Tcp::Socket {
     Socket accept() const;
     Socket & close();
 
-    const Network::Host * getRemote() const;
-    const Network::Host * getLocal() const;
+    const Network::Host & getRemote() const;
+    const Network::Host & getLocal() const;
 
 };

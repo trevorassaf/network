@@ -4,8 +4,8 @@
 
 #include <string>
 
-#define DEFAULT_PORT_NUMBER 0
-#define DEFAULT_PORT_STRING "0"
+#define DYNAMIC_PORT_NUMBER 0
+#define DYNAMIC_PORT_STRING "0"
 
 class Network::Port {
 
@@ -87,4 +87,10 @@ class Network::Port {
      *    test _portString b/c it was internally derived from _portNumber.
      */
     bool operator!=(const Port & port) const;
+
+    /**
+     * isStatic()
+     * @return true iff port is static.
+     */
+    bool isStatic() const;
 };

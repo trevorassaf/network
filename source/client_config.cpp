@@ -20,16 +20,11 @@ const Network::ClientConfig::ReverseAddressFamilyMap Network::ClientConfig::REVE
 Network::ClientConfig::ClientConfig() :
     _addressType(Network::ClientConfig::AddressType::UNSPECIFIED),
     _hasAddress(false),
-    _hasPort(false),
     _backlog(CLIENT_DEFAULT_BACKLOG)
 {}
 
 bool Network::ClientConfig::hasAddress() const {
   return _hasAddress;
-}
-
-bool Network::ClientConfig::hasPort() const {
-  return _hasPort;
 }
 
 Network::ClientConfig & Network::ClientConfig::setIpv4(const Network::Ipv4 & ipv4) {
@@ -48,7 +43,6 @@ Network::ClientConfig & Network::ClientConfig::setIpv6(const Network::Ipv6 & ipv
 
 Network::ClientConfig & Network::ClientConfig::setPort(const Network::Port & port) {
   _port = port;
-  _hasPort = true;
   return *this;
 }
 
@@ -66,7 +60,7 @@ Network::ClientConfig & Network::ClientConfig::unsetAddress() {
 }
 
 Network::ClientConfig & Network::ClientConfig::unsetPort() {
-  _hasPort = false;
+  _port = Network::Port();
   return *this;
 }
 
@@ -105,9 +99,6 @@ const Network::Ipv6 & Network::ClientConfig::getIpv6() const {
 }
 
 const Network::Port & Network::ClientConfig::getPort() const {
-  if (!_hasPort) {
-    throw std::runtime_error("Port not set! Must check with hasPort()");
-  }
   return _port;
 }
 

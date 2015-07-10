@@ -41,7 +41,6 @@ class Network::ServerConfig {
 
     const IpVersion _ipVersion;
     const AddressType _addressType;
-    const bool _hasPort;
     const std::string _domain;
     const Network::Ipv4 _ipv4;
     const Network::Ipv6 _ipv6;
@@ -50,7 +49,6 @@ class Network::ServerConfig {
     ServerConfig(
       IpVersion ip_version,
       AddressType address_type,
-      bool has_port,
       const std::string & domain,
       const Network::Ipv4 & ipv4,
       const Network::Ipv6 & ipv6,
@@ -62,7 +60,6 @@ class Network::ServerConfig {
 
     IpVersion getIpVersion() const;
     AddressType getAddressType() const;
-    bool hasPort() const;
     int getIpAddressFamily() const;
     const std::string & getDomain() const;
     const Network::Ipv4 & getIpv4() const;
