@@ -10,9 +10,6 @@ NETWORK_OBJS = \
 	ipv6.o \
 	port.o \
 	host.o \
-	client_config.o \
-	server_config.o \
-	socket.o \
 	packet.o \
 	packet_writer.o \
 	packet_reader.o
@@ -24,9 +21,6 @@ NETWORK_HEADERS = \
 	$(H_PATH)/ipv6.h	\
 	$(H_PATH)/port.h \
 	$(H_PATH)/host.h \
-	$(H_PATH)/client_config.h \
-	$(H_PATH)/server_config.h \
-	$(H_PATH)/socket.h \
 	$(H_PATH)/packet.h \
 	$(H_PATH)/packet_writer.h \
 	$(H_PATH)/packet_reader.h
@@ -82,26 +76,6 @@ host.o: \
 		$(H_PATH)/port.h 
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/host.cpp
 
-client_config.o: \
-		$(H_PATH)/client_config.h \
-		$(H_PATH)/network.h \
-		$(H_PATH)/network_except.h \
-		$(H_PATH)/ipv4.h \
-		$(H_PATH)/ipv6.h \
-		$(H_PATH)/port.h \
-		$(H_PATH)/host.h
-	$(CXX) $(CXXFLAGS) -c $(S_PATH)/client_config.cpp
-
-server_config.o: \
-		$(H_PATH)/server_config.h \
-		$(H_PATH)/network.h \
-		$(H_PATH)/network_except.h \
-		$(H_PATH)/ipv4.h \
-		$(H_PATH)/ipv6.h \
-		$(H_PATH)/port.h \
-		$(H_PATH)/host.h
-	$(CXX) $(CXXFLAGS) -c $(S_PATH)/server_config.cpp
-
 packet.o: \
 		$(H_PATH)/network.h \
 		$(H_PATH)/packet_writer.h
@@ -116,21 +90,6 @@ packet_reader.o: \
 		$(H_PATH)/network.h \
 		$(H_PATH)/packet.h
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/packet_reader.cpp
-
-socket.o: \
-		$(H_PATH)/socket.h \
-		$(H_PATH)/network.h \
-		$(H_PATH)/network_except.h \
-		$(H_PATH)/ipv4.h \
-		$(H_PATH)/ipv6.h \
-		$(H_PATH)/port.h \
-		$(H_PATH)/host.h \
-		$(H_PATH)/server_config.h \
-		$(H_PATH)/client_config.h \
-		$(H_PATH)/packet.h \
-		$(H_PATH)/packet_writer.h \
-		$(H_PATH)/packet_reader.h
-	$(CXX) $(CXXFLAGS) -c $(S_PATH)/socket.cpp
 
 clean:
 	\rm *.o $(NETWORK_EXE)

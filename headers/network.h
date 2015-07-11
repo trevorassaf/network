@@ -5,15 +5,32 @@ namespace Network {
   class Ipv6;
   class Port;
   class Host;
-  class ClientConfig;
-  class ServerConfig;
-  class ServerConfigBuilder;
   template <class Tdata> class Packet;
   template <class Tdata> class PacketWriter;
   template <class Tdata> class PacketReader;
-  
-  namespace Tcp {
-    class Socket;
+
+  class Socket;
+  class SocketConfig;
+
+  namespace Ip {
+    class Config;
+    class Connection;
+
+    namespace Tcp {
+      class Config;
+      class ConnectionBuilder;
+      class Connection;
+      class Service;
+      class ServiceBuilder;
+    };
+
+    namespace Udp {
+      class Config;
+      class RequestBuilder;
+      class Request;
+      class Service;
+      class ServiceBuilder;
+    };
   };
   
   // Exceptions
