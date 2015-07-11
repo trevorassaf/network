@@ -11,6 +11,7 @@ namespace Network {
 
   class Socket;
   class SocketConfig;
+  class SocketBuilder;
 
   namespace Ip {
     class Config;
