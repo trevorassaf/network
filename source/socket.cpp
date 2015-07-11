@@ -15,6 +15,8 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
+#include <iostream>
+
 const int Network::Tcp::Socket::TYPE = SOCK_STREAM;
 
 const Network::Host * Network::Tcp::Socket::initHost(const sockaddr * addr) {
@@ -100,6 +102,7 @@ void Network::Tcp::Socket::open(
   ::memset(&hints, 0, sizeof(hints));
   hints.ai_family = client_config.getAddressFamily();
   hints.ai_socktype = Network::Tcp::Socket::TYPE;
+  hints.ai_flags = AI_PASSIVE;
 
   // Ip address config 
   const char * ip_address_str = nullptr;
@@ -163,18 +166,18 @@ void Network::Tcp::Socket::open(
 
   _status = Network::Tcp::Socket::Status::OPEN;
 
-  // Bind to port, if set
-//  if (client_config.getPort().isStatic()) {
-    int bind_output = ::bind(
-        _socketDescriptor,
-        addrinfo_result->ai_addr,
-        addrinfo_result->ai_addrlen
-    );
+  int bind_output = ::bind(
+      _socketDescriptor,
+      addrinfo_result->ai_addr,
+      addrinfo_result->ai_addrlen
+  );
 
-    if (bind_output == -1) {
-      throw Network::Exception::NetworkRuntimeError(errno, "Failed to bind socket.");
-    }
- // }
+  if (bind_output == -1) {
+    throw Network::Exception::NetworkRuntimeError(
+        errno,
+        "Failed to bind socket."
+    );
+  }
   ::freeaddrinfo(addrinfo_result_list);
 }
 
@@ -290,6 +293,52 @@ template <class Tdata> const Network::Packet<Tdata> Network::Tcp::Socket::read()
 Network::Tcp::Socket & Network::Tcp::Socket::listen() {
   const Network::ClientConfig client_config;
   listen(client_config); 
+
+  char host_name[256];
+  memset(host_name, '\0', 256);
+  gethostname(host_name, 256); 
+  std::cout << "Hostname: " << host_name << std::endl;
+  hostent * host = gethostbyname(host_name);
+  std::cout << "Num addresses: " << host->h_length << std::endl;
+  std::cout << "Name: " << host->h_name << std::endl;
+  char ** address_list = host->h_addr_list;
+  for (int i = 0; i < host->h_length; ++i) {
+    std::cout << "Address: " << *address_list << std::endl;
+    ++address_list;
+  }
+
+  sockaddr_storage storage;
+  socklen_t storage_len = sizeof(storage);
+  int getsock_result = ::getsockname(_socketDescriptor, (sockaddr *)&storage, &storage_len);
+  assert(getsock_result != -1);
+  memset(host_name, '\0', 256);
+  if (storage.ss_family == AF_INET) {
+    sockaddr_in * ipv4_addr = (sockaddr_in *)&storage;
+    inet_ntop(AF_INET, (void *)&ipv4_addr->sin_addr, host_name, 256);
+  } else {
+    sockaddr_in6 * ipv6_addr = (sockaddr_in6 *)&storage;
+    inet_ntop(AF_INET6, (void *)&ipv6_addr->sin6_addr, host_name, 256);
+  }
+
+  std::cout << "sockname Address: " << host_name << std::endl;
+
+  addrinfo * server_info;
+  int gai_status = getaddrinfo("dcm", _local->getPort().toString().c_str(), NULL, &server_info);
+  assert(gai_status == 0);
+  assert(server_info);
+  while (server_info) {
+    char ip_pretty[100];
+    if (server_info->ai_family == AF_INET) {
+      sockaddr_in * ipv4_addr = (sockaddr_in *)server_info->ai_addr;
+      inet_ntop(AF_INET, (void *)&ipv4_addr->sin_addr, ip_pretty, 100);
+    } else {
+      sockaddr_in6 * ipv6_addr = (sockaddr_in6 *)server_info->ai_addr;
+      inet_ntop(AF_INET6, (void *)&ipv6_addr->sin6_addr, ip_pretty, 100);
+    }
+
+    std::cout << "gai-ip addr: " << ip_pretty << std::endl;
+    server_info = server_info->ai_next;
+  }
   return *this;
 }
 
