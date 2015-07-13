@@ -9,34 +9,80 @@
 class Network::Socket : Network::SocketConfig {
 
   public:
-    enum class AddressFamily {
-      IPV4,
-      IPV6
-    };
-
-    enum class Type {
-      TCP,
-      UDP
-    };
-    
     struct EnumClassKeyer {
       template <typename T>
       std::size_t operator()(const T & t) const {
         return static_cast<std::size_t>(t);
       }
     };
+
+    enum class Option {
+      DOMAIN,
+      ERROR,
+      BIND_TO_DEVICE,
+      IS_ROUTING,
+      IS_KEEP_ALIVE,
+      IS_LINGER,
+      IS_OOB_INLINE,
+      IS_PASS_CREDENTIALS,
+      IS_REUSE_ADDRESS,
+      // IS_REUSE_PORT
+      IS_TIMESTAMP_TRANSMITTED,
+      PRIORITY,
+      PROTOCOL,
+      MAXIMUM_RECEIVED_BUFFER_BYTES,
+      MINIMUM_RECEIVED_BUFFER_BYTES,
+      MAXIMUM_SEND_BUFFER_BYTES,
+      MINIMUM_SEND_BUFFER_BYTES,
+      RECEIVE_TIMEOUT,
+      SEND_TIMEOUT,
+      TYPE
+    };
+
+    typedef std::unordered_map<Option, int, EnumClassKeyer> OsSocketOptionMap;
+    typedef std::unordered_map<int, Option> ReverseOsSocketOptionMap;
+
+    static const OsSocketOptionMap OPTION_MAP;
+    static const ReverseOsSocketOptionMap REVERSE_OPTION_MAP;
     
-    typedef std::unordered_map<AddressFamily, int, EnumClassKeyer> AddressFamilyMap; 
-    typedef std::unordered_map<int, AddressFamily> ReverseAddressFamilyMap; 
+    enum class Level {
+      SOCKET,
+      IPV4,
+      IPV6,
+      TCP,
+      UDP
+    };
+
+    typedef std::unordered_map<Level, int, EnumClassKeyer> OsSocketLevelMap;
+    typedef std::unordered_map<int, Level> ReverseOsSocketLevelMap;
+
+    static const OsSocketLevelMap LEVEL_MAP;
+    static const ReverseOsSocketLevelMap REVERSE_LEVEL_MAP;
+
+    enum class AddressFamily {
+      IPV4,
+      IPV6
+    };
+    
+    typedef std::unordered_map<AddressFamily, int, EnumClassKeyer> OsSocketAddressFamilyMap; 
+    typedef std::unordered_map<int, AddressFamily> ReverseOsSocketAddressFamilyMap; 
+    
+    static const OsSocketAddressFamilyMap ADDRESS_FAMILY_MAP;
+    static const ReverseOsSocketAddressFamilyMap REVERSE_ADDRESS_FAMILY_MAP;
+
+    enum class Type {
+      TCP,
+      UDP,
+      IP
+    };
     
     typedef std::unordered_map<Type, int, EnumClassKeyer> TypeMap; 
     typedef std::unordered_map<int, Type> ReverseTypeMap; 
     
-    static const AddressFamilyMap ADDRESS_FAMILY_MAP;
-    static const ReverseAddressFamilyMap REVERSE_ADDRESS_FAMILY_MAP;
-
     static const TypeMap TYPE_MAP;
     static const ReverseTypeMap REVERSE_TYPE_MAP;
+
+    ~Socket();
 
     Socket(const Socket & socket) = delete;
     Socket(const Socket && socket) = delete;
@@ -96,7 +142,7 @@ class Network::Socket : Network::SocketConfig {
     Network::SocketConfig * setIsTimestampTransmitted(bool is_timestamp_transmitted) override;
 
     unsigned int getType() const;
-  
+
   private:
     friend class SocketBuilder;
 
@@ -104,4 +150,19 @@ class Network::Socket : Network::SocketConfig {
 
     Socket();
     Socket(unsigned int socket_descriptor);
+    
+    template <typename T> T getOption(
+        Option option,
+        const std::string & error_message
+    ) const;
+    
+    template <typename T> void setOption(
+        Option option,
+        const T & t,
+        const std::string & error_message
+    ) const;
+
+    static const Level LEVEL;
+
+    void close() const;
 };
