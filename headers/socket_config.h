@@ -35,9 +35,14 @@ class Network::SocketConfig {
 
     virtual Network::SocketConfig * setPriority(unsigned int priority) = 0;
 
-    virtual Network::SocketConfig * setReceivedBufferSize(unsigned int rcv_buff_size) = 0;
+    virtual Network::SocketConfig * setMaximumReceivedBufferBytes(unsigned int rcv_buff_size) = 0;
 
-    virtual Network::SocketConfig * setMinimumReceiveWindowBytes(unsigned int min_rcv_win_bytes) = 0;
+    virtual Network::SocketConfig * setMinimumReceivedBufferBytes(unsigned int min_rcv_win_bytes) = 0;
 
-    virtual Network::SocketConfig * setMaximumSendBufferSize(unsigned int max_send_buffer) = 0;
+    virtual Network::SocketConfig * setMaximumSendBufferBytes(unsigned int max_send_buffer) = 0;
+
+    virtual Network::SocketConfig * setMinimumSendBufferBytes(unsigned int max_send_buffer) = 0;
+
+    virtual Network::SocketConfig * setReceiveTimeout(unsigned int seconds, unsigned int micro_seconds) = 0;
+    virtual Network::SocketConfig * setSendTimeout(unsigned int seconds, unsigned int micro_seconds) = 0;
 };
