@@ -15,6 +15,12 @@ Network::TimeBuilder & Network::TimeBuilder::from(const Network::Time & time) {
   return *this;
 }
 
+Network::TimeBuilder & Network::TimeBuilder::from(const timeval & os_time) {
+  _seconds = os_time.tv_sec;
+  _microSeconds = os_time.tv_usec;
+  return *this;
+}
+
 Network::TimeBuilder & Network::TimeBuilder::setSeconds(uint32_t secs) {
   _seconds = secs;
   return *this;

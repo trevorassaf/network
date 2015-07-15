@@ -1,12 +1,40 @@
 #pragma once
 
 #include "network.h"
+#include "enum_keyer.h"
 
+#include <unordered_map>
 #include <string>
 
 class Network::SocketConfig {
 
   public:
+    enum class Type {
+      TCP,
+      UDP,
+      IP
+      // SEQ_PACKET,
+      // RDM
+    };
+    
+    typedef std::unordered_map<Type, int, EnumClassKeyer> TypeMap; 
+    typedef std::unordered_map<int, Type> ReverseTypeMap; 
+    
+    static const TypeMap TYPE_MAP;
+    static const ReverseTypeMap REVERSE_TYPE_MAP;
+    
+    enum class AddressFamily {
+      IPV4,
+      IPV6
+    };
+    
+    typedef std::unordered_map<AddressFamily, int, EnumClassKeyer> OsSocketAddressFamilyMap; 
+    typedef std::unordered_map<int, AddressFamily> ReverseOsSocketAddressFamilyMap; 
+    
+    static const OsSocketAddressFamilyMap ADDRESS_FAMILY_MAP;
+    static const ReverseOsSocketAddressFamilyMap REVERSE_ADDRESS_FAMILY_MAP;
+
+
     virtual Network::SocketConfig * setIsRouting(bool is_routing) = 0;
     virtual Network::SocketConfig * enableRouting() = 0;
     virtual Network::SocketConfig * disableRouting() = 0;

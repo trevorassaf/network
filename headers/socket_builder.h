@@ -48,11 +48,11 @@ class Network::SocketBuilder : Network::SocketConfig {
     int getProtocolForOs() const;
 
   protected:
-    Network::Socket * initNewConcreteSocket(int socket_descriptor) const;
+    virtual Network::Socket * initNewConcreteSocket(int socket_descriptor) const = 0;
 
   public:
-    virtual Network::Socket::Type getType() const = 0;
-    virtual Network::Socket::AddressFamily getAddressFamily() const = 0;
+    virtual Network::SocketConfig::Type getType() const = 0;
+    virtual Network::SocketConfig::AddressFamily getAddressFamily() const = 0;
     
     SocketBuilder();
     Network::Socket * build() const;

@@ -1,21 +1,14 @@
 #pragma once
 
 #include "network.h"
-#include "socket_builder.h"
 #include "socket_config.h"
+#include "socket_builder.h"
 
 #include <unordered_map>
 
 class Network::Socket : Network::SocketConfig {
 
   public:
-    struct EnumClassKeyer {
-      template <typename T>
-      std::size_t operator()(const T & t) const {
-        return static_cast<std::size_t>(t);
-      }
-    };
-
     enum class Option {
       DOMAIN,
       ERROR,
@@ -60,31 +53,6 @@ class Network::Socket : Network::SocketConfig {
     static const OsSocketLevelMap LEVEL_MAP;
     static const ReverseOsSocketLevelMap REVERSE_LEVEL_MAP;
 
-    enum class AddressFamily {
-      IPV4,
-      IPV6
-    };
-    
-    typedef std::unordered_map<AddressFamily, int, EnumClassKeyer> OsSocketAddressFamilyMap; 
-    typedef std::unordered_map<int, AddressFamily> ReverseOsSocketAddressFamilyMap; 
-    
-    static const OsSocketAddressFamilyMap ADDRESS_FAMILY_MAP;
-    static const ReverseOsSocketAddressFamilyMap REVERSE_ADDRESS_FAMILY_MAP;
-
-    enum class Type {
-      TCP,
-      UDP,
-      IP
-      // SEQ_PACKET,
-      // RDM
-    };
-    
-    typedef std::unordered_map<Type, int, EnumClassKeyer> TypeMap; 
-    typedef std::unordered_map<int, Type> ReverseTypeMap; 
-    
-    static const TypeMap TYPE_MAP;
-    static const ReverseTypeMap REVERSE_TYPE_MAP;
-
     ~Socket();
 
     Socket(const Socket & socket) = delete;
@@ -93,11 +61,12 @@ class Network::Socket : Network::SocketConfig {
 
     bool isAcceptor() const;
     
-    AddressFamily getAddressFamily() const;
+    Network::SocketConfig::AddressFamily getAddressFamily() const;
     
     int getError() const;
 
     bool isBoundToDevice() const;
+    const std::string getBoundDevice() const;
     Network::SocketConfig * bindToDevice(const std::string & device_name) override;
     
     bool isRouting() const;
@@ -134,34 +103,42 @@ class Network::Socket : Network::SocketConfig {
     Network::SocketConfig * disableTimestampTransmitted() override;
     
     Network::SocketConfig * setPriority(unsigned int priority) override;
+    unsigned int getPriority() const;
 
     Network::SocketConfig * setMaximumReceiveBufferBytes(unsigned int rcv_buff_size) override;
+    unsigned int getMaximumReceiveBufferBytes() const;
 
     Network::SocketConfig * setMinimumReceiveBufferBytes(unsigned int min_rcv_win_bytes) override;
+    unsigned int getMinimumReceiveBufferBytes() const;
 
     Network::SocketConfig * setMaximumSendBufferBytes(unsigned int max_send_buffer) override;
+    unsigned int getMaximumSendBufferBytes() const;
 
     Network::SocketConfig * setMinimumSendBufferBytes(unsigned int max_send_buffer) override;
+    unsigned int getMinimumSendBufferBytes() const;
 
     Network::SocketConfig * setReceiveTimeout(const Network::Time & time) override;
+    const Network::Time getReceiveTimeout() const;
 
     Network::SocketConfig * setSendTimeout(const Network::Time & time) override;
+    const Network::Time getSendTimeout() const;
 
-    Type getType() const;
+    Network::SocketConfig::Type getType() const;
 
   private:
-    friend class SocketBuilder;
+    static const Level LEVEL;
 
     unsigned int _socketDescriptor;
 
-    Socket();
+    friend class SocketBuilder;
+
     Socket(unsigned int socket_descriptor);
     
     template <typename T> T getOption(Option option) const;
+    const std::string getOption(Option option) const;
     
     template <typename T> void setOption(Option option, const T & t) const;
-
-    static const Level LEVEL;
+    void setOption(Option option, const std::string & option_value) const;
 
     void close() const;
 };

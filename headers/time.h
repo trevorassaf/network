@@ -18,6 +18,7 @@ class Network::TimeBuilder {
     TimeBuilder & setSeconds(uint32_t secs);
     TimeBuilder & setMicroSecs(uint32_t micro_secs);
     TimeBuilder & from(const Network::Time & time);
+    TimeBuilder & from(const timeval & os_time);
     const Network::Time build() const;
 };
 

@@ -12,7 +12,12 @@ NETWORK_OBJS = \
 	host.o \
 	packet.o \
 	packet_writer.o \
-	packet_reader.o
+	packet_reader.o \
+	socket_config.o \
+	socket.o \
+	socket_builder.o \
+	time.o
+
 
 NETWORK_HEADERS = \
 	$(H_PATH)/network.h \
@@ -23,7 +28,12 @@ NETWORK_HEADERS = \
 	$(H_PATH)/host.h \
 	$(H_PATH)/packet.h \
 	$(H_PATH)/packet_writer.h \
-	$(H_PATH)/packet_reader.h
+	$(H_PATH)/packet_reader.h \
+	$(H_PATH)/socket_config.h \
+	$(H_PATH)/socket.h \
+	$(H_PATH)/socket_builder.h \
+	$(H_PATH)/socket_config.h \
+	$(H_PATH)/time.h
 
 NETWORK_EXE = nwk
 
@@ -77,19 +87,51 @@ host.o: \
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/host.cpp
 
 packet.o: \
+		$(H_PATH)/packet.h \
 		$(H_PATH)/network.h \
 		$(H_PATH)/packet_writer.h
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/packet.cpp
 
 packet_writer.o: \
+		$(H_PATH)/packet_writer.h \
 		$(H_PATH)/network.h \
 		$(H_PATH)/packet.h
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/packet_writer.cpp
 
 packet_reader.o: \
+		$(H_PATH)/packet_reader.h \
 		$(H_PATH)/network.h \
 		$(H_PATH)/packet.h
 	$(CXX) $(CXXFLAGS) -c $(S_PATH)/packet_reader.cpp
+
+socket_config.o: \
+		$(H_PATH)/socket_config.h \
+		$(H_PATH)/socket.h \
+		$(H_PATH)/socket_builder.h \
+		$(H_PATH)/network.h \
+		$(H_PATH)/network_except.h
+	$(CXX) $(CXXFLAGS) -c $(S_PATH)/socket_config.cpp
+
+socket_builder.o: \
+		$(H_PATH)/network.h \
+		$(H_PATH)/socket_config.h \
+		$(H_PATH)/socket.h \
+		$(H_PATH)/socket_builder.h \
+		$(H_PATH)/network_except.h
+	$(CXX) $(CXXFLAGS) -c $(S_PATH)/socket_builder.cpp
+
+socket.o: \
+		$(H_PATH)/socket.h \
+		$(H_PATH)/network.h \
+		$(H_PATH)/network_except.h \
+		$(H_PATH)/socket_builder.h \
+		$(H_PATH)/socket_config.h
+	$(CXX) $(CXXFLAGS) -c $(S_PATH)/socket.cpp
+
+time.o: \
+		$(H_PATH)/time.h \
+		$(H_PATH)/network.h
+	$(CXX) $(CXXFLAGS) -c $(S_PATH)/time.cpp
 
 clean:
 	\rm *.o $(NETWORK_EXE)
