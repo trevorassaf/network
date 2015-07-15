@@ -2,6 +2,8 @@
 
 #include "network.h"
 
+#include <string>
+
 class Network::SocketConfig {
 
   public:
@@ -35,14 +37,17 @@ class Network::SocketConfig {
 
     virtual Network::SocketConfig * setPriority(unsigned int priority) = 0;
 
-    virtual Network::SocketConfig * setMaximumReceivedBufferBytes(unsigned int rcv_buff_size) = 0;
+    virtual Network::SocketConfig * setMaximumReceiveBufferBytes(unsigned int rcv_buff_size) = 0;
 
-    virtual Network::SocketConfig * setMinimumReceivedBufferBytes(unsigned int min_rcv_win_bytes) = 0;
+    virtual Network::SocketConfig * setMinimumReceiveBufferBytes(unsigned int min_rcv_win_bytes) = 0;
 
     virtual Network::SocketConfig * setMaximumSendBufferBytes(unsigned int max_send_buffer) = 0;
 
     virtual Network::SocketConfig * setMinimumSendBufferBytes(unsigned int max_send_buffer) = 0;
 
-    virtual Network::SocketConfig * setReceiveTimeout(unsigned int seconds, unsigned int micro_seconds) = 0;
-    virtual Network::SocketConfig * setSendTimeout(unsigned int seconds, unsigned int micro_seconds) = 0;
+    virtual Network::SocketConfig * setReceiveTimeout(const Network::Time & time) = 0;
+
+    virtual Network::SocketConfig * setSendTimeout(const Network::Time & time) = 0;
+
+    virtual Network::SocketConfig * bindToDevice(const std::string & device_name) = 0;
 };

@@ -20,6 +20,7 @@ class Network::Socket : Network::SocketConfig {
       DOMAIN,
       ERROR,
       BIND_TO_DEVICE,
+      IS_ACCEPTOR,
       IS_ROUTING,
       IS_KEEP_ALIVE,
       IS_LINGER,
@@ -74,6 +75,8 @@ class Network::Socket : Network::SocketConfig {
       TCP,
       UDP,
       IP
+      // SEQ_PACKET,
+      // RDM
     };
     
     typedef std::unordered_map<Type, int, EnumClassKeyer> TypeMap; 
@@ -90,9 +93,12 @@ class Network::Socket : Network::SocketConfig {
 
     bool isAcceptor() const;
     
-    unsigned int getDomain() const;
+    AddressFamily getAddressFamily() const;
     
-    unsigned int getError() const;
+    int getError() const;
+
+    bool isBoundToDevice() const;
+    Network::SocketConfig * bindToDevice(const std::string & device_name) override;
     
     bool isRouting() const;
     Network::SocketConfig * setIsRouting(bool is_routing) override;
@@ -119,29 +125,29 @@ class Network::Socket : Network::SocketConfig {
     Network::SocketConfig * enablePassCredentials() override;
     Network::SocketConfig * disablePassCredentials() override;
 
-    unsigned int getPriority() const;
-    Network::SocketConfig * setPriority(unsigned int priority) override;
-
-    unsigned int getProtocol() const;
-
-    unsigned int getReceiveBufferSize() const;
-    Network::SocketConfig * setReceivedBufferSize(unsigned int rcv_buff_size) override;
-
-    unsigned int getMinimumReceivedWindowBytes() const;
-    Network::SocketConfig * setMinimumReceiveWindowBytes(unsigned int min_rcv_win_bytes) override;
-
-    bool isReuseAddress() const;
     Network::SocketConfig * setIsReuseAddress(bool is_reuse_addr) override;
     Network::SocketConfig * enableReuseAddress() override;
     Network::SocketConfig * disableReuseAddress() override;
-
-    unsigned int getMaximumSendBufferSize() const; 
-    Network::SocketConfig * setMaximumSendBufferSize(unsigned int max_send_buffer) override;
-
-    bool isTimestampTransmitted() const;
+   
     Network::SocketConfig * setIsTimestampTransmitted(bool is_timestamp_transmitted) override;
+    Network::SocketConfig * enableTimestampTransmitted() override;
+    Network::SocketConfig * disableTimestampTransmitted() override;
+    
+    Network::SocketConfig * setPriority(unsigned int priority) override;
 
-    unsigned int getType() const;
+    Network::SocketConfig * setMaximumReceiveBufferBytes(unsigned int rcv_buff_size) override;
+
+    Network::SocketConfig * setMinimumReceiveBufferBytes(unsigned int min_rcv_win_bytes) override;
+
+    Network::SocketConfig * setMaximumSendBufferBytes(unsigned int max_send_buffer) override;
+
+    Network::SocketConfig * setMinimumSendBufferBytes(unsigned int max_send_buffer) override;
+
+    Network::SocketConfig * setReceiveTimeout(const Network::Time & time) override;
+
+    Network::SocketConfig * setSendTimeout(const Network::Time & time) override;
+
+    Type getType() const;
 
   private:
     friend class SocketBuilder;
@@ -151,16 +157,9 @@ class Network::Socket : Network::SocketConfig {
     Socket();
     Socket(unsigned int socket_descriptor);
     
-    template <typename T> T getOption(
-        Option option,
-        const std::string & error_message
-    ) const;
+    template <typename T> T getOption(Option option) const;
     
-    template <typename T> void setOption(
-        Option option,
-        const T & t,
-        const std::string & error_message
-    ) const;
+    template <typename T> void setOption(Option option, const T & t) const;
 
     static const Level LEVEL;
 

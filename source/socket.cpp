@@ -89,19 +89,69 @@ const Network::Socket::ReverseTypeMap Network::Socket::REVERSE_TYPE_MAP = {
   {SOCK_RAW, Network::Socket::Type::IP}
 };
 
-bool Network::Socket::isAcceptor() const {
+Network::Socket::AddressFamily
+Network::Socket::getAddressFamily() const {
+  int os_address_family = Network::Socket::getOption<int>(
+      Network::Socket::Option::DOMAIN    
+  );
+  return Network::Socket::REVERSE_ADDRESS_FAMILY_MAP.at(os_address_family);
+}
 
+int Network::Socket::getError() const {
+  return Network::Socket::getOption<int>(
+      Network::Socket::Option::ERROR    
+  );
+}
+
+
+bool Network::Socket::isAcceptor() const {
+  return Network::Socket::getOption<bool>(
+      Network::Socket::Option::IS_ACCEPTOR
+  );
+}
+
+bool Network::Socket::isBoundToDevice() const {
+  return Network::Socket::getOption<bool>(
+    Network::Socket::Option::BIND_TO_DEVICE    
+  );
 }
 
 template <typename T>
-T Network::Socket::getOption(const std::string & error_str) const {
+T Network::Socket::getOption(
+    Network::Socket::Option option
+) const {
   T data;
   socklen_t data_size = sizeof(data);
 
   int get_sock_opt_result = ::getsockopt(
-    _socketDescriptor,
-            
+      _socketDescriptor,
+      Network::Socket::LEVEL_MAP.at(Network::Socket::LEVEL),
+      Network::Socket::OPTION_MAP.at(option),
+      static_cast<void *>(&data),
+      &data_size
   );
+  if (get_sock_opt_result == -1) {
+    throw Network::Exception::NetworkRuntimeError(errno, "Failed during getsockopt()");
+  }
+  return data;
+}
+
+template <typename T>
+void Network::Socket::setOption(
+    Option option,
+    const T & data 
+) const {
+  socklen_t data_size = sizeof(data);
+  int set_sock_opt_result = ::setsockopt(
+    _socketDescriptor,
+    Network::Socket::LEVEL_MAP.at(Network::Socket::LEVEL),
+    Network::Socket::OPTION_MAP.at(option),
+    static_cast<void *>(&data),
+    data_size
+  ); 
+  if (set_sock_opt_result == -1) {
+    throw Network::Exception::NetworkRuntimeError(errno, "Failed during setsockopt()");
+  }
 }
 
 const Network::Socket::Level Network::Socket::LEVEL =

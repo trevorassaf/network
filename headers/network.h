@@ -13,6 +13,9 @@ namespace Network {
   class SocketConfig;
   class SocketBuilder;
 
+  class TimeBuilder;
+  class Time;
+
   namespace Ip {
     class Config;
     class Connection;

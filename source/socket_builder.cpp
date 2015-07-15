@@ -15,9 +15,13 @@ Network::SocketBuilder::SocketBuilder() :
     _isReuseAddrSet(false),
     _isTimestampTransmittedSet(false),
     _isPrioritySet(false),
-    _isReceiveBufferSizeSet(false),
-    _isMinimumReceiveWindowBytesSet(false),
-    _isMaximumSendWindowBytesSet(false)
+    _isMaximumReceiveBufferBytesSet(false),
+    _isMinimumReceiveBufferBytesSet(false),
+    _isMaximumSendBufferBytesSet(false),
+    _isMinimumSendBufferBytesSet(false),
+    _isReceiveTimeoutSet(false),
+    _isSendTimeoutSet(false),
+    _isBoundToDevice(false)
 {}
 
 int Network::SocketBuilder::open() const {
@@ -64,16 +68,32 @@ void Network::SocketBuilder::setOptions(Network::Socket * socket) const {
     socket->setIsTimestampTransmitted(_isTimestampTransmitted);
   }
 
-  if (_isReceiveBufferSizeSet) {
-    socket->setReceivedBufferSize(_receiveBufferSize);
+  if (_isPrioritySet) {
+    socket->setPriority(_priority);
   }
 
-  if (_isMinimumReceiveWindowBytesSet) {
-    socket->setMinimumReceiveWindowBytes(_minimumReceivedWindowBytes);
+  if (_isMaximumReceiveBufferBytesSet) {
+    socket->setMaximumReceiveBufferBytes(_maximumReceiveBufferBytes);
+  }
+  
+  if (_isMinimumReceiveBufferBytesSet) {
+    socket->setMinimumReceiveBufferBytes(_maximumReceiveBufferBytes);
+  }
+  
+  if (_isMaximumSendBufferBytesSet) {
+    socket->setMaximumSendBufferBytes(_maximumSendBufferBytes);
+  }
+  
+  if (_isMinimumSendBufferBytesSet) {
+    socket->setMinimumSendBufferBytes(_maximumSendBufferBytes);
   }
 
-  if (_isMaximumSendWindowBytesSet) {
-    socket->setMaximumSendBufferSize(_maximumSendWindowBytes);
+  if (_isReceiveTimeoutSet) {
+    socket->setReceiveTimeout(_receiveTimeoutBuilder.build());
+  }
+  
+  if (_isSendTimeoutSet) {
+    socket->setSendTimeout(_receiveTimeoutBuilder.build());
   }
 }
 
@@ -200,20 +220,65 @@ Network::SocketConfig * Network::SocketBuilder::setPriority(unsigned int priorit
   return this;
 }
 
-Network::SocketConfig * Network::SocketBuilder::setReceivedBufferSize(unsigned int rcv_buff_size) {
-  _isReceiveBufferSizeSet = true;
-  _receiveBufferSize = rcv_buff_size;
+Network::SocketConfig * 
+Network::SocketBuilder::setMaximumReceiveBufferBytes(
+    unsigned int rcv_buff_size
+) {
+  _isMaximumReceiveBufferBytesSet = true;
+  _maximumReceiveBufferBytes = rcv_buff_size;
   return this;
 }
 
-Network::SocketConfig * Network::SocketBuilder::setMinimumReceiveWindowBytes(unsigned int min_rcv_win_bytes) {
-  _isMinimumReceiveWindowBytesSet = true;
-  _minimumReceivedWindowBytes = min_rcv_win_bytes;
+Network::SocketConfig * 
+Network::SocketBuilder::setMinimumReceiveBufferBytes(
+    unsigned int rcv_buff_size
+) {
+  _isMinimumReceiveBufferBytesSet = true;
+  _minimumReceiveBufferBytes = rcv_buff_size;
   return this;
 }
 
-Network::SocketConfig * Network::SocketBuilder::setMaximumSendBufferSize(unsigned int max_send_buffer_bytes) {
-  _isMaximumSendWindowBytesSet = true;
-  _maximumSendWindowBytes = max_send_buffer_bytes;
+Network::SocketConfig * 
+Network::SocketBuilder::setMaximumSendBufferBytes(
+    unsigned int send_buff_size
+) {
+  _isMaximumSendBufferBytesSet = true;
+  _maximumSendBufferBytes = send_buff_size;
+  return this;
+}
+
+Network::SocketConfig * 
+Network::SocketBuilder::setMinimumSendBufferBytes(
+    unsigned int send_buff_size
+) {
+  _isMinimumSendBufferBytesSet = true;
+  _minimumSendBufferBytes = send_buff_size;
+  return this;
+}
+
+Network::SocketConfig *
+Network::SocketBuilder::setReceiveTimeout(
+    const Network::Time & time
+) {
+  _isReceiveTimeoutSet = true;
+  _receiveTimeoutBuilder.from(time);
+  return this;
+}
+
+Network::SocketConfig *
+Network::SocketBuilder::setSendTimeout(
+    const Network::Time & time
+) {
+  _isSendTimeoutSet = true;
+  _sendTimeoutBuilder.from(time);
+  return this;
+}
+
+Network::SocketConfig *
+Network::SocketBuilder::bindToDevice(
+    const std::string & bound_device_name    
+) {
+  _isBoundToDevice = true;
+  _boundDeviceName = bound_device_name;
   return this;
 }

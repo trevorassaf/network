@@ -3,6 +3,7 @@
 #include "network.h"
 #include "socket.h"
 #include "socket_config.h"
+#include "time.h"
 
 class Network::SocketBuilder : Network::SocketConfig {
 
@@ -18,14 +19,26 @@ class Network::SocketBuilder : Network::SocketConfig {
     bool _isPrioritySet;
     unsigned int _priority;
 
-    bool _isReceiveBufferSizeSet;
-    unsigned int _receiveBufferSize;
+    bool _isMaximumReceiveBufferBytesSet;
+    unsigned int _maximumReceiveBufferBytes;
 
-    bool _isMinimumReceiveWindowBytesSet;
-    unsigned int _minimumReceivedWindowBytes;
+    bool _isMinimumReceiveBufferBytesSet;
+    unsigned int _minimumReceiveBufferBytes;
 
-    bool _isMaximumSendWindowBytesSet;
-    unsigned int _maximumSendWindowBytes;
+    bool _isMaximumSendBufferBytesSet;
+    unsigned int _maximumSendBufferBytes;
+    
+    bool _isMinimumSendBufferBytesSet;
+    unsigned int _minimumSendBufferBytes;
+
+    bool _isReceiveTimeoutSet;
+    Network::TimeBuilder _receiveTimeoutBuilder;
+    
+    bool _isSendTimeoutSet;
+    Network::TimeBuilder _sendTimeoutBuilder;
+
+    bool _isBoundToDevice;
+    std::string _boundDeviceName;
 
     int open() const;
     void setOptions(Network::Socket * socket) const;
@@ -35,14 +48,14 @@ class Network::SocketBuilder : Network::SocketConfig {
     int getProtocolForOs() const;
 
   protected:
-    virtual Network::Socket * initNewConcreteSocket(int socket_descriptor) const;
+    Network::Socket * initNewConcreteSocket(int socket_descriptor) const;
 
   public:
     virtual Network::Socket::Type getType() const = 0;
     virtual Network::Socket::AddressFamily getAddressFamily() const = 0;
     
     SocketBuilder();
-    virtual Network::Socket * build() const;
+    Network::Socket * build() const;
 
     Network::SocketConfig * setIsRouting(bool is_routing) override;
     Network::SocketConfig * enableRouting() override;
@@ -71,12 +84,20 @@ class Network::SocketBuilder : Network::SocketConfig {
     Network::SocketConfig * setIsTimestampTransmitted(bool is_timestamp_transmitted) override;
     Network::SocketConfig * enableTimestampTransmitted() override;
     Network::SocketConfig * disableTimestampTransmitted() override;
-
+    
     Network::SocketConfig * setPriority(unsigned int priority) override;
 
-    Network::SocketConfig * setReceivedBufferSize(unsigned int rcv_buff_size) override;
+    Network::SocketConfig * setMaximumReceiveBufferBytes(unsigned int rcv_buff_size) override;
 
-    Network::SocketConfig * setMinimumReceiveWindowBytes(unsigned int min_rcv_win_bytes) override;
+    Network::SocketConfig * setMinimumReceiveBufferBytes(unsigned int min_rcv_win_bytes) override;
 
-    Network::SocketConfig * setMaximumSendBufferSize(unsigned int max_send_buffer) override;
+    Network::SocketConfig * setMaximumSendBufferBytes(unsigned int max_send_buffer) override;
+
+    Network::SocketConfig * setMinimumSendBufferBytes(unsigned int max_send_buffer) override;
+
+    Network::SocketConfig * setReceiveTimeout(const Network::Time & time) override;
+
+    Network::SocketConfig * setSendTimeout(const Network::Time & time) override;
+
+    Network::SocketConfig * bindToDevice(const std::string & device_name) override;
 };
