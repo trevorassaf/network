@@ -48,14 +48,14 @@ class Network::SocketBuilder : Network::SocketConfig {
     int getProtocolForOs() const;
 
   protected:
-    virtual Network::Socket * initNewConcreteSocket(int socket_descriptor) const = 0;
+    virtual Network::Socket * initNewConcreteSocket(int opened_socket_descriptor) const = 0;
 
   public:
     virtual Network::SocketConfig::Type getType() const = 0;
     virtual Network::SocketConfig::AddressFamily getAddressFamily() const = 0;
     
     SocketBuilder();
-    Network::Socket * build() const;
+    virtual Network::Socket * build() const;
 
     Network::SocketConfig * setIsRouting(bool is_routing) override;
     Network::SocketConfig * enableRouting() override;
