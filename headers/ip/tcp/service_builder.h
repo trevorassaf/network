@@ -13,18 +13,18 @@ class Network::Ip::Tcp::ServiceBuilder :
   private:
     bool _isHostSet;
     Network::HostBuilder _hostBulder;
-
     unsigned int _backlogSize;
+
    
   protected:
-    Network::Tcp::Ip::Service * initNewConcreteSocket(int opened_socket_descriptor) const;
+    int openTcpIpServiceSocket() const;
 
   public:
     ServiceBuilder();
 
-    Network::SocketConfig::Type getType() override const;
-    Network::SocketConfig::AddressFamily getAddressFamily() override const;
-    Network::Tcp::Ip::Service * build() const;
+    Network::SocketConfig::Type getType() const override;
+    Network::SocketConfig::AddressFamily getAddressFamily() const override;
+    virtual Network::Tcp::Ip::Service * build() const override;
 
     ServiceBuilder & setHost(const Network::Host & host);
     ServiceBuilder & setBacklogSize(unsigned int backlog_size);

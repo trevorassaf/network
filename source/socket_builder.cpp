@@ -24,7 +24,7 @@ Network::SocketBuilder::SocketBuilder() :
     _isBoundToDevice(false)
 {}
 
-int Network::SocketBuilder::open() const {
+int Network::SocketBuilder::openSocket() const {
   int open_result = ::socket(
     getAddressFamilyForOs(),
     getTypeForOs(),
@@ -110,7 +110,7 @@ int Network::SocketBuilder::getProtocolForOs() const {
 }
 
 Network::Socket * Network::SocketBuilder::build() const {
-  int socket_descriptor = open();
+  int socket_descriptor = openSocket();
   Network::Socket * socket = initNewConcreteSocket(socket_descriptor);
   setOptions(socket);
   return socket;

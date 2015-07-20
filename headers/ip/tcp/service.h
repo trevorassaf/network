@@ -10,10 +10,12 @@ class Network::Ip::Tcp::Service :
     const Network::Host _host;
     
     friend class ServiceBuilder;
-    Service();
+    Service(
+        unsigned int backlog_size,
+        const Network::Host & host
+    );
 
   public:
-
     unsigned int getBacklogSize() const;
     const Network::Host & getHost() const;
     Network::Connection * accept() const;

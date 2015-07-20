@@ -11,15 +11,13 @@ class Network::Ip::SocketBuilder :
     public Network::Ip::SocketConfig {
   
   protected: 
-    virtual Network::Socket *
-    initNewConcreteSocket(
-        int socket_descriptor
-    ) const override = 0;
+    virtual Network::Ip::Socket * build() const override = 0;
+    int openIpSocket() const;
 
   public:
     virtual Network::SocketConfig::Type
-    getType() const override = 0;
+        getType() const override = 0;
     
     virtual Network::SocketConfig::AddressFamily
-    getAddressFamily() const override = 0;
+        getAddressFamily() const override = 0;
 };

@@ -40,7 +40,6 @@ class Network::SocketBuilder : Network::SocketConfig {
     bool _isBoundToDevice;
     std::string _boundDeviceName;
 
-    int open() const;
     void setOptions(Network::Socket * socket) const;
 
     int getAddressFamilyForOs() const;
@@ -48,9 +47,10 @@ class Network::SocketBuilder : Network::SocketConfig {
     int getProtocolForOs() const;
 
   protected:
-    virtual Network::Socket * initNewConcreteSocket(int opened_socket_descriptor) const = 0;
+    int openSocket() const;
 
   public:
+    virtual Network::Socket * build() const = 0;
     virtual Network::SocketConfig::Type getType() const = 0;
     virtual Network::SocketConfig::AddressFamily getAddressFamily() const = 0;
     

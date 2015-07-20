@@ -8,6 +8,4 @@ class Network::Ip::Socket :
     public Network::Socket,
     public Network::Ip::SocketConfig {
 
-  public:
-
 };

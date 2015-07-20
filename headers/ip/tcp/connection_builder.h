@@ -16,10 +16,12 @@ class Network::Ip::Tcp::ConnectionBuilder :
     Network::HostBuilder _remoteHostBuilder;
   
   protected:
-    Network::Tcp::Ip::Connection * initNewConcreteSocket(int opened_socket_descriptor) const;
+    int openTcpConnectionSocket() const;
 
   public:
     ConnectionBuilder();
+    
+    virtual Network::Tcp::Ip::Connection * build() override const;
 
     Network::SocketConfig::Type getType() override const;
     Network::SocketConfig::AddressFamily getAddressFamily() override const;

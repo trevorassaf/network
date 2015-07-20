@@ -8,6 +8,8 @@
 #include "ipv6.h"
 #include "port.h"
 
+class Network::HostBuilder {};
+
 class Network::Host {
 
     public:
