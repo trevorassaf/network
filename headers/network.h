@@ -1,9 +1,13 @@
 #pragma once
 
 namespace Network {
+  class Port;
+  class PortBuilder;
+
+
+
   class Ipv4;
   class Ipv6;
-  class Port;
   class Host;
   template <class Tdata> class Packet;
   template <class Tdata> class PacketWriter;
@@ -17,6 +21,11 @@ namespace Network {
   class Time;
 
   namespace Ip {
+    class IpAddress;
+    class Ipv4Address;
+    class Ipv6Address;
+
+
     class Config;
     class Connection;
 
