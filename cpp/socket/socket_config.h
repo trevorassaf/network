@@ -1,6 +1,6 @@
 #pragma once
 
-#include "network.h"
+#include "socket_namespace.h"
 #include "enum_keyer.h"
 
 #include <unordered_map>
