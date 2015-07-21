@@ -3,12 +3,8 @@
 namespace Network {
   class Port;
   class PortBuilder;
-
-
-
-  class Ipv4;
-  class Ipv6;
   class Host;
+
   template <class Tdata> class Packet;
   template <class Tdata> class PacketWriter;
   template <class Tdata> class PacketReader;

@@ -3,19 +3,15 @@
 #include <unordered_map>
 #include <functional>
 
-#include "network.h"
-#include "ipv4.h"
-#include "ipv6.h"
-#include "port.h"
-
-class Network::HostBuilder {};
+#include "network_namespace.h"
 
 class Network::Host {
 
     public:
       enum class AddressType {
         IPV4,
-        IPV6
+        IPV6,
+        UNIX,
       };
 
     private:
@@ -34,83 +30,6 @@ class Network::Host {
       static const AddressFamilyMap ADDRESS_FAMILY_MAP;
       static const ReverseAddressFamilyMap REVERSE_ADDRESS_FAMILY_MAP;
 
-      Network::Ipv4 _ipv4;
-      Network::Ipv6 _ipv6;
-      Network::Port _port;
-
     public:
-      /**
-       * reverseAddressFamilyLookup()
-       * @param os_address_family : os-specific address flag 
-       * @return internal address mode
-       */
-      static AddressType reverseAddressFamilyLookup(int os_address_family);
-      
-      /**
-       * addressFamilyLookup()
-       * @param address_family : internal address family mode 
-       * @return os-specific address family 
-       */
-      static int addressFamilyLookup(const AddressType address_family);
-
-      /**
-       * Host()
-       * - Derives compatible ipv6 address from ipv4 address.
-       * @param ipv4 : ipv4 address
-       * @param port : port
-       */
-      Host(const Network::Ipv4 & ipv4, const Network::Port & port);
-      
-      /**
-       * Host()
-       * @param ipv6 : ipv6 address
-       * @param port : port
-       */
-      Host(const Network::Ipv6 & ipv6, const Network::Port & port);
-
-      /**
-       * getIpv4()
-       * @return ipv4 address
-       * @throw runtime_error if no valid ipv4 address is available. Check first with
-       *    Network::Ipv4::isIpv4()
-       */
-      const Network::Ipv4 & getIpv4() const;
-
-      /**
-       * getIpv6()
-       * @return ipv6 address (always valid due to ipv4 -> ipv6 compatibility mapping)
-       */
-      const Network::Ipv6 & getIpv6() const;
-
-      /**
-       * getPort()
-       * @return port
-       * @throw std::runtime_error if port is unspecified. Check first with
-       *    Network::Ipv4::hasPort()
-       */
-      const Network::Port & getPort() const;
-
-      /**
-       * getAddressFamily()
-       * @return os code for this address family 
-       */
-      int getAddressFamily() const;
-
-      /**
-       * getAddressType()
-       * @return address type of this host
-       */
-      AddressType getAddressType() const;
-
-      /**
-       * operator==()
-       * @return true iff ip address and port are identical.
-       */
-      bool operator==(const Host & host);
-
-      /**
-       * operator!=()
-       * @return true iff == operator fails.
-       */
-      bool operator!=(const Host & host);
+      virtual AddressType getAddressType() const = 0;
 };
