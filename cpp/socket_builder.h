@@ -51,11 +51,16 @@ class Network::SocketBuilder : Network::SocketConfig {
 
   public:
     virtual Network::Socket * build() const = 0;
+    
+    // Open hooks
     virtual Network::SocketConfig::Type getType() const = 0;
     virtual Network::SocketConfig::AddressFamily getAddressFamily() const = 0;
+    virtual int getProtocol() const = 0; 
+
+    // Bind hooks
+    
     
     SocketBuilder();
-    virtual Network::Socket * build() const;
 
     Network::SocketConfig * setIsRouting(bool is_routing) override;
     Network::SocketConfig * enableRouting() override;

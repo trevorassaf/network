@@ -8,6 +8,8 @@ namespace Network {
   class GetAddrInfoError;
   class SocketError;
 
+  class Host;
+
   class Port;
   class PortBuilder;
   class Host;
