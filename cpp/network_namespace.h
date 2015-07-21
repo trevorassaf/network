@@ -8,20 +8,15 @@ namespace Network {
   class GetAddrInfoError;
   class SocketError;
 
-  class Host;
-
-  class Port;
-  class PortBuilder;
-  class Host;
-
+  // Packets
   template <class Tdata> class Packet;
   template <class Tdata> class PacketWriter;
   template <class Tdata> class PacketReader;
+  
 
+  // Socket
   class Socket;
   class SocketConfig;
   class SocketBuilder;
 
-  class TimeBuilder;
-  class Time;
 };

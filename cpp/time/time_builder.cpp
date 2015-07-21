@@ -1,4 +1,5 @@
-#include "../headers/time.h"
+#include "time.h"
+#include "time_builder.h"
 
 #include <cstdint>
 
@@ -38,24 +39,4 @@ Network::TimeBuilder & Network::TimeBuilder::setMicroSecs(uint32_t micros) {
 
 const Network::Time Network::TimeBuilder::build() const {
   return Network::Time(_seconds, _microSeconds);
-}
-
-Network::Time::Time(
-    uint32_t seconds,
-    uint32_t u_secs
-) : 
-    _seconds(seconds),
-    _microSeconds(u_secs)
-{}
-
-uint32_t Network::Time::getSeconds() const {
-  return _seconds;
-}
-
-uint32_t Network::Time::getMicroSeconds() const {
-  return _microSeconds;
-}
-
-const timeval Network::Time::toTimeval() const {
-  return timeval{_seconds, _microSeconds};
 }
