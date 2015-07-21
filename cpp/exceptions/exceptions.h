@@ -1,6 +1,6 @@
 #pragma once
 
-#include "network.h"
+#include "../network_namespace.h"
 
 #include <vector>
 #include <stdexcept>
@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <arpa/inet.h>
 
-class Network::Exception::NetworkRuntimeError : public std::runtime_error {
+class Network::NetworkRuntimeError : public std::runtime_error {
 
   private:
     static const std::string composeErrorMessage(int error_number, const std::string & user_error_str);
@@ -19,7 +19,7 @@ class Network::Exception::NetworkRuntimeError : public std::runtime_error {
     NetworkRuntimeError(int error_number);
 };
 
-class Network::Exception::BadIpAddressString : public std::exception {
+class Network::IpAddressStringError : public std::exception {
 
   private:
     const int _ipVersion;
@@ -29,21 +29,21 @@ class Network::Exception::BadIpAddressString : public std::exception {
     const static ip_version_map IP_VERSIONS;
 
   public:
-    BadIpAddressString(int ip_version, const std::string & bad_ip);
+    IpAddressStringError(int ip_version, const std::string & bad_ip);
     virtual const char * what() const throw(); 
 };
 
-class Network::Exception::BadPortString : public std::exception {
+class Network::PortStringError : public std::exception {
 
   private:
     const std::string _badPort;
 
   public:
-    BadPortString(const std::string & bad_port);
+    PortStringError(const std::string & bad_port);
     virtual const char * what() const throw(); 
 };
 
-class Network::Exception::GetAddrInfoError : public std::exception {
+class Network::GetAddrInfoError : public std::exception {
   private:
     const int _errorCode; 
 
@@ -52,7 +52,7 @@ class Network::Exception::GetAddrInfoError : public std::exception {
     virtual const char * what() const throw(); 
 };
 
-class Network::Exception::SocketError : public std::exception {
+class Network::SocketError : public std::exception {
 
   private:
     const std::string _errorMessage;

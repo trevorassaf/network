@@ -1,11 +1,11 @@
-#include "../headers/network_except.h"
+#include "exceptions.h"
 
 #include <string.h>
 #include <string>
 
 #include <netdb.h>
 
-const std::string Network::Exception::NetworkRuntimeError::composeErrorMessage(
+const std::string Network::NetworkRuntimeError::composeErrorMessage(
     int error_number,
     const std::string & user_error_str
 ) {
@@ -16,38 +16,38 @@ const std::string Network::Exception::NetworkRuntimeError::composeErrorMessage(
       + std::string("]");
 }
 
-Network::Exception::NetworkRuntimeError::NetworkRuntimeError(
+Network::NetworkRuntimeError::NetworkRuntimeError(
     int error_number,
     const std::string & error_str
 ) : 
     std::runtime_error(
-        Network::Exception::NetworkRuntimeError::composeErrorMessage(
+        Network::NetworkRuntimeError::composeErrorMessage(
             error_number,
             error_str
         )
     )
 {}
 
-Network::Exception::NetworkRuntimeError::NetworkRuntimeError(
+Network::NetworkRuntimeError::NetworkRuntimeError(
     const std::string & error_str
 ) : 
     std::runtime_error(error_str)
 {}
 
-Network::Exception::NetworkRuntimeError::NetworkRuntimeError(
+Network::NetworkRuntimeError::NetworkRuntimeError(
     int error_number
 ) : 
     std::runtime_error(::strerror(error_number))
 {}
 
-const Network::Exception::BadIpAddressString::ip_version_map 
-    Network::Exception::BadIpAddressString::IP_VERSIONS = 
+const Network::IpAddressStringError::ip_version_map 
+    Network::IpAddressStringError::IP_VERSIONS = 
         std::unordered_map<int, const std::string>{
             {AF_INET, "Ipv4"},
             {AF_INET6, "Ipv6"}
         };
 
-Network::Exception::BadIpAddressString::BadIpAddressString(
+Network::IpAddressStringError::IpAddressStringError(
     int ip_version,
     const std::string & bad_ip
 ) : 
@@ -55,35 +55,35 @@ Network::Exception::BadIpAddressString::BadIpAddressString(
     _badIp(bad_ip)
 {}
 
-const char * Network::Exception::BadIpAddressString::what() const throw() {
+const char * Network::IpAddressStringError::what() const throw() {
   std::string error_message = std::string("[Bad ip address string: ") 
       + _badIp 
       + std::string(", version: ")
-      + Network::Exception::BadIpAddressString::IP_VERSIONS.at(_ipVersion)
+      + Network::IpAddressStringError::IP_VERSIONS.at(_ipVersion)
       + std::string("]");
   return error_message.c_str();
 }
 
-Network::Exception::BadPortString::BadPortString(
+Network::PortStringError::PortStringError(
     const std::string & bad_port
 ) : 
     _badPort(bad_port)
 {}
 
-const char * Network::Exception::BadPortString::what() const throw() {
+const char * Network::PortStringError::what() const throw() {
   std::string error_message = std::string("[Bad port string: ")
       + _badPort
       + std::string("]");
   return error_message.c_str();
 }
 
-Network::Exception::GetAddrInfoError::GetAddrInfoError(int error_code) : _errorCode(error_code) {}
+Network::GetAddrInfoError::GetAddrInfoError(int error_code) : _errorCode(error_code) {}
 
-const char * Network::Exception::GetAddrInfoError::what() const throw() {
+const char * Network::GetAddrInfoError::what() const throw() {
   return ::gai_strerror(_errorCode);
 }
 
-Network::Exception::SocketError::SocketError(
+Network::SocketError::SocketError(
     const std::string & error_message,
     const std::vector<int> error_numbers
 ) : 
@@ -91,7 +91,7 @@ Network::Exception::SocketError::SocketError(
     _errorNumbers(error_numbers)
 {}
 
-const char * Network::Exception::SocketError::what() const throw() {
+const char * Network::SocketError::what() const throw() {
   std::string error_string = _errorMessage;
   for (int error_number : _errorNumbers) {
     error_string += std::string("Error: ") + std::string(::strerror(error_number)) + std::string("\n");
