@@ -1,9 +1,10 @@
 #pragma once
 
-#include "network.h"
+#include "../network_namespace.h"
+#include "../time/time.h"
+#include "../time/time_builder.h"
 #include "socket.h"
 #include "socket_config.h"
-#include "time.h"
 
 class Network::SocketBuilder : Network::SocketConfig {
 
@@ -45,23 +46,23 @@ class Network::SocketBuilder : Network::SocketConfig {
     int getAddressFamilyForOs() const;
     int getTypeForOs() const;
     int getProtocolForOs() const;
-
-  protected:
     int openSocket() const;
-
-  public:
-    virtual Network::Socket * build() const = 0;
-    
-    // Open hooks
-    virtual Network::SocketConfig::Type getType() const = 0;
-    virtual Network::SocketConfig::AddressFamily getAddressFamily() const = 0;
-    virtual int getProtocol() const = 0; 
-
-    // Bind hooks
-    
     
     SocketBuilder();
 
+  protected:
+    // Open hooks
+    virtual Network::SocketConfig::Type getType() const = 0;
+    virtual Network::SocketConfig::AddressFamily getAddressFamily() const = 0;
+    virtual int getProtocol() const; 
+
+    // Socket Hook Extension
+    virtual Network::Socket * constructNewSocket() const = 0;
+    virtual void configureSocket(Network::Socket * socket) const = 0;
+
+  public:
+    Network::Socket * build() const;
+    
     Network::SocketConfig * setIsRouting(bool is_routing) override;
     Network::SocketConfig * enableRouting() override;
     Network::SocketConfig * disableRouting() override;

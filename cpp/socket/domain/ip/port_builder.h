@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../network.h"
+#include "ip_namespace.h"
 #include "port.h"
 
 #include <cstdint>
@@ -8,7 +8,7 @@
 #define DYNAMIC_PORT_NUMBER 0
 #define DYNAMIC_PORT_STRING "0"
 
-class Network::PortBuilder {
+class Network::Ip::PortBuilder {
 
   private:
     bool _hasPort;
@@ -20,6 +20,6 @@ class Network::PortBuilder {
     PortBuilder();
     PortBuilder & setPort(uint16_t port);
     PortBuilder & setPort(const std::string & port);
-    const Network::Port build() const;
-    const Network::Port * buildNew() const;
+    const Network::Ip::Port build() const;
+    const Network::Ip::Port * buildNew() const;
 };

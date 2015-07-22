@@ -1,7 +1,8 @@
 #pragma once
 
 #include "socket_namespace.h"
-#include "enum_keyer.h"
+#include "../util/enum_keyer.h"
+#include "../time/time.h"
 
 #include <unordered_map>
 #include <string>

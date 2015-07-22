@@ -1,6 +1,6 @@
 #pragma once
 
-#include "network.h"
+#include "../network_namespace.h"
 #include "socket_config.h"
 #include "socket_builder.h"
 

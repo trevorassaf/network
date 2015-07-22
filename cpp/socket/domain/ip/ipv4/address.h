@@ -1,17 +1,17 @@
 #pragma once
 
-#include "../../../network.h"
-#include "../ip_addr.h"
+#include "v4_namespace.h"
+#include "../address.h"
 
 #include <string>
 #include <cstdint>
 
-class Network::Ip::Ipv4Address : Network::Ip::IpAddress {
+class Network::Ip::V4::Address : public Network::Ip::Address {
 
   private:
     const uint32_t _ipv4;
 
-    Ipv4Address(uint32_t ipv4_number);
+    Address(uint32_t ipv4_number);
 
   public:
     uint32_t getNumber() const;

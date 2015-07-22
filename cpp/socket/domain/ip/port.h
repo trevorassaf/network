@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../../network.h"
+#include "ip_namespace.h" 
 
 #include <cstdint>
 #include <string>
 
-class Network::Port {
+class Network::Ip::Port {
 
   private:
     /**
@@ -13,7 +13,7 @@ class Network::Port {
      */
     const uint16_t _port;
 
-    friend class Network::PortBuilder;
+    friend class Network::Ip::PortBuilder;
     Port(uint16_t port);
 
   public:
