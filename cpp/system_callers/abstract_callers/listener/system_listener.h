@@ -6,8 +6,7 @@
 
 class Network::SystemListener {
   public:
-    Network::SystemListenResults * listen(
+    virtual Network::SystemListenResults * listen(
         Network::SystemListenParameters system_listen_parameters
-    ) const;
+    ) const = 0;
 };
-

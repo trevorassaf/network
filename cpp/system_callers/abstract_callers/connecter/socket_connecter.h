@@ -22,5 +22,6 @@ class Network::SocketConnecter {
     SocketConnecter(
         const Network::SystemConnecter * system_connecter    
     );
+
     void connect();
 };

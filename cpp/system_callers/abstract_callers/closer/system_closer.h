@@ -6,8 +6,8 @@
 
 class Network::SystemCloser {
   public:
-    Network::SystemCloseResults * close(
-        Network::SystemCloseParameters system_close_parameters
-    ) const;
+    virtual Network::SystemCloseResults * close(
+        const Network::SystemCloseParameters * system_close_parameters
+    ) const = 0;
 };
 

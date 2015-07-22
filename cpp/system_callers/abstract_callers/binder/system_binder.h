@@ -6,8 +6,8 @@
 
 class Network::SystemBinder {
   public:
-    Network::SystemBindResults * bind(
-        Network::SystemBindParameters system_bind_parameters
-    ) const;
+    virtual Network::SystemBindResults * bind(
+        const Network::SystemBindParameters * system_bind_parameters
+    ) const = 0;
 };
 

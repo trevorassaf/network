@@ -5,8 +5,10 @@
 #include "system_connect_results.h"
 
 class Network::SystemConnecter {
+  
   public:
-    Network::SystemConnectResults * connect(
-        Network::SystemConnectParameters & system_connect_parameters
-    ) const;
+    virtual Network::SystemConnectResults * connect(
+        Network::SystemConnectParameters * system_connect_parameters
+    ) const = 0;
+
 };
