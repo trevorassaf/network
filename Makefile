@@ -4,7 +4,7 @@ S_PATH = cpp
 O_PATH = bits
 
 NETWORK_OBJS = \
-		main.o
+		$(S_PATH)/main.o
 
 NETWORK_HEADERS =
 
