@@ -15,24 +15,24 @@ class Network::Linux::SocketConnecter :
     socklen_t _socketAddressBytes;
 
   protected:
-    Network::SystemConnectParameters *
-        assembleSystemConnectParameters() const;
+    const Network::SystemConnectParameters *
+        assembleSystemConnectParameters() const override;
     
     void cacheSystemConnectResults(
-        Network::SystemConnectResults * system_connect_results    
-    ) const;
-
-    virtual Network::Linux::SocketConnecter *
-        setSocketAddressStorage(
-            const struct sockaddr_storage & socket_address
-        ) = 0;
-
-    virtual Network::Linux::SocketConnecter *
-        setSocketAddressBytes(
-            socklen_t socket_address_bytes
-        ) = 0;
+        const Network::SystemConnectResults * system_connect_results    
+    ) const override;
 
   public:
+    Network::Linux::SocketConnecter *
+        setSocketAddressStorage(
+            const struct sockaddr_storage & socket_address
+        );
+
+    Network::Linux::SocketConnecter *
+        setSocketAddressBytes(
+            socklen_t socket_address_bytes
+        );
+
     Network::Linux::SocketConnecter *
         setSocketDescriptor(unsigned int socket_descriptor);
 };

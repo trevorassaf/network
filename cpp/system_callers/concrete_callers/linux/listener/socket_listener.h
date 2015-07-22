@@ -11,17 +11,17 @@ class Network::Linux::SocketListener :
     unsigned int _backlogSize; 
 
   protected:
-    Network::SystemListenParameters *
+    const Network::SystemListenParameters *
         assembleSystemListenParameters() const override;
     
     void cacheSystemListenResults(
-        Network::SystemListenResults * system_listen_results    
+        const Network::SystemListenResults * system_listen_results    
     ) const override;
 
   public:
     SocketListener(
         const Network::SystemListener * system_listener    
     );
-    
+
     SocketListener * setBacklogSize(unsigned int backlog_size);
 };

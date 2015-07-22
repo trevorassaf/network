@@ -9,18 +9,22 @@ class Network::SocketBinder {
 
   private:
     const Network::SystemBinder * _systemBinder;
+    bool _hasResults;
  
   protected:
-    virtual Network::SystemBindParameters *
+    virtual const Network::SystemBindParameters *
         assembleSystemBindParameters() const = 0;
     
     virtual void cacheSystemBindResults(
-        Network::SystemBindResults * system_bind_results    
+        const Network::SystemBindResults * system_bind_results    
     ) const = 0;
   
   public:
     SocketBinder(
         const Network::SystemBinder * system_binder    
     );
+
     void bind();
+    
+    bool hasResults() const;
 };

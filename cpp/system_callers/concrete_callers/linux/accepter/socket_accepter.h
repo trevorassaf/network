@@ -18,12 +18,12 @@ class Network::Linux::SocketAccepter :
     socklen_t _socketAddressLength;
 
   protected:
-    Network::SystemAcceptParameters *
-        assembleSystemAcceptParameters() const;
+    const Network::SystemAcceptParameters *
+        assembleSystemAcceptParameters() const override;
     
     void cacheSystemAcceptResults(
-        Network::SystemAcceptResults * system_accept_results    
-    ) const;
+        const Network::SystemAcceptResults * system_accept_results    
+    ) const override;
 
   public:
     const struct sockaddr_storage & getSocketAddressStorage() const;

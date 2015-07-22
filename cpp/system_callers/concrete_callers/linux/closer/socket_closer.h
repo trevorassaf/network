@@ -10,19 +10,17 @@ class Network::Linux::SocketCloser :
     unsigned int _socketDescriptor;
 
   protected:
-    Network::SystemCloseParameters *
-        assembleSystemCloseParameters() const;
+    const Network::SystemCloseParameters *
+        assembleSystemCloseParameters() const override;
     
     void cacheSystemCloseResults(
-        Network::SystemCloseResults * system_close_results    
-    ) const;
+        const Network::SystemCloseResults * system_close_results    
+    ) const override;
 
   public:
     SocketCloser(
         const Network::SystemCloser * system_closer    
     );
 
-    SocketCloser * setSocketDescriptor(
-        unsigned int socket_descriptor
-    );
+    SocketCloser * setSocketDescriptor(unsigned int socket_descriptor);
 };

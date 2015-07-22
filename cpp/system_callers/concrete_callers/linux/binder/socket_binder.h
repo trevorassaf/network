@@ -12,11 +12,11 @@ class Network::Linux::SocketBinder :
     socklen_t _socketAddressStorageLength;
 
   protected:
-    Network::SystemBindParameters *
+    const Network::SystemBindParameters *
         assembleSystemBindParameters() const override;
     
     void cacheSystemBindResults(
-        Network::SystemBindResults * system_bind_results    
+        const Network::SystemBindResults * system_bind_results    
     ) const override;
 
     virtual int getSocketType() const = 0;

@@ -9,18 +9,22 @@ class Network::SocketAccepter {
 
   private:
     const Network::SystemAccepter * _systemAccepter;
+    bool _hasResults;
  
   protected:
-    virtual Network::SystemAcceptParameters *
+    virtual const Network::SystemAcceptParameters *
         assembleSystemAcceptParameters() const = 0;
     
     virtual void cacheSystemAcceptResults(
-        Network::SystemAcceptResults * system_accept_results    
+        const Network::SystemAcceptResults * system_accept_results    
     ) const = 0;
   
   public:
     SocketAccepter(
         const Network::SystemAccepter * system_accepter    
     );
+
     void accept();
+
+    bool hasResults() const;
 };

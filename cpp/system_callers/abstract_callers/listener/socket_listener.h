@@ -9,18 +9,22 @@ class Network::SocketListener {
 
   private:
     const Network::SystemListener * _systemListener;
+    bool _hasResults;
  
   protected:
-    virtual Network::SystemListenParameters *
+    virtual const Network::SystemListenParameters *
         assembleSystemListenParameters() const = 0;
     
     virtual void cacheSystemListenResults(
-        Network::SystemListenResults * system_listen_results    
+        const Network::SystemListenResults * system_listen_results    
     ) const = 0;
   
   public:
     SocketListener(
         const Network::SystemListener * system_listener    
     );
+
     void listen();
+    
+    bool hasResults() const;
 };

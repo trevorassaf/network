@@ -9,13 +9,14 @@ class Network::SocketConnecter {
 
   private:
     const Network::SystemConnecter * _systemConnecter;
+    bool _hasResults;
  
   protected:
-    virtual Network::SystemConnectParameters *
+    virtual const Network::SystemConnectParameters *
         assembleSystemConnectParameters() const = 0;
     
     virtual void cacheSystemConnectResults(
-        Network::SystemConnectResults * system_connect_results    
+        const Network::SystemConnectResults * system_connect_results    
     ) const = 0;
   
   public:
@@ -24,4 +25,6 @@ class Network::SocketConnecter {
     );
 
     void connect();
+    
+    bool hasResults() const;
 };

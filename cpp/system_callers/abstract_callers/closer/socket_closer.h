@@ -9,18 +9,22 @@ class Network::SocketCloser {
 
   private:
     const Network::SystemCloser * _systemCloser;
+    bool _hasResults;
  
   protected:
-    virtual Network::SystemCloseParameters *
+    virtual const Network::SystemCloseParameters *
         assembleSystemCloseParameters() const = 0;
     
     virtual void cacheSystemCloseResults(
-        Network::SystemCloseResults * system_close_results    
+        const Network::SystemCloseResults * system_close_results    
     ) const = 0;
   
   public:
     SocketCloser(
         const Network::SystemCloser * system_closer    
     );
+    
     void close();
+    
+    bool hasResults() const;
 };

@@ -14,9 +14,13 @@ class Network::Linux::SocketOpener :
         assembleSystemOpenParameters() const override;
     
     void cacheSystemOpenResults(
-        Network::SystemOpenResults * system_open_results    
+        const Network::SystemOpenResults * system_open_results    
     ) const override;
 
   public:
+    SocketOpener(
+        const Network::SystemOpener * system_opener    
+    );
+
     int getSocketDiscriptor() const;
 };
