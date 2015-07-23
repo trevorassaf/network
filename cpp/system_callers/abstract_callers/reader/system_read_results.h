@@ -4,14 +4,14 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-class Network::SystemReaderResults {
+class Network::SystemReadResults {
 
   private:
     const void * _dataBuffer;
     socklen_t _dataBufferSize;
 
   public:
-    SystemReaderResults(
+    SystemReadResults(
         const void * _dataBuffer,
         socklen_t _dataBufferSize
     );

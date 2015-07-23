@@ -4,6 +4,6 @@
 
 namespace Network {
   class SystemReader;
-  class SystemReaderParameters;
-  class SystemReaderResults;
+  class SystemReadParameters;
+  class SystemReadResults;
 };

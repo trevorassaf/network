@@ -7,7 +7,7 @@
 class Network::SystemOpener {
   
   public:
-    virtual const SystemOpenResults * open(
-        const SystemOpenParameters * open_params
+    virtual const Network::SystemOpenResults * open(
+        const Network::SystemOpenParameters * open_params
     ) const = 0;
 };

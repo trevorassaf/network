@@ -4,6 +4,6 @@
 
 namespace Network {
   class SystemWriter;
-  class SystemWriterParameters;
-  class SystemWriterResults;
+  class SystemWriteParameters;
+  class SystemWriteResults;
 };

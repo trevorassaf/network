@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-class Network::SystemWriterParameters {
+class Network::SystemWriteParameters {
 
   private:
     int _socketDescriptor;
@@ -13,7 +13,7 @@ class Network::SystemWriterParameters {
     socklen_t _dataBufferSize;
 
   public:
-    SystemWriterParameters(
+    SystemWriteParameters(
         int socket_descriptor,
         const void * data_buffer,
         socklen_t data_buffer_size

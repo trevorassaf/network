@@ -5,13 +5,13 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-class Network::SystemReaderParameters {
+class Network::SystemReadParameters {
 
   private:
     int _socketDescriptor;
 
   public:
-    SystemReaderParameters(
+    SystemReadParameters(
         int socket_descriptor
     );
 
