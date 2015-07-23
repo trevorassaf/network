@@ -14,13 +14,11 @@ class Network::SocketConnectionBundle {
 
   public:
     SocketConnectionBundle(
-        const Network::SystemOpener * _systemOpener,
         const Network::SystemWriter * _systemWriter,
         const Network::SystemReader * _systemReader,
         const Network::SystemCloser * _systemCloser
     );
 
-    const Network::SystemOpener * getSystemOpener() const;
     const Network::SystemWriter * getSystemWriter() const;
     const Network::SystemReader * getSystemReader() const;
     const Network::SystemCloser * getSystemCloser() const;
