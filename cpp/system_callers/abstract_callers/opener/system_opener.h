@@ -5,8 +5,9 @@
 #include "system_open_results.h"
 
 class Network::SystemOpener {
+  
   public:
-    virtual SystemOpenResults open(
+    virtual const SystemOpenResults * open(
         const SystemOpenParameters * open_params
     ) const = 0;
 };
