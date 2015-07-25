@@ -11,7 +11,7 @@ template <typename Tdata> class Network::Packet {
     const size_t _dataSize;
 
     Packet();
-    void setData(const Tdata data);
+    void setData(const Tdata & data);
 
   public:
     Packet(const Tdata & data);

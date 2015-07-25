@@ -1,6 +1,6 @@
 #pragma once
 
-#include "network.h"
+#include "../network_namespace.h"
 
 #include "packet.h"
 
@@ -10,12 +10,11 @@
 template <class Tdata> class Network::PacketWriter {
 
   private:
-    const Network::Packet<Tdata> _packet;
+    const Network::Packet<Tdata> & _packet;
     size_t _bytesRemaining;
-    const uint8_t * _buffer;
 
   public:
-    PacketWriter(const Network::Packet<Tdata> packet);
+    PacketWriter(const Network::Packet<Tdata> & packet);
     const void * serialize() const;
     void accumulate(size_t bytes_written);
     void reset();

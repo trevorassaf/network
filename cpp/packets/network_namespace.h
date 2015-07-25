@@ -4,6 +4,6 @@
 
 namespace Network {
   template <typename Tdata> class Packet;
-  class PacketReader;
-  class PacketWriter;
+  template <typename Tdata> class PacketReader;
+  template <typename Tdata> class PacketWriter;
 };
