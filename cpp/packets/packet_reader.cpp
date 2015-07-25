@@ -27,7 +27,7 @@ void Network::PacketReader<Tdata>::accumulate(size_t num_bytes) {
 
 template <typename Tdata>
 void * Network::PacketReader<Tdata>::getBuffer() {
-  return &_packet + _bytesRead;
+  return static_cast<void *>(&_packet) + _bytesRead;
 }
 
 template <typename Tdata>
