@@ -27,6 +27,14 @@ class Network::SystemServiceModule {
     const Network::SystemCloser * _systemCloser;
 
   public:
+    SocketServiceBundle(
+        const Network::SystemOpener * _systemOpener,
+        const Network::SystemBinder * _systemBinder,
+        const Network::SystemConnecter * _systemConnecter,
+        const Network::SystemAccepter * _systemAccepter,
+        const Network::SystemCloser * _systemCloser
+    );
+
     virtual const Network::SystemOpenResults * open(
         const Network::SystemOpenParameters * open_params    
     ) = 0;

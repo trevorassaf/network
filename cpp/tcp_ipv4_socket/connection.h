@@ -11,7 +11,7 @@ class Network::TcpIpv4Socket::Connection {
     Network::SystemConnectionModule * _systemConnectionModule;
     const Network::Ip::V4::Host * _localHost;
     const Network::Ip::V4::Host * _remoteHost;
-    void close() const;
+    void close();
 
   public:
     Connection(

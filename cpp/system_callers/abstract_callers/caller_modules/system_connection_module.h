@@ -19,6 +19,12 @@ class Network::SystemConnectionModule {
     const Network::SystemCloser * _systemCloser;
 
   public:
+    SystemConnectionBundle(
+        const Network::SystemWriter * _systemWriter,
+        const Network::SystemReader * _systemReader,
+        const Network::SystemCloser * _systemCloser
+    );
+
     virtual const Network::SystemWriteResults * write(
         const Network::SystemWriteParameters * writer_params    
     ) = 0;

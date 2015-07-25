@@ -5,21 +5,16 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
+template <typename Tdata>
 class Network::SystemWriteParameters {
 
   private:
-    int _socketDescriptor;
-    const void * _dataBuffer;
-    socklen_t _dataBufferSize;
+    const Network::Packet<Tdata> * _packet;
 
   public:
     SystemWriteParameters(
-        int socket_descriptor,
-        const void * data_buffer,
-        socklen_t data_buffer_size
+        const Network::Packet<Tdata> * packet
     );
 
-    int getSocketDescriptor() const;
-    const void * getDataBuffer() const;
-    socklen_t getDataBufferSize() const;
+    const Network::Packet<Tdata> * getPacket() const;
 };

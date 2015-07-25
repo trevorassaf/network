@@ -1,21 +1,21 @@
 #pragma once
 
 #include "network_namespace.h"
+#include "../../../packets/packet.h"
+
 #include <sys/types.h>
 #include <sys/socket.h>
 
+template <typename Tdata>
 class Network::SystemReadResults {
 
   private:
-    const void * _dataBuffer;
-    socklen_t _dataBufferSize;
+    const Network::Packet<Tdata> * _packet;
 
   public:
     SystemReadResults(
-        const void * _dataBuffer,
-        socklen_t _dataBufferSize
+        const Network::Packet<Tdata> * packet
     );
 
-    const void * getDataBuffer() const;
-    socklen_t getDataBufferSize() const;
+    const Network::Packet<Tdata> * getPacket() const;
 };
