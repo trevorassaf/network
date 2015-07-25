@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ip_namespace.h"
+#include "port_config.h"
 
 #include <cstdint>
 #include <string>
@@ -11,7 +12,11 @@ class Network::Ip::Port {
     /**
      * Port number in network byte-order
      */
-    uint16_t _number;
+    const uint16_t _number;
+
+    friend class PortConfig;
+    
+    Port();
 
   public:
     /**

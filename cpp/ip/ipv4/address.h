@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ipv4_namespace.h"
+#include "v4_namespace.h"
 
 #include <cstdint>
 #include <string>
@@ -9,6 +9,9 @@ class Network::Ip::V4::Address {
 
   private:
     const uint32_t _number;
+
+    friend class AddressConfig;
+    Address();
 
   public:
     /**
