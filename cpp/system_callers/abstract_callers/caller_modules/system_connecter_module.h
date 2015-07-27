@@ -17,19 +17,11 @@
 class Network::SystemConnecterModule {
 
   public:
-    virtual const Network::SystemOpenResults * open(
-        const Network::SystemOpenParameters * open_params    
+    virtual const Network::SystemConnectFromUnboundAddressResults * connect(
+        const Network::SystemConnectFromUnboundAddressResults * system_connect_parameters    
     ) = 0;
 
-    virtual Network::SystemOpenAndBindResults * openAndBind(
-        const Network::SystemOpenAndBindParameters * system_open_and_bind_parameters
-    ) = 0;
-    
-    virtual Network::SystemConnectResults * connect(
-        const Network::SystemConnectParameters * system_connect_parameters
-    ) = 0;
-    
-    virtual Network::SystemCloseResults * close(
-        const Network::SystemCloseParameters * system_connect_parameters
+    virtual const Network::SystemConnectFromBoundAddressResults * connect(
+        const Network::SystemConnectFromBoundAddressResults * system_connect_parameters    
     ) = 0;
 };

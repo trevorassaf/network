@@ -20,16 +20,12 @@
 class Network::SystemServiceModule {
 
   public:
-    virtual const Network::SystemOpenResults * open(
-        const Network::SystemOpenParameters * open_params    
-    ) = 0;
-
-    virtual const Network::SystemOpenAndBindResults * openAndBind(
-        const Network::SystemOpenAndBindParameters * open_and_bind_params    
-    ) = 0;
-
     virtual const Network::SystemListenResults * listen(
         const Network::SystemListenParameters * listen_params    
+    ) = 0;
+
+    virtual const Network::SystemOpenResults * open(
+        const Network::SystemOpenParameters * open_params    
     ) = 0;
 
     virtual const Network::SystemAcceptResults * accept(
