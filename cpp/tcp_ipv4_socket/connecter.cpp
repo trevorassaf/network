@@ -21,11 +21,35 @@ Network::TcpIpv4Socket::Connecter * Network::TcpIpv4Socket::Connecter::setLocalH
 }
 
 const Network::TcpIpv4Socket::Connection * Network::TcpIpv4Socket::connect() const {
-  // Open socket
-  const Network::SystemOpenParameters * open_params = new Network::SystemOpenParameters();
-  const Network::SystemOpenResults * open_results = _systemConnecterModule->open(open_params);
-  delete open_results;
+  if (_localHostConfig) {
+    // Open and bind socket
+    const Network::SystemOpenAndBindParameters open_and_bind_params(
+        Network::SocketType::IPV4,
+        Network::SocketDomain::STREAM,
+        _localHostConfig
+    );
+    const Network::SystemOpenAndBindResults * results =
+        _systemConnecterModule->openAndBind(&open_and_bind_params);
+    delete results;
+  } else {
+    // Open socket
+    const Network::SystemOpenParameters open_params(
+        Network::SocketType::IPV4,
+        Network::SocketDomain::STREAM
+    );
+    const Network::SystemOpenResults * results =
+        _systemConnecterModule->open(&open_params);
+    delete results;
+  }
 
-  // Bind to local address, if set
   // Connect
+  const Network::SystemConnectParameters connect_params(_remoteHost);
+  const Network::SystemConnectResults * connect_results = 
+    _systemConnecterModule->connect(connect_params);
+  
+  const Network::TcpIpv4Socket::Connection * connection =
+      new Network::TcpIpv4Socket::Connection(connect_params);
+  delete connect_results;
+
+  return connection;
 }

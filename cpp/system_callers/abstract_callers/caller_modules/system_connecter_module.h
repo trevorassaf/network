@@ -16,26 +16,13 @@
 
 class Network::SystemConnecterModule {
 
-  private:
-    const Network::SystemOpener * _systemOpener;
-    const Network::SystemBinder * _systemBinder;
-    const Network::SystemConnecter * _systemConnecter;
-    const Network::SystemCloser * _systemCloser;
-
   public:
-    SystemConnecterModule(
-        const Network::SystemOpener * _systemOpener,
-        const Network::SystemBinder * _systemBinder,
-        const Network::SystemConnecter * _systemConnecter,
-        const Network::SystemCloser * _systemCloser
-    );
-
     virtual const Network::SystemOpenResults * open(
         const Network::SystemOpenParameters * open_params    
     ) = 0;
-    
-    virtual Network::SystemBindResults * bind(
-        const Network::SystemBindParameters * system_bind_parameters
+
+    virtual Network::SystemOpenAndBindResults * openAndBind(
+        const Network::SystemOpenAndBindParameters * system_open_and_bind_parameters
     ) = 0;
     
     virtual Network::SystemConnectResults * connect(
@@ -45,5 +32,4 @@ class Network::SystemConnecterModule {
     virtual Network::SystemCloseResults * close(
         const Network::SystemCloseParameters * system_connect_parameters
     ) = 0;
-
 };
