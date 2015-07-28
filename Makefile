@@ -16,10 +16,10 @@ OBJECT_FILES := $(addprefix $(OBJECT_FILES_ROOT)/,$(SOURCE_FILES:%.c=%.o))
 
 # Compile binary (no smart dependency checks)
 $(BINARY): $(OBJECTS)
-	    $(CXX) $(CXXFLAGS) $(LDFLAGS) $(OBJECT_FILES) -o $(BINARY)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(OBJECT_FILES) -o $(BINARY)
 
 $(OBJECT_FILES_ROOT)/%.o: %.c
-	    $(CXX) $(CXXFLAGS) $(LDFLAGS) -I$(HEADER_DIR) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -I$(HEADER_DIR) -c $< -o $@
 
 clean:
-	\rm -rf $(OBJECT_PATH)/*.o $(NETWORK_EXE)
+	\rm -rf $(OBJECT_FILES_ROOT)/*.o $(NETWORK_EXE)
