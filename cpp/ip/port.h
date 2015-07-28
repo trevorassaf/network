@@ -10,26 +10,22 @@ class Network::Ip::Port {
 
   private:
     /**
-     * Port number in network byte-order
+     * Port number in host byte-order
      */
-    const uint16_t _number;
-
-    friend class PortConfig;
-    
-    Port();
+    const uint16_t _portNumber;
 
   public:
     /**
      * Port()
-     * @param number : port number in network byte-order
+     * @param number : port number in host byte-order
      */
-    Port(uint16_t number);
+    Port(uint16_t port_number);
 
     /**
      * getNumber()
-     * @return port number in network byte-order
+     * @return port number in host byte-order
      */
-    uint16_t getNumber() const;
+    uint16_t getPortNumber() const;
 
     /**
      * toString()

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ip_namespace.h"
+#include "port_builder.h"
 #include "port.h"
 
 #include <cstdint>
@@ -9,28 +10,32 @@
 class Network::Ip::PortConfig {
 
   private:
-    const Network::Ip::Port _port;
     bool _hasPort;
+    const Network::Ip::PortBuilder _portBuilder;
 
   public:
     /**
      * PortConfig()
-     * @param number : port number in network byte-order
+     * - Portless state
      */
     PortConfig();
 
+    /**
+     * PortConfig()
+     * - Portful state
+     */
     PortConfig(const Network::Ip::Port & port);
 
     /**
      * hasPort()
-     * @return true iff port number is specified
+     * @return true iff in portful state
      */
     bool hasPort() const;
 
     /**
      * getPort()
      * @return port
-     * @throw NetworkRuntimeException iff port is not set
+     * @throw runtime_error iff not in portful state 
      */
     const Network::Ip::Port & getPort() const;
 };

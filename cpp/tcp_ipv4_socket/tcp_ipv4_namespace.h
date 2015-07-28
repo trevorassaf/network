@@ -4,9 +4,11 @@
 
 namespace Network {
   namespace TcpIpv4Socket {
-    class Connection;
+    class ConnecterFactory;
     class Connecter;
-    class Listener;
+    class Connection;
+    class ServiceBuilderFactory;
+    class ServiceBuilder;
     class Service;
   };
 };

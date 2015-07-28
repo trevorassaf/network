@@ -1,11 +1,10 @@
 #pragma once
 
 #include "network_namespace.h"
-#include "../listener/system_listener.h"
-#include "../listener/system_listen_parameters.h"
-#include "../listener/system_listen_results.h"
+#include "system_listen_parameters.h"
+#include "system_listen_results.h"
 
-class Network::SystemServiceModule {
+class Network::SystemServiceBuilderModule {
 
   public:
     virtual const Network::SystemListenResults * listen(

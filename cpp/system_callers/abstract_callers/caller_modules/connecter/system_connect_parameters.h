@@ -2,10 +2,4 @@
 
 #include "network_namespace.h"
 
-class Network::SystemConnectParameters {
-
-  private:
-              
-
-  public:
-};
+class Network::SystemConnectParameters {};
