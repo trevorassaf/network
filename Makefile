@@ -1,25 +1,25 @@
 CXX = g++
 
-S_PATH = cpp
-O_PATH = bits
+SOURCE_DIR = cpp2
+HEADER_DIR = $(SOURCE_DIR)
+SOURCE_FILES := $(shell find $(SOURCE_DIR) -name '*.cpp')
 
-NETWORK_OBJS = \
-		$(S_PATH)/main.o
+BINARY = nwk
 
-NETWORK_HEADERS =
-
-NETWORK_EXE = nwk
-
+LDFLAGS = 
 CXXFLAGS = -Wall -Wno-deprecated -std=c++11 -ggdb
 
-LFLAGS = $(CXXFLAGS)
 DEBUG_LFLAGS = $(LFLAGS) -ggdb
 
-nwk: $(NETWORK_OBJS)
-	$(CXX) $(LFLAGS) -o $(NETWORK_EXE) $(NETWORK_OBJS)
+OBJECT_FILES_ROOT = bits
+OBJECT_FILES := $(addprefix $(OBJECT_FILES_ROOT)/,$(SOURCE_FILES:%.c=%.o))
 
-main.o: $(S_PATH)/main.cpp $(NETWORK_HEADERS)
-	$(CXX) $(CXXFLAGS) -c $(S_PATH)/main.cpp -o $(O_PATH)/main.o
+# Compile binary (no smart dependency checks)
+$(BINARY): $(OBJECTS)
+	    $(CXX) $(CXXFLAGS) $(LDFLAGS) $(OBJECT_FILES) -o $(BINARY)
+
+$(OBJECT_FILES_ROOT)/%.o: %.c
+	    $(CXX) $(CXXFLAGS) $(LDFLAGS) -I$(HEADER_DIR) -c $< -o $@
 
 clean:
-	\rm -rf $(O_PATH)/*.o $(NETWORK_EXE)
+	\rm -rf $(OBJECT_PATH)/*.o $(NETWORK_EXE)
