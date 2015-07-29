@@ -1,5 +1,5 @@
 #pragma once
 
-#include "network_namespace.h"
+#include <network_namespace>
 
 class Network::SystemConnectParameters {};
