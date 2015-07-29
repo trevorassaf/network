@@ -1,4 +1,4 @@
-#include "network_namespace.h"
+#include <network_namespace>
 
 enum class Network::SocketDomain {
   STREAM,
