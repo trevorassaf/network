@@ -1,8 +1,7 @@
 #pragma once
 
-#include "../network_namespace.h"
-
-#include "packet.h"
+#include <network_namespace>
+#include <packet>
 
 #include <cstdlib>
 #include <cstdint>
