@@ -1,5 +1,7 @@
 #include "address_builder.h"
 
+#include <ip/address>
+
 #include <stdexcept>
 
 Network::Ip::AddressBuilder::AddressBuilder() : _hasAddressString(false) {}

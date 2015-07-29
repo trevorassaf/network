@@ -1,6 +1,8 @@
 #pragma once
 
-#include "ip_namespace.h"
+#include <ip_namespace>
+#include <address_config>
+#include <port_config>
 
 enum class Network::Ip::AddressFamily {
   V4,

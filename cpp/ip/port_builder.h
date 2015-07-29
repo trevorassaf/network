@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ip_namespace.h"
+#include <ip_namespace>
 
 #include <cstdint>
 #include <string>

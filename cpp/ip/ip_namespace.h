@@ -1,10 +1,8 @@
 #pragma once
 
-#include "../network_namespace.h"
-
 namespace Network {
   namespace Ip {
-    enum class AddressType;
+    enum class AddressFamily;
     enum class SocketType;
     class Port;
     class PortBuilder;
