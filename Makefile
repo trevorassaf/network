@@ -1,35 +1,49 @@
-CXX = g++
+##########################
+######## Commands ########
+##########################
+MKDIR_P = mkdir -p
+RM_R = rm -rf
 
-SOURCE_DIR = cpp2
-HEADER_DIR = $(SOURCE_DIR)
+##########################
+####### Directories ######
+##########################
+SOURCE_DIR = cpp
+OBJECT_DIR = bits
+
+##########################
+######### Recipes ########
+##########################
+
+# Source files 
 SOURCE_FILES := $(shell find $(SOURCE_DIR) -name '*.cpp')
 
-BINARY = nwk
+# Object files
+OBJECT_FILES_WITH_ROOT = $(addprefix $(OBJECT_DIR)/,$(SOURCE_FILES:%.cpp=%.o))
+OBJECT_FILES = $(SOURCE_FILES:%.cpp=%.o)
 
-LDFLAGS = 
-CXXFLAGS = -Wall -Wno-deprecated -std=c++11 -ggdb
+#Declaration of variables
+CC = g++
+CC_FLAGS = -w -I$(SOURCE_DIR)
 
-DEBUG_LFLAGS = $(LFLAGS) -ggdb
+# Binaries
+NETWORK_EXEC = nwk
 
-OBJECT_FILES_ROOT = bits
+# Removed files
+FILES_TO_REMOVE = $(NETWORK_EXEC) $(OBJECT_DIR)/ $(NETWORK_EXEC).dSYM
 
-OBJECT_FILES := $(addprefix $(OBJECT_FILES_ROOT)/,$(SOURCE_FILES:%.cpp=%.o))
+# Link for network binary 
+$(NETWORK_EXEC): $(OBJECT_FILES) 
+	$(CC) $(OBJECT_FILES_WITH_ROOT) -o $(NETWORK_EXEC)
 
-all: 
-	$(OBJECT_FILES)
-	$(BINARY)
-	@echo $(OBJECT_FILES)
-	@echo $(SOURCE_FILES)
+# Compile source
+%.o: %.cpp
+	@if [ -a $(dir $@) ] ; \
+		then \
+			echo Creating directory: $(OBJECT_DIR)/$(dir $@) ; \
+			${MKDIR_P} $(OBJECT_DIR)/$(dir $@) ; \
+	fi;
+	$(CC) -c $(CC_FLAGS) $< -o $(OBJECT_DIR)/$@ 
 
-# Compile binary (no smart dependency checks)
-$(BINARY): $(SOURCES_FILES)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(OBJECT_FILES) -o $(BINARY)
-
-$(OBJECT_FILES): $(SOURCE_FILES) 
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -I$(HEADER_DIR) -c $< -o $@
-
-# $(OBJECT_FILES_ROOT)/%.o: %.cpp 
-# 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -I$(HEADER_DIR) -c $< -o $@
-
+# To remove generated files
 clean:
-	\rm -rf $(OBJECT_FILES_ROOT)/*.o $(BINARY)
+	rm -rf $(FILES_TO_REMOVE) 
