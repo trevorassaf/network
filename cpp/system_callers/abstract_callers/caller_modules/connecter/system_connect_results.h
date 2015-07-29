@@ -1,3 +1,5 @@
-#include <network_namespace>
+#pragma once
 
-class Network::SystemConnectResults {};
+namespace Network {
+  class SystemConnectResults {};
+};

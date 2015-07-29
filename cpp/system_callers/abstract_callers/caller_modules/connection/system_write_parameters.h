@@ -1,20 +1,22 @@
 #pragma once
 
-#include "network_namespace.h"
+#include <cstdlib>
 
-#include "cstdlib"
+namespace Network {
+  
+  class SystemWriteParameters {
 
-class Network::SystemWriteParameters {
+    private:
+      const void * _writeBuffer;
+      size_t _writeBufferSize;
 
-  private:
-    const void * _writeBuffer;
-    size_t _writeBufferSize;
+    public:
+      SystemWriteParameters(
+          const void * write_buffer,
+          size_t write_buffer_size
+      );
+      const void * getWriteBuffer() const;
+      size_t getWriteBufferSize() const;
+  };
 
-  public:
-    SystemWriteParameters(
-        const void * write_buffer,
-        size_t write_buffer_size
-    );
-    const void * getWriteBuffer() const;
-    size_t getWriteBufferSize() const;
 };
