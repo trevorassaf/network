@@ -1,8 +1,8 @@
 #pragma once
 
-#include <system_modules/abstract_modules/service_builder/system_service_builder_module>
-#include <ip/address_family>
-#include <ip/socket_type>
+#include <system_modules/abstract_modules/service_builder/system_service_builder_module.h>
+#include <ip/address_family.h>
+#include <ip/socket_type.h>
 
 #include <unordered_map>
 

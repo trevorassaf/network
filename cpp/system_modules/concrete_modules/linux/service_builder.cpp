@@ -1,10 +1,11 @@
 #include "service_builder.h"
-#include <system_modules/abstract_modules/exceptions/getaddrinfo_exception>
+#include <system_modules/concrete_modules/linux/exceptions/getaddrinfo_exception.h>
 
-#include <cstring>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+
+#include <cstring>
 
 Network::Linux::ServiceBuilder::AddressFamilyMap
 Network::Linux::ServiceBuilder::ADDRESS_FAMILY_MAP = {
