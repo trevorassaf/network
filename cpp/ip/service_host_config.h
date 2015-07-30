@@ -1,19 +1,10 @@
 #pragma once
 
-#include <ip_namespace>
-#include <address_config>
-#include <port_config>
-
-enum class Network::Ip::AddressFamily {
-  V4,
-  V6,
-  UNSPECIFIED 
-};
-
-enum class Network::Ip::SocketType {
-  STREAM,
-  DATAGRAM
-};
+#include <ip/ip_namespace>
+#include <ip/address_config>
+#include <ip/port_config>
+#include <ip/address_family>
+#include <ip/socket_type>
 
 class Network::Ip::ServiceHostConfig {
 

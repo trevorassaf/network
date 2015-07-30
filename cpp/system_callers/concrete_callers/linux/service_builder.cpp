@@ -1,10 +1,31 @@
 #include "service_builder.h"
-#include "exceptions/getaddrinfo_exception.h"
+#include <system_callers/abstract_callers/caller_modules/exceptions/getaddrinfo_exception>
 
 #include <cstring>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+
+Network::Linux::ServiceBuilder::AddressFamilyMap
+Network::Linux::ServiceBuilder::ADDRESS_FAMILY_MAP = {
+  {Network::Ip::AddressFamily::V4, AF_INET},
+  {Network::Ip::AddressFamily::V6, AF_INET6},
+  {Network::Ip::AddressFamily::UNSPECIFIED, AF_UNSPEC}
+};
+
+Network::Linux::ServiceBuilder::SocketTypeMap
+Network::Linux::ServiceBuilder::SOCKET_TYPE_MAP = {
+  {Network::Ip::SocketType::STREAM, SOCK_STREAM},
+  {Network::Ip::SocketType::DATAGRAM, SOCK_DGRAM}
+};
+
+static int Network::Linux::ServiceBuilder::translateAddressFamilyToOsCode(Network::Ip::AddressFamily address_family) {
+  return Network::Linux::ServiceBuilder::ADDRESS_FAMILY_MAP.at(address_family);
+}
+
+static int Network::Linux::ServiceBuilder::translateForOsCode(Network::Ip::SocketType socket_type) {
+  return Network::Linux::ServiceBuilder::SOCKET_TYPE_MAP.at(socket_type);
+}
 
 const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
     const Network::SystemListenParameters * listen_params    
