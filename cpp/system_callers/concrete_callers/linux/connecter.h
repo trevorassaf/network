@@ -1,6 +1,7 @@
 #pragma once
 
 namespace Network {
-  
-  class Connecter {};
+  namespace Linux {  
+    class Connecter {};
+  };
 };

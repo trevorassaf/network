@@ -1,6 +1,7 @@
 #pragma once
 
 namespace Network {
-  
-  class Connection {};
+  namespace Linux {  
+    class Connection {};
+  };
 };
