@@ -1,6 +1,6 @@
 #pragma once
 
-#include <exceptions/network_exception>
+#include <exceptions/network_exception.h>
 
 namespace Network {
   namespace Linux {

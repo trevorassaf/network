@@ -1,6 +1,6 @@
 #pragma once
 
-#include <system_modules/concrete_modules/linux/exceptions/socket_initialization_exception>
+#include <system_modules/concrete_modules/linux/exceptions/socket_initialization_exception.h>
 #include <vector>
 #include <string>
 
