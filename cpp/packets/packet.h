@@ -1,20 +1,20 @@
 #pragma once
 
-#include <network_namespace>
-
 #include <cstdlib>
 
-template <typename Tdata> class Network::Packet {
+namespace Network {
+  template <typename Tdata> class Packet {
 
-  private:
-    const Tdata _data;
-    const size_t _dataSize;
+    private:
+      const Tdata _data;
+      const size_t _dataSize;
 
-    Packet();
-    void setData(const Tdata & data);
+      Packet();
+      void setData(const Tdata & data);
 
-  public:
-    Packet(const Tdata & data);
-    const Tdata & getData() const;
-    size_t getDataSize() const;
+    public:
+      Packet(const Tdata & data);
+      const Tdata & getData() const;
+      size_t getDataSize() const;
+  };
 };

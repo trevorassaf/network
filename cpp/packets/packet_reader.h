@@ -1,23 +1,25 @@
 #pragma once
 
-#include <network_namespace>
-#include <packet>
+#include <packets/packet>
 
 #include <cstdlib>
 #include <cstdint>
 
-template <class Tdata> class Network::PacketReader {
+namespace Network {
+  
+  template <class Tdata> class PacketReader {
 
-  private:
-    Network::Packet<Tdata> _packet;
-    size_t _bytesRead;
+    private:
+      Network::Packet<Tdata> _packet;
+      size_t _bytesRead;
 
-  public:
-    PacketReader();
-    bool isFinished() const;
-    size_t getBytesRemaining() const;
-    void accumulate(size_t num_bytes);
-    void * getBuffer();
-    void reset();
-    const Packet<Tdata> & getPacket() const;
+    public:
+      PacketReader();
+      bool isFinished() const;
+      size_t getBytesRemaining() const;
+      void accumulate(size_t num_bytes);
+      void * getBuffer();
+      void reset();
+      const Packet<Tdata> & getPacket() const;
+  };
 };

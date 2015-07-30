@@ -1,22 +1,23 @@
 #pragma once
 
-#include <network_namespace>
-#include <packet>
+#include <packets/packet>
 
 #include <cstdlib>
 #include <cstdint>
 
-template <class Tdata> class Network::PacketWriter {
+namespace Network {
+  template <class Tdata> class PacketWriter {
 
-  private:
-    const Network::Packet<Tdata> & _packet;
-    size_t _bytesRemaining;
+    private:
+      const Network::Packet<Tdata> & _packet;
+      size_t _bytesRemaining;
 
-  public:
-    PacketWriter(const Network::Packet<Tdata> & packet);
-    const void * serialize() const;
-    void accumulate(size_t bytes_written);
-    void reset();
-    bool isFinished() const;
-    size_t getBytesRemaining() const;
+    public:
+      PacketWriter(const Network::Packet<Tdata> & packet);
+      const void * serialize() const;
+      void accumulate(size_t bytes_written);
+      void reset();
+      bool isFinished() const;
+      size_t getBytesRemaining() const;
+  };
 };
