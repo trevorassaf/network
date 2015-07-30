@@ -7,16 +7,15 @@ namespace Network {
   class SystemWriteParameters {
 
     private:
-      const void * _writeBuffer;
-      size_t _writeBufferSize;
+      const void * _buffer;
+      size_t _bufferSize;
 
     public:
       SystemWriteParameters(
-          const void * write_buffer,
-          size_t write_buffer_size
+          const void * buffer,
+          size_t buffer_size
       );
-      const void * getWriteBuffer() const;
-      size_t getWriteBufferSize() const;
+      const void * getBuffer() const;
+      size_t getBufferSize() const;
   };
-
 };

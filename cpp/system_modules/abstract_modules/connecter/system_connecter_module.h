@@ -1,9 +1,9 @@
 #pragma once
 
-#include <system_connect_parameters>
-#include <system_connect_results>
-#include <system_connect_with_bind_parameters>
-#include <system_connect_with_bind_results>
+#include <system_modules/abstract_modules/connecter/system_connect_parameters.h>
+#include <system_modules/abstract_modules/connecter/system_connect_results.h>
+#include <system_modules/abstract_modules/connecter/system_connect_with_bind_parameters.h>
+#include <system_modules/abstract_modules/connecter/system_connect_with_bind_results.h>
 
 namespace Network {
   

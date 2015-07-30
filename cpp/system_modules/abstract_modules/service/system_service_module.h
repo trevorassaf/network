@@ -1,6 +1,6 @@
 #pragma once
 
-#include <system_accept_results>
+#include <system_modules/abstract_modules/service/system_accept_results.h>
 
 namespace Network {
   

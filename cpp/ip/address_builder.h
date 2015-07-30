@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ip/ip_namespace>
+#include <ip/ip_namespace.h>
 
 #include <string>
 

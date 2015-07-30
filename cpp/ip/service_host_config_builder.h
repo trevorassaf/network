@@ -1,9 +1,9 @@
 #pragma once
 
-#include <ip/ip_namespace>
-#include <ip/address_config_builder>
-#include <ip/port_config_builder>
-#include <ip/service_host_config>
+#include <ip/ip_namespace.h>
+#include <ip/address_config_builder.h>
+#include <ip/port_config_builder.h>
+#include <ip/service_host_config.h>
 
 class Network::Ip::ServiceHostConfigBuilder {
 

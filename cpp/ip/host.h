@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ip/ip_namespace>
-#include <ip/address>
-#include <ip/port>
+#include <ip/ip_namespace.h>
+#include <ip/address.h>
+#include <ip/port.h>
 
 class Network::Ip::Host {
   

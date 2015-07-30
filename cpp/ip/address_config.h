@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ip/ip_namespace>
-#include <ip/address_builder>
-#include <ip/address>
+#include <ip/ip_namespace.h>
+#include <ip/address_builder.h>
+#include <ip/address.h>
 
 class Network::Ip::AddressConfig {
 

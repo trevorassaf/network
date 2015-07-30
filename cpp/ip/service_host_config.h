@@ -1,10 +1,10 @@
 #pragma once
 
-#include <ip/ip_namespace>
-#include <ip/address_config>
-#include <ip/port_config>
-#include <ip/address_family>
-#include <ip/socket_type>
+#include <ip/ip_namespace.h>
+#include <ip/address_config.h>
+#include <ip/port_config.h>
+#include <ip/address_family.h>
+#include <ip/socket_type.h>
 
 class Network::Ip::ServiceHostConfig {
 

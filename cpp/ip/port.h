@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ip/ip_namespace>
-#include <ip/port_config>
+#include <ip/ip_namespace.h>
+#include <ip/port_config.h>
 
 #include <cstdint>
 #include <string>

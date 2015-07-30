@@ -23,7 +23,7 @@ OBJECT_FILES = $(SOURCE_FILES:%.cpp=%.o)
 
 #Declaration of variables
 CC = g++
-CC_FLAGS = -w -I$(SOURCE_DIR)
+CC_FLAGS = -w -I$(SOURCE_DIR) -std=c++11
 
 # Binaries
 NETWORK_EXEC = nwk

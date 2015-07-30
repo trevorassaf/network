@@ -1,6 +1,6 @@
 #include "address_builder.h"
 
-#include <ip/address>
+#include <ip/address.h>
 
 #include <stdexcept>
 

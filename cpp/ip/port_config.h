@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ip/ip_namespace>
-#include <ip/port_builder>
-#include <ip/port>
+#include <ip/ip_namespace.h>
+#include <ip/port_builder.h>
+#include <ip/port.h>
 
 #include <cstdint>
 #include <string>

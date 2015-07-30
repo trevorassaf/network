@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../connection/system_connection_module.h"
-#include <ip/host>
+#include <system_modules/abstract_modules/connection/system_connection_module.h>
+#include <ip/host.h>
 
 class Network::SystemAcceptResults {
 

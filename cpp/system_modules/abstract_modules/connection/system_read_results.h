@@ -7,16 +7,14 @@ namespace Network {
   class SystemReadResults {
 
     private:
-      const void * _readBuffer;
-      size_t _readBufferSize;
+      const void * _buffer;
+      size_t _bufferSize;
 
     public:
-      SystemReadResults(
-          const void * read_buffer,
-          size_t read_buffer_size
-      );
-      const void * getReadBuffer() const;
-      size_t getReadBufferSize() const;
+      SystemReadResults(size_t read_buffer_size);
+      ~SystemReadResults();
+      const void * getBuffer() const;
+      void * getBuffer();
+      size_t getBufferSize() const;
   };
-
 };
