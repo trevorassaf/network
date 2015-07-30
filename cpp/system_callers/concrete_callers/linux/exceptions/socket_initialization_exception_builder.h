@@ -1,17 +1,18 @@
 #pragma once
 
-#include "linux_exceptions.h"
-
+#include <system_callers/concrete_callers/linux/exceptions/socket_initialization_exception>
 #include <vector>
 #include <string>
 
-class Network::Linux::SocketInitializationExceptionBuilder : Network::Linux::NetworkException {
-
-  private:
-    std::vector<const std::string> _errorStrings;
-
-  public:
-    SocketInitialExceptionBuilder();
-    void pushErrorString(const std::string & error_string);
-    const Network::Linux::SocketInitializationException build() const;
+namespace Network {
+  namespace Linux {
+    class SocketInitializationExceptionBuilder {
+      private:
+        std::vector<const std::string> _errorStrings;
+      public:
+        SocketInitialExceptionBuilder();
+        void pushErrorString(const std::string & error_string);
+        const Network::Linux::SocketInitializationException build() const;
+    };
+  };
 };

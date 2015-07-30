@@ -13,5 +13,10 @@ const std::string Network::Linux::SocketOpenException(int error_code) {
   return ::strerror(error_code);
 }
 
-Network::Linux::SocketOpenException(int error_code) :
-    Network::NetworkException(Network::Linux::SocketOpenException(error_code)) {}
+Network::Linux::SocketOpenException(
+    int error_code
+) :
+    Network::NetworkException(
+        Network::Linux::SocketOpenException::getErrorString(error_code)
+    )
+{}

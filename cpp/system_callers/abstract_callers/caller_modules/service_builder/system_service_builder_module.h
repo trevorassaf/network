@@ -1,14 +1,15 @@
 #pragma once
 
-#include "network_namespace.h"
-#include "system_listen_parameters.h"
-#include "system_listen_results.h"
+#include <system_listen_parameters>
+#include <system_listen_results>
 
-class Network::SystemServiceBuilderModule {
+namespace Network {
+  
+  class Network::SystemServiceBuilderModule {
 
-  public:
-    virtual const Network::SystemListenResults * listen(
-        const Network::SystemListenParameters * listen_params    
-    ) = 0;
-
+    public:
+      virtual const Network::SystemListenResults * listen(
+          const Network::SystemListenParameters * listen_params    
+      ) = 0;
+  };
 };

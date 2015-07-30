@@ -13,5 +13,12 @@ const std::string Network::Linux::SocketBindException(int error_code) {
   return ::strerror(error_code);
 }
 
-Network::Linux::SocketBindException(int error_code) :
-    Network::NetworkException(Network::Linux::SocketBindException(error_code)) {}
+Network::Linux::SocketBindException(
+    int error_code
+) :
+    Network::NetworkException(
+        Network::Linux::SocketBindException::getErrorString(
+            error_code
+        )
+    )
+{}

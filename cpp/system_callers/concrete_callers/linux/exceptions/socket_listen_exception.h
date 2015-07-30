@@ -1,9 +1,16 @@
 #pragma once
 
-class Network::Linux::SocketListenException {
+#include <exceptions/network_exception.h>
 
-  public:
-    static bool isError(int error_code);
-    static const std::string getErrorString(int error_code);
-    SocketListenException(int error_code);
+namespace Network {
+  namespace Linux {
+    class SocketListenException : public Network::NetworkException {
+      private:
+        static int ERROR_CODE;
+      public:
+        static bool isError(int error_code);
+        static const std::string getErrorString(int error_code);
+        SocketListenException(int error_code);
+    };
+  };
 };

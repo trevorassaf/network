@@ -1,6 +1,6 @@
 #pragma once
 
-#include "network_namespace.h"
+#include <system_service_module>
 
 class Network::SystemListenResults {
 

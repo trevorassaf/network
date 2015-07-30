@@ -6,6 +6,7 @@ Network::SystemListenParameters::SystemListenParameters(
     _serviceHostConfig(service_host_config)
 {}
 
-const Network::Ip::ServiceHostConfig & Network::SystemListenParameters::getServiceHostConfig() const {
+const Network::Ip::ServiceHostConfig &
+Network::SystemListenParameters::getServiceHostConfig() const {
   return _serviceHostConfig;   
 }

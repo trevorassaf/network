@@ -1,4 +1,5 @@
 #include "system_listen_results.h"
+
 #include <stderror> 
 
 Network::SystemListenResults::SystemListenResults(
@@ -11,7 +12,8 @@ Network::SystemListenResults::SystemListenResults(
   }
 }
 
-Network::SystemServiceModule * Network::SystemListenResults::moveSystemServiceModule() {
+Network::SystemServiceModule *
+Network::SystemListenResults::moveSystemServiceModule() {
   if (!_systemServiceModule) {
     throw std::runtime_error("SystemServiceModule has already been moved!");
   }

@@ -11,3 +11,9 @@ const std::string Network::Linux::serializeErrorStrings(
 
   return serialize_error_string;
 }
+
+Network::Linux::SocketInitializationException::SocketInitializationException(
+    const std::vector<const std::string> & error_strings
+) :
+    Network::NetworkException(serializeErrorStrings(error_strings))
+{}

@@ -1,7 +1,7 @@
 #include "socket_listen_exception.h"
 
-#include <stdio.h>
-#include <string.h>
+#include <stdio>
+#include <string>
 
 int Network::Linux::SocketListenException::ERROR_CODE = -1;
 
@@ -13,5 +13,10 @@ const std::string Network::Linux::SocketListenException(int error_code) {
   return ::strerror(error_code);
 }
 
-Network::Linux::SocketListenException(int error_code) :
-    Network::NetworkException(Network::Linux::SocketListenException(error_code)) {}
+Network::Linux::SocketListenException(
+    int error_code
+) :
+    Network::NetworkException(
+        Network::Linux::SocketListenException::getErrorString(error_code)
+    )
+{}
