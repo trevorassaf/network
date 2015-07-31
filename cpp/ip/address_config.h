@@ -8,7 +8,7 @@ class Network::Ip::AddressConfig {
 
   private:
     bool _hasAddress;
-    const Network::Ip::AddressBuilder _addressBuilder;
+    Network::Ip::AddressBuilder _addressBuilder;
 
   public:
     AddressConfig();

@@ -1,15 +1,15 @@
 #pragma once
 
-#include <system_modules/abstact_modules/service_builder/system_service_module.h>
+#include <system_modules/abstract_modules/service/system_service_module.h>
 
-class Network::SystemListenResults {
+namespace Network {
+  class SystemListenResults {
 
-  private:
-    Network::SystemServiceModule * _systemServiceModule; 
+    private:
+      Network::SystemServiceModule * _systemServiceModule; 
 
-  public:
-    Network::SystemListenResults(
-        Network::SystemServiceModule * system_service_module    
-    );
-    Network::SystemServiceModule * moveSystemServiceModule();
+    public:
+      SystemListenResults(Network::SystemServiceModule * system_service_module);
+      Network::SystemServiceModule * moveSystemServiceModule();
+  };
 };

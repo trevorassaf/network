@@ -40,14 +40,15 @@ Network::Ip::ServiceHostConfigBuilder::setSocketType(
   _hasSocketType = true;
   return *this;
 }
-const ServiceHostConfigBuilder Network::Ip::ServiceHostConfigBuilder::build() const {
+const Network::Ip::ServiceHostConfig
+Network::Ip::ServiceHostConfigBuilder::build() const {
   if (!_hasSocketType) {
     throw std::runtime_error("Must specify socket type before building!");
   }
-  return Network::Ip::ServiceHostConfigBuilder(
+  return Network::Ip::ServiceHostConfig(
       _addressConfig,
       _portConfig,
-      _adressFamily,
+      _addressFamily,
       _socketType
   );
 }

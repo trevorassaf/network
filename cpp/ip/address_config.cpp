@@ -11,7 +11,7 @@ Network::Ip::AddressConfig::AddressConfig(
     _addressBuilder(address)
 {}
 
-bool Network::Ip::Address::hasAddress() const {
+bool Network::Ip::AddressConfig::hasAddress() const {
   return _hasAddress;
 }
 

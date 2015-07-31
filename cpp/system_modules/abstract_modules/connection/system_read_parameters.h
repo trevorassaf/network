@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdlib>
+
 namespace Network {
   class SystemReadParameters {
     private:

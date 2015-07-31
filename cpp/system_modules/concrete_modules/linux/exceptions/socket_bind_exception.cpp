@@ -9,11 +9,11 @@ bool Network::Linux::SocketBindException::isError(int error_code) {
   return error_code == Network::Linux::SocketBindException::ERROR_CODE;
 }
 
-const std::string Network::Linux::SocketBindException(int error_code) {
+const std::string Network::Linux::SocketBindException::getErrorString(int error_code) {
   return ::strerror(error_code);
 }
 
-Network::Linux::SocketBindException(
+Network::Linux::SocketBindException::SocketBindException(
     int error_code
 ) :
     Network::NetworkException(

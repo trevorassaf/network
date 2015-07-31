@@ -5,7 +5,7 @@
 Network::SystemAcceptResults::SystemAcceptResults(
     const Network::SystemConnectionModule * system_connection_module,
     const Network::Ip::Host & local_host,
-    const Network::Ip::Host & remote_host,
+    const Network::Ip::Host & remote_host
 ) :
     _systemConnectionModule(system_connection_module),
     _localHost(local_host),
@@ -22,8 +22,7 @@ Network::SystemAcceptResults::moveSystemConnectionModule() {
     throw std::runtime_error("Already moved system connection module!");
   }
 
-  const Network::SystemConnectionModule * temporary_system_connection_module =
-      _systemConnectionModule;
+  const Network::SystemConnectionModule * temporary_system_connection_module = _systemConnectionModule;
   _systemConnectionModule = nullptr;
   return temporary_system_connection_module;
 }

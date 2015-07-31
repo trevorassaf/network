@@ -11,7 +11,7 @@ class Network::Ip::PortConfig {
 
   private:
     bool _hasPort;
-    const Network::Ip::PortBuilder _portBuilder;
+    Network::Ip::PortBuilder _portBuilder;
 
   public:
     /**
@@ -37,5 +37,5 @@ class Network::Ip::PortConfig {
      * @return port
      * @throw runtime_error iff not in portful state 
      */
-    const Network::Ip::Port & getPort() const;
+    const Network::Ip::Port getPort() const;
 };

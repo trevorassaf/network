@@ -9,11 +9,11 @@ bool Network::Linux::SocketOpenException::isError(int error_code) {
   return error_code == Network::Linux::SocketOpenException::ERROR_CODE;
 }
 
-const std::string Network::Linux::SocketOpenException(int error_code) {
+const std::string Network::Linux::SocketOpenException::getErrorString(int error_code) {
   return ::strerror(error_code);
 }
 
-Network::Linux::SocketOpenException(
+Network::Linux::SocketOpenException::SocketOpenException(
     int error_code
 ) :
     Network::NetworkException(

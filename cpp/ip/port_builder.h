@@ -14,6 +14,7 @@ class Network::Ip::PortBuilder {
   public:
     PortBuilder();
     PortBuilder(const Network::Ip::Port & port);
+    PortBuilder & from(const Network::Ip::Port & port);
     PortBuilder & setPortNumber(uint16_t port_number);
     PortBuilder & setPortNumber(const std::string & port_number_string);
     PortBuilder & form(const Network::Ip::Port & port);

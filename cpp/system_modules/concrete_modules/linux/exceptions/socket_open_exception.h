@@ -4,7 +4,7 @@
 
 namespace Network {
   namespace Linux {
-    class Network::Linux::SocketOpenException : public Network::NetworkException {
+    class SocketOpenException : public Network::NetworkException {
       private:
         static int ERROR_CODE;       
       public:

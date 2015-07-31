@@ -8,15 +8,15 @@
 
 namespace Network {
   namespace Linux {
-    class ServiceBuilder : public Network::SystemServiceModule {
+    class ServiceBuilder : public Network::SystemServiceBuilderModule {
      private:
         // Address family functions
-        typedef std::unordered_map<AddressFamily, int> AddressFamilyMap;
+        typedef std::unordered_map<Network::Ip::AddressFamily, int> AddressFamilyMap;
         static const AddressFamilyMap ADDRESS_FAMILY_MAP;
         static int translateAddressFamilyToOsCode(Network::Ip::AddressFamily address_family);
 
         // Socket type functions
-        typedef std::unordered_map<SocketType, int> SocketTypeMap;
+        typedef std::unordered_map<Network::Ip::SocketType, int> SocketTypeMap;
         static const SocketTypeMap SOCKET_TYPE_MAP;
         static int translateSocketTypeToOsCode(Network::Ip::SocketType socket_type);
 

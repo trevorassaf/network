@@ -34,5 +34,5 @@ const Network::Ip::Address Network::Ip::AddressBuilder::build() const {
   if (!_hasAddressString) {
     throw std::runtime_error("Must set address string before building!");
   } 
-  return Network::Ip::Address(address_string);
+  return Network::Ip::Address(_addressString);
 }

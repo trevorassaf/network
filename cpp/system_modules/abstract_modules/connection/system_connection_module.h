@@ -19,4 +19,4 @@ namespace Network {
       
       virtual void close() = 0;
   };
-}:
+};

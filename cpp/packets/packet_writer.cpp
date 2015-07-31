@@ -1,5 +1,7 @@
 #include "packet_writer.h"
 
+#include <stdexcept>
+
 template <typename Tdata>
 Network::PacketWriter<Tdata>::PacketWriter(const Network::Packet<Tdata> & packet) : 
     _packet(packet),

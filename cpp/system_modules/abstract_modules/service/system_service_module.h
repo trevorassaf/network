@@ -4,7 +4,7 @@
 
 namespace Network {
   
-  class Network::SystemServiceModule {
+  class SystemServiceModule {
 
     public:
       virtual const Network::SystemAcceptResults * accept() = 0;

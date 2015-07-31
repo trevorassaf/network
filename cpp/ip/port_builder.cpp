@@ -22,7 +22,7 @@ Network::Ip::PortBuilder &
 Network::Ip::PortBuilder::setPortNumber(
     const std::string & port_number_string
 ) {
-  _portNumber = ::stoul(port_number_string);
+  _portNumber = std::stoul(port_number_string);
   _hasPortNumber = true;
   return *this;
 }

@@ -1,6 +1,6 @@
 #include "port.h"
 
-Namespace::Ip::Port::Port(uint16_t port_number) :
+Network::Ip::Port::Port(uint16_t port_number) :
     _portNumber(port_number) {}
 
 uint16_t Network::Ip::Port::getPortNumber() const {

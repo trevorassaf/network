@@ -7,7 +7,7 @@ namespace Network {
   class SystemReadResults {
 
     private:
-      const void * _buffer;
+      void * _buffer;
       size_t _bufferSize;
 
     public:

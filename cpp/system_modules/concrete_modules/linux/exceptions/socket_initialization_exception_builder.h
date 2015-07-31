@@ -10,7 +10,7 @@ namespace Network {
       private:
         std::vector<const std::string> _errorStrings;
       public:
-        SocketInitialExceptionBuilder();
+        SocketInitializationExceptionBuilder();
         void pushErrorString(const std::string & error_string);
         const Network::Linux::SocketInitializationException build() const;
     };
