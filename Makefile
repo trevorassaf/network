@@ -33,16 +33,16 @@ FILES_TO_REMOVE = $(NETWORK_EXEC) $(OBJECT_DIR)/ $(NETWORK_EXEC).dSYM
 
 # Link for network binary 
 $(NETWORK_EXEC): $(OBJECT_FILES) 
-	$(CC) $(OBJECT_FILES_WITH_ROOT) -o $(NETWORK_EXEC)
+	@$(CC) $(OBJECT_FILES_WITH_ROOT) -o $(NETWORK_EXEC)
 
 # Compile source
 %.o: %.cpp
-	@if [ -a $(dir $@) ] ; \
+	@echo $(OBJECT_DIR)/$@
+	@if [ -e $(dir $@) ] ; \
 		then \
-			echo Creating directory: $(OBJECT_DIR)/$(dir $@) ; \
 			${MKDIR_P} $(OBJECT_DIR)/$(dir $@) ; \
 	fi;
-	$(CC) -c $(CC_FLAGS) $< -o $(OBJECT_DIR)/$@ 
+	@$(CC) -c $(CC_FLAGS) $< -o $(OBJECT_DIR)/$@ 
 
 # To remove generated files
 clean:
