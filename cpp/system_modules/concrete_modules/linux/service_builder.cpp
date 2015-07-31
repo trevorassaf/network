@@ -1,9 +1,15 @@
 #include "service_builder.h"
 #include <system_modules/concrete_modules/linux/exceptions/getaddrinfo_exception.h>
+#include <system_modules/concrete_modules/linux/exceptions/socket_initialization_exception_builder.h>
+#include <system_modules/concrete_modules/linux/exceptions/socket_open_exception.h>
+#include <system_modules/concrete_modules/linux/exceptions/socket_bind_exception.h>
+#include <system_modules/concrete_modules/linux/exceptions/socket_listen_exception.h>
+#include <system_modules/concrete_modules/linux/service.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <unistd.h>
 
 #include <cstring>
 
@@ -24,7 +30,7 @@ int Network::Linux::ServiceBuilder::translateAddressFamilyToOsCode(Network::Ip::
   return Network::Linux::ServiceBuilder::ADDRESS_FAMILY_MAP.at(address_family);
 }
 
-int Network::Linux::ServiceBuilder::translateForOsCode(Network::Ip::SocketType socket_type) {
+int Network::Linux::ServiceBuilder::translateSocketTypeToOsCode(Network::Ip::SocketType socket_type) {
   return Network::Linux::ServiceBuilder::SOCKET_TYPE_MAP.at(socket_type);
 }
 
@@ -32,20 +38,17 @@ const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
     const Network::SystemListenParameters * listen_params    
 ) {
   // Unpack parameters
-  const Network::Ip::ServiceHostConfig & service_host_config = listen_params
-      ->getServiceHostConfig();
-  const Network::Ip::AddressConfig & address_config = service_host_config
-      .getAddressConfig();
-  const Network::Ip::PortConfig & port_config = service_host_config
-      .getPortConfig();
-
-  Network::Ip::AddressFamily address_family = address_config.getAddressFamily();
-  Network::Ip::SocketType socket_type = address_config.getSocketType();
+  const Network::Ip::ServiceHostConfig & service_host_config = listen_params->getServiceHostConfig();
+  const Network::Ip::AddressConfig & address_config = service_host_config.getAddressConfig();
+  const Network::Ip::PortConfig & port_config = service_host_config.getPortConfig();
+  Network::Ip::AddressFamily address_family = service_host_config.getAddressFamily();
+  Network::Ip::SocketType socket_type = service_host_config.getSocketType();
+  unsigned int backlog_size = service_host_config.getBacklogSize();
 
   struct addrinfo hints, *serv_info;
   ::memset(&hints, 0, sizeof(hints));
-  hints.ai_family = translateAddressFamily(address_family);
-  hints.ai_socktype = translateSocketType(socket_type);
+  hints.ai_family = translateAddressFamilyToOsCode(address_family);
+  hints.ai_socktype = translateSocketTypeToOsCode(socket_type);
 
   // Fetch information on available addresses
   int get_addr_info_result = ::getaddrinfo(
@@ -153,7 +156,7 @@ const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
   }
 
   // Caller requires linux-specific service-module in order to assemble a service
-  return new Network::ServiceListenResults(
-      new Network::Linux::ServiceModule(socket_descriptor)    
+  return new Network::SystemListenResults(
+      new Network::Linux::Service(socket_descriptor)    
   );
 }

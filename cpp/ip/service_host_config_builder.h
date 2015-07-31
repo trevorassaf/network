@@ -10,11 +10,14 @@
 class Network::Ip::ServiceHostConfigBuilder {
 
   private:
+    static unsigned int DEFAULT_BACKLOG_SIZE;
+
     Network::Ip::AddressConfig _addressConfig;
     Network::Ip::PortConfig _portConfig;
     Network::Ip::AddressFamily _addressFamily;
     bool _hasSocketType;
     Network::Ip::SocketType _socketType;
+    unsigned int _backlogSize;
      
   public:
     ServiceHostConfigBuilder();
@@ -22,5 +25,6 @@ class Network::Ip::ServiceHostConfigBuilder {
     ServiceHostConfigBuilder & setPortConfig(const Network::Ip::PortConfig & port_config);
     ServiceHostConfigBuilder & setAddressFamily(Network::Ip::AddressFamily address_family);
     ServiceHostConfigBuilder & setSocketType(Network::Ip::SocketType socket_type);
+    ServiceHostConfigBuilder & setBacklogSize(unsigned int backlog_size);
     const Network::Ip::ServiceHostConfig build() const;
 };

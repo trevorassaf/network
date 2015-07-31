@@ -1,11 +1,14 @@
 #include "service_host_config_builder.h"
 
+unsigned int Network::Ip::ServiceHostConfigBuilder::DEFAULT_BACKLOG_SIZE = 10;
+
 Network::Ip::ServiceHostConfigBuilder::ServiceHostConfigBuilder() :
     _addressConfig(),
     _portConfig(),
     _addressFamily(Network::Ip::AddressFamily::UNSPECIFIED),
     _hasSocketType(false),
-    _socketType(Network::Ip::SocketType::STREAM) // arbitrary default
+    _socketType(Network::Ip::SocketType::STREAM), // arbitrary default
+    _backlogSize(DEFAULT_BACKLOG_SIZE)
 {}
 
 Network::Ip::ServiceHostConfigBuilder &
@@ -40,6 +43,15 @@ Network::Ip::ServiceHostConfigBuilder::setSocketType(
   _hasSocketType = true;
   return *this;
 }
+
+Network::Ip::ServiceHostConfigBuilder &
+Network::Ip::ServiceHostConfigBuilder::setBacklogSize(
+    unsigned int backlog_size
+) {
+  _backlogSize = backlog_size;
+  return *this;
+}
+
 const Network::Ip::ServiceHostConfig
 Network::Ip::ServiceHostConfigBuilder::build() const {
   if (!_hasSocketType) {
@@ -49,6 +61,7 @@ Network::Ip::ServiceHostConfigBuilder::build() const {
       _addressConfig,
       _portConfig,
       _addressFamily,
-      _socketType
+      _socketType,
+      _backlogSize
   );
 }
