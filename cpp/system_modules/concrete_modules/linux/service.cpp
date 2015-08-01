@@ -122,9 +122,11 @@ const Network::Ip::Host Network::Linux::Service::generateLocalHost() const {
 }
 
 Network::Linux::Service::Service(
-    unsigned int socket_descriptor
+    unsigned int socket_descriptor,
+    const ListeningHosts & listening_hosts
 ) :
-    _socketDescriptor(socket_descriptor)
+    _socketDescriptor(socket_descriptor),
+    _listeningHosts(listening_hosts)
 {}
 
 const Network::SystemAcceptResults * Network::Linux::Service::accept() {
@@ -174,6 +176,11 @@ const Network::SystemAcceptResults * Network::Linux::Service::accept() {
   }
 
   return accept_results_builder.build();
+}
+
+const Network::Service::ListeningHosts &
+Network::Linux::Service::getListeningHosts() {
+  return _listeningHosts;
 }
 
 void Network::Linux::Service::close() {

@@ -5,6 +5,7 @@
 #include <ip/socket_type.h>
 
 #include <unordered_map>
+#include <vector>
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -34,10 +35,15 @@ namespace Network {
         const Network::Ip::Host generateLocalHost() const;
 
         const unsigned int _socketDescriptor;
+        const Network::Service::ListeningHosts _listeningHosts;
 
       public:
-        Service(unsigned int socket_descriptor);
+        Service(
+            unsigned int socket_descriptor,
+            const Network::Service::ListeningHosts & listening_hosts
+        );
         const Network::SystemAcceptResults * accept() override;
+        const Network::Service::ListeningHosts & getListeningHosts() const override;
         void close() override;
     };
   };
