@@ -35,15 +35,15 @@ namespace Network {
         const Network::Ip::Host generateLocalHost() const;
 
         const unsigned int _socketDescriptor;
-        const Network::Service::ListeningHosts _listeningHosts;
+        const Network::SystemServiceModule::ListeningHosts _listeningHosts;
 
       public:
         Service(
             unsigned int socket_descriptor,
-            const Network::Service::ListeningHosts & listening_hosts
+            const Network::SystemServiceModule::ListeningHosts & listening_hosts
         );
         const Network::SystemAcceptResults * accept() override;
-        const Network::Service::ListeningHosts & getListeningHosts() const override;
+        const Network::SystemServiceModule::ListeningHosts & getListeningHosts() const override;
         void close() override;
     };
   };

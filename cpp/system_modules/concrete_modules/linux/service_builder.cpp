@@ -6,6 +6,7 @@
 #include <system_modules/concrete_modules/linux/exceptions/socket_listen_exception.h>
 #include <system_modules/concrete_modules/linux/service.h>
 
+#include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -144,7 +145,7 @@ const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
 
       // Try to initialize next iface
       current_serv_info = current_serv_info->ai_next;
-      continue
+      continue;
     }
 
     has_socket_descriptor = true;
@@ -152,21 +153,21 @@ const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
     break;
   }
 
-  const Network::Ip::PortBuilder port_builder;
+  Network::Ip::PortBuilder port_builder;
 
   switch (current_serv_info->ai_addr->sa_family) {
     case AF_INET:
       {
         sockaddr_in * ipv4_socket_address = 
             reinterpret_cast<sockaddr_in *>(current_serv_info->ai_addr);
-        port_builder.setNetworkByteOrder(ipv4_socket_address->sin_port);
+        port_builder.setNetworkByteOrderPortNumber(ipv4_socket_address->sin_port);
         break;
       }
     case AF_INET6:
       {
         sockaddr_in6 * ipv6_socket_address = 
             reinterpret_cast<sockaddr_in6 *>(current_serv_info->ai_addr);
-        port_builder.setNetworkByteOrder(ipv6_socket_address->sin6_port);
+        port_builder.setNetworkByteOrderPortNumber(ipv6_socket_address->sin6_port);
         break;
       }
     default:
@@ -179,7 +180,7 @@ const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
     throw exception_builder.build(); 
   }
 
-  ListeningHosts listening_hosts;
+  Network::SystemServiceModule::ListeningHosts listening_hosts;
   Network::Ip::AddressBuilder address_builder;
 
   if (address_config.hasAddress()) {
@@ -195,21 +196,21 @@ const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
     ifaddrs * interface_address = interface_address_head;
 
     while (interface_address) {
-      switch (interface_address->ifa_address->sa_family) {
+      switch (interface_address->ifa_addr->sa_family) {
         case AF_INET:
           {
             sockaddr_in * ipv4_address =
                 reinterpret_cast<sockaddr_in *>(
-                    interface_address->ifa_address
+                    interface_address->ifa_addr
                 );
             
-            char ipv4_address_str[IPV4_ADDRSTRLEN+1];
-            ::bzero(ipv4_address_str, IPV4_ADDRSTRLEN+1);
+            char ipv4_address_str[INET_ADDRSTRLEN+1];
+            ::bzero(ipv4_address_str, INET_ADDRSTRLEN+1);
             ::inet_ntop(
                 AF_INET,
-                ipv4_address->sin_addr,
+                &ipv4_address->sin_addr,
                 ipv4_address_str,
-                IPV4_ADDRSTRLEN
+                INET_ADDRSTRLEN
             );
 
             listening_hosts.push_back(
@@ -224,16 +225,16 @@ const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
           {
             sockaddr_in6 * ipv6_address =
                 reinterpret_cast<sockaddr_in6 *>(
-                    interface_address->ifa_address
+                    interface_address->ifa_addr
                 );
             
-            char ipv6_address_str[IPV6_ADDRSTRLEN+1];
-            ::bzero(ipv6_address_str, IPV6_ADDRSTRLEN+1);
+            char ipv6_address_str[INET6_ADDRSTRLEN+1];
+            ::bzero(ipv6_address_str, INET6_ADDRSTRLEN+1);
             ::inet_ntop(
                 AF_INET6,
-                ipv6_address->sin6_addr,
+                &ipv6_address->sin6_addr,
                 ipv6_address_str,
-                IPV6_ADDRSTRLEN
+                INET6_ADDRSTRLEN
             );
 
             listening_hosts.push_back(
@@ -249,7 +250,7 @@ const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
           break;
       }
 
-      interface_address = interface_address->ifa_addrs;
+      interface_address = interface_address->ifa_next;
     }
 
     ::freeifaddrs(interface_address_head);
@@ -257,6 +258,9 @@ const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
 
   // Caller requires linux-specific service-module in order to assemble a service
   return new Network::SystemListenResults(
-      new Network::Linux::Service(socket_descriptor)    
+      new Network::Linux::Service(
+          socket_descriptor,
+          listening_hosts
+      )
   );
 }
