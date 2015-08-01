@@ -2,6 +2,8 @@
 
 #include <ip/port.h>
 
+#include <arpa/inet.h>
+
 #include <stdexcept> 
 
 Network::Ip::PortBuilder::PortBuilder() : _hasPortNumber(false) {}
@@ -30,6 +32,13 @@ Network::Ip::PortBuilder::setPortNumber(
 Network::Ip::PortBuilder &
 Network::Ip::PortBuilder::from(const Network::Ip::Port & port) {
   _portNumber = port.getPortNumber();
+  _hasPortNumber = true;
+  return *this;
+}
+
+Network::Ip::PortBuilder &
+Network::Ip::PortBuilder::setNetworkByteOrderPortNumber(uint16_t network_byte_order_port_number) {
+  _portNumber = ntohs(network_byte_order_port_number);
   _hasPortNumber = true;
   return *this;
 }
