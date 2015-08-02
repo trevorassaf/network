@@ -14,6 +14,8 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
+#include <iostream>
+
 const Network::Linux::Service::OsAddressFamilyMap
 Network::Linux::Service::OS_ADDRESS_FAMILY_MAP = {
   {AF_INET, Network::Ip::AddressFamily::V4},
@@ -116,6 +118,8 @@ const Network::Ip::Host Network::Linux::Service::generateLocalHost() const {
         break;
       }
     default:
+      std::cout << "Invalid address family (service): " << socket_address.ss_family 
+          << std::endl;
       throw std::runtime_error("Invalid AddressFamily!");
       break;
   }
@@ -132,11 +136,16 @@ Network::Linux::Service::Service(
 const Network::SystemAcceptResults * Network::Linux::Service::accept() {
   sockaddr_storage socket_storage;
   socklen_t socket_storage_length = sizeof(socket_storage);
+
+  std::cout << "Calling accept!" << std::endl;
+
   int accept_result = ::accept(
       _socketDescriptor,
       reinterpret_cast<sockaddr *>(&socket_storage),
       &socket_storage_length
   );
+  
+  std::cout << "After accept!" << std::endl;
 
   if (Network::Linux::SocketAcceptException::isError(accept_result)) {
     throw Network::Linux::SocketAcceptException();   

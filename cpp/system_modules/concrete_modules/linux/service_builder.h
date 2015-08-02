@@ -22,7 +22,7 @@ namespace Network {
         static int translateSocketTypeToOsCode(Network::Ip::SocketType socket_type);
 
       public:
-        const Network::SystemListenResults * listen(
+        Network::SystemListenResults * listen(
             const Network::SystemListenParameters * listen_params    
         ) override; 
     };

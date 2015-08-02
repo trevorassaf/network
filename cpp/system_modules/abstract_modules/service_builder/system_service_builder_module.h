@@ -8,7 +8,7 @@ namespace Network {
   class SystemServiceBuilderModule {
 
     public:
-      virtual const Network::SystemListenResults * listen(
+      virtual Network::SystemListenResults * listen(
           const Network::SystemListenParameters * listen_params    
       ) = 0;
   };

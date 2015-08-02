@@ -15,6 +15,8 @@
 
 #include <cstring>
 
+#include <iostream>
+
 const Network::Linux::ServiceBuilder::AddressFamilyMap
 Network::Linux::ServiceBuilder::ADDRESS_FAMILY_MAP = {
   {Network::Ip::AddressFamily::V4, AF_INET},
@@ -36,7 +38,7 @@ int Network::Linux::ServiceBuilder::translateSocketTypeToOsCode(Network::Ip::Soc
   return Network::Linux::ServiceBuilder::SOCKET_TYPE_MAP.at(socket_type);
 }
 
-const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
+Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
     const Network::SystemListenParameters * listen_params    
 ) {
   // Unpack parameters
@@ -51,6 +53,7 @@ const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
   ::memset(&hints, 0, sizeof(hints));
   hints.ai_family = translateAddressFamilyToOsCode(address_family);
   hints.ai_socktype = translateSocketTypeToOsCode(socket_type);
+  hints.ai_flags = AI_PASSIVE;
 
   // Fetch information on available addresses
   int get_addr_info_result = ::getaddrinfo(
@@ -59,11 +62,11 @@ const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
           : nullptr,
       (port_config.hasPort())
           ? port_config.getPort().toString().c_str()
-          : nullptr,
+          : "0",
       &hints,
       &serv_info
   );
-
+  
   // Check for getaddrinfo() error
   if (Network::Linux::GetAddrInfoException::isError(get_addr_info_result)) {
     throw Network::Linux::GetAddrInfoException(get_addr_info_result);
@@ -155,18 +158,30 @@ const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
 
   Network::Ip::PortBuilder port_builder;
 
-  switch (current_serv_info->ai_addr->sa_family) {
+  sockaddr_storage socket_storage;
+  socklen_t socket_storage_len = sizeof(socket_storage);
+  int getsockname_result = ::getsockname(
+      socket_descriptor,
+      reinterpret_cast<sockaddr *>(&socket_storage),
+      &socket_storage_len
+  );
+
+  if (getsockname_result == -1) {
+    throw std::runtime_error("Getsockname error in service builder!");
+  }
+
+  switch (socket_storage.ss_family) {
     case AF_INET:
       {
         sockaddr_in * ipv4_socket_address = 
-            reinterpret_cast<sockaddr_in *>(current_serv_info->ai_addr);
+            reinterpret_cast<sockaddr_in *>(&socket_storage);
         port_builder.setNetworkByteOrderPortNumber(ipv4_socket_address->sin_port);
         break;
       }
     case AF_INET6:
       {
         sockaddr_in6 * ipv6_socket_address = 
-            reinterpret_cast<sockaddr_in6 *>(current_serv_info->ai_addr);
+            reinterpret_cast<sockaddr_in6 *>(&socket_storage);
         port_builder.setNetworkByteOrderPortNumber(ipv6_socket_address->sin6_port);
         break;
       }
@@ -181,7 +196,6 @@ const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
   }
 
   Network::SystemServiceModule::ListeningHosts listening_hosts;
-  Network::Ip::AddressBuilder address_builder;
 
   if (address_config.hasAddress()) {
     listening_hosts.push_back(
@@ -192,10 +206,18 @@ const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
     ); 
   } else {
     ifaddrs * interface_address_head;
-    ::getifaddrs(&interface_address_head);
+    int getifaddrs_result = ::getifaddrs(&interface_address_head);
+    if (getifaddrs_result == -1) {
+      std::cout << "getifaddrs error: " << ::strerror(getifaddrs_result) << std::endl;
+    }
     ifaddrs * interface_address = interface_address_head;
 
     while (interface_address) {
+      // Skip if no interface address is set
+      if (!interface_address->ifa_addr) {
+        continue;
+      }
+
       switch (interface_address->ifa_addr->sa_family) {
         case AF_INET:
           {
@@ -245,9 +267,6 @@ const Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
             );
             break;
           }
-        default:
-          throw std::runtime_error("Invalid AddressFamily!");
-          break;
       }
 
       interface_address = interface_address->ifa_next;
