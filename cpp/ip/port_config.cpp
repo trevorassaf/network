@@ -1,21 +1,22 @@
 #include "port_config.h"
 
-Network::Ip::PortConfig::PortConfig() : _hasPort(false) {}
+#include <stdexcept>
+
+Network::Ip::PortConfig::PortConfig() : _port(nullptr) {}
 
 Network::Ip::PortConfig::PortConfig(
     const Network::Ip::Port & port    
 ) :
-    _hasPort(true),
-    _portBuilder(port)    
+    _port(new Network::Ip::Port(port))
 {}
 
 bool Network::Ip::PortConfig::hasPort() const {
-  return _hasPort;
+  return _port;
 }
 
-const Network::Ip::Port Network::Ip::PortConfig::getPort() const {
-  if (!_hasPort) {
+const Network::Ip::Port & Network::Ip::PortConfig::getPort() const {
+  if (!hasPort()) {
     throw std::runtime_error("Must set port before calling this method!");
   }
-  return _portBuilder.build();
+  return *_port;
 }

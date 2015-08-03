@@ -1,19 +1,18 @@
 #pragma once
 
 #include <ip/ip_namespace.h>
-#include <ip/address_builder.h>
 #include <ip/address.h>
 
 class Network::Ip::AddressConfig {
 
   private:
-    bool _hasAddress;
-    Network::Ip::AddressBuilder _addressBuilder;
+    Network::Ip::Address * _address;
 
   public:
     AddressConfig();
     AddressConfig(const Network::Ip::Address & address);
+    ~AddressConfig();
 
     bool hasAddress() const;
-    const Network::Ip::Address getAddress() const;
+    const Network::Ip::Address & getAddress() const;
 };

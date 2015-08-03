@@ -1,7 +1,6 @@
 #pragma once
 
 #include <ip/ip_namespace.h>
-#include <ip/port_builder.h>
 #include <ip/port.h>
 
 #include <cstdint>
@@ -10,8 +9,7 @@
 class Network::Ip::PortConfig {
 
   private:
-    bool _hasPort;
-    Network::Ip::PortBuilder _portBuilder;
+    Network::Ip::Port * _port;
 
   public:
     /**
@@ -27,6 +25,12 @@ class Network::Ip::PortConfig {
     PortConfig(const Network::Ip::Port & port);
 
     /**
+     * ~PortConfig()
+     * - Delete port memory
+     */
+    ~PortConfig();
+
+    /**
      * hasPort()
      * @return true iff in portful state
      */
@@ -37,5 +41,5 @@ class Network::Ip::PortConfig {
      * @return port
      * @throw runtime_error iff not in portful state 
      */
-    const Network::Ip::Port getPort() const;
+    const Network::Ip::Port & getPort() const;
 };

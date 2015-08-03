@@ -13,5 +13,7 @@ namespace Network {
     class Host;
     class ServiceHostConfig; 
     class ServiceHostConfigBuilder; 
+    class ConnecterHostConfig; 
+    class ConnecterHostConfigBuilder; 
   };
 };

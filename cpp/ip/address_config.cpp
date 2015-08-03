@@ -2,22 +2,26 @@
 
 #include <stdexcept>
 
-Network::Ip::AddressConfig::AddressConfig() : _hasAddress(false) {}
+Network::Ip::AddressConfig::AddressConfig() : _address(nullptr) {}
 
 Network::Ip::AddressConfig::AddressConfig(
     const Network::Ip::Address & address    
 ) :
-    _hasAddress(true),
-    _addressBuilder(address)
+    _address(new Network::Ip::Address(address))
 {}
 
-bool Network::Ip::AddressConfig::hasAddress() const {
-  return _hasAddress;
+Network::Ip::AddressConfig::~AddressConfig() {
+  delete _address;
+  _address = nullptr;
 }
 
-const Network::Ip::Address Network::Ip::AddressConfig::getAddress() const {
-  if (!_hasAddress) {
+bool Network::Ip::AddressConfig::hasAddress() const {
+  return _address;
+}
+
+const Network::Ip::Address & Network::Ip::AddressConfig::getAddress() const {
+  if (!hasAddress()) {
     throw std::runtime_error("Must set address config before calling getAddress()");
   }
-  return _addressBuilder.build();
+  return *_address;
 }

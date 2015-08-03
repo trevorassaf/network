@@ -1,5 +1,7 @@
 #include "service_host_config_builder.h"
 
+#include <stdexcept>
+
 unsigned int Network::Ip::ServiceHostConfigBuilder::DEFAULT_BACKLOG_SIZE = 10;
 
 Network::Ip::ServiceHostConfigBuilder::ServiceHostConfigBuilder() :
