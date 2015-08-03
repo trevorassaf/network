@@ -26,7 +26,6 @@ int main() {
 
   Network::SystemServiceModule * service_module = listen_results
       ->moveSystemServiceModule();
-  listen_results;
 
   const Network::SystemServiceModule::ListeningHosts & listening_hosts =
       service_module->getListeningHosts();

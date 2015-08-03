@@ -34,6 +34,8 @@ flags = [
 '-I',
 '.',
 '-I',
+'cpp/',
+'-I',
 './ClangCompleter',
 '-isystem',
 './tests/gmock/gtest',
