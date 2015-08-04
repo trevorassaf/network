@@ -7,14 +7,15 @@ namespace Network {
   class SystemReadResults {
 
     private:
-      void * _buffer;
-      size_t _bufferSize;
+      const void * _buffer;
+      const size_t _bufferSize;
 
     public:
-      SystemReadResults(size_t read_buffer_size);
+      SystemReadResults(void * buffer, size_t read_buffer_size);
+      SystemReadResults(const SystemReadResults & results) = delete;
+      SystemReadResults & operator=(const SystemReadResults & results) = delete;
       ~SystemReadResults();
-      const void * getBuffer() const;
-      void * getBuffer();
+      template <typename T> T deserialize<T>() const;
       size_t getBufferSize() const;
   };
 };

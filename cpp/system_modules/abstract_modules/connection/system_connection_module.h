@@ -14,7 +14,7 @@ namespace Network {
       ) = 0;
 
       virtual const Network::SystemReadResults * read(
-          const Network::SystemReadResults * read_results
+          const Network::SystemReadParameters * read_parameters
       ) = 0;
       
       virtual void close() = 0;
