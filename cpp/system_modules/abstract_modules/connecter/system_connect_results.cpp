@@ -1,5 +1,7 @@
 #include "system_connect_results.h"
 
+#include <stdexcept>
+
 Network::SystemConnectResults::SystemConnectResults(
     Network::SystemConnectionModule * system_connection_module    
 ) :
@@ -11,7 +13,7 @@ Network::SystemConnectResults::~SystemConnectResults() {
   _systemConnectionModule = nullptr;
 }
 
-Network::SystemConnectionModule * Network::SystemConnectionModule::moveSystemConnectionModule() {
+Network::SystemConnectionModule * Network::SystemConnectResults::moveSystemConnectionModule() {
   if (!_systemConnectionModule) {
     throw std::runtime_error("Connection already moved!");
   }

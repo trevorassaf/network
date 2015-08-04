@@ -1,5 +1,8 @@
 #include "system_read_results.h"
 
+#include <stdexcept>
+#include <cstring>
+
 Network::SystemReadResults::SystemReadResults(
     const void * buffer,
     size_t buffer_size
@@ -19,11 +22,11 @@ Network::SystemReadResults::SystemReadResults(
 }
 
 Network::SystemReadResults::~SystemReadResults() {
-  delete[] _buffer; 
+  delete[] static_cast<char *>(_buffer);
   _buffer = nullptr;
 }
 
-template <typename T> Network::SystemReadResults::deserialize<T>() const {
+template <typename T> T Network::SystemReadResults::deserialize() const {
   if (sizeof(T) != _bufferSize) {
     throw std::runtime_error("Read results buffer size does not equal T size");
   }

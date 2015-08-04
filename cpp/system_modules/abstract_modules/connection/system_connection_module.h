@@ -12,6 +12,11 @@ namespace Network {
       virtual void write(
           const Network::SystemWriteParameters * write_params    
       ) = 0;
+  
+      SystemConnectionModule(const SystemConnectionModule & module) = delete;
+      SystemConnectionModule & operator=(const SystemConnectionModule & module) = delete;
+
+      virtual ~SystemConnectionModule();
 
       virtual const Network::SystemReadResults * read(
           const Network::SystemReadParameters * read_parameters

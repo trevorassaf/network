@@ -7,7 +7,7 @@ namespace Network {
   class SystemWriteParameters {
 
     private:
-      const void * _buffer;
+      void * _buffer;
       const size_t _bufferSize;
 
     public:
@@ -16,7 +16,7 @@ namespace Network {
           size_t buffer_size
       );
       SystemWriteParameters(const SystemWriteParameters & parameters) = delete;
-      SystemWriteParameters & operator=() = delete;
+      SystemWriteParameters & operator=(const SystemWriteParameters & params) = delete;
       ~SystemWriteParameters();
       const void * getBuffer() const;
       size_t getBufferSize() const;

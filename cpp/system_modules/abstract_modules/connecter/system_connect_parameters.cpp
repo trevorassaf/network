@@ -11,7 +11,7 @@ Network::SystemConnectParameters::SystemConnectParameters(
     _remoteHost(remote_host),
     _localHostConfig(
         (local_host_config)
-            ? new Network::Ip::ConnecterHostConfig(local_host_config)
+            ? new Network::Ip::ConnecterHostConfig(*local_host_config)
             : nullptr
     ),
     _addressFamily(address_family),
@@ -23,8 +23,8 @@ Network::SystemConnectParameters::SystemConnectParameters(
 ) :
     _remoteHost(parameters._remoteHost),
     _localHostConfig(
-        (parameters._remoteHost)
-            ? new Network::Ip::ConnecterHostConfig(parameters._remoteHost)
+        (parameters._localHostConfig)
+            ? new Network::Ip::ConnecterHostConfig(*parameters._localHostConfig)
             : nullptr
     ),
     _addressFamily(parameters._addressFamily),

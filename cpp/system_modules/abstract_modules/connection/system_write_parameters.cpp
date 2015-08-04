@@ -1,5 +1,8 @@
 #include "system_write_parameters.h"
 
+#include <stdexcept>
+#include <cstring>
+
 Network::SystemWriteParameters::SystemWriteParameters(
     const void * buffer,
     size_t buffer_size
@@ -14,7 +17,7 @@ Network::SystemWriteParameters::SystemWriteParameters(
 }
 
 Network::SystemWriteParameters::~SystemWriteParameters() {
-  delete _buffer;
+  delete static_cast<char *>(_buffer);
   _buffer = nullptr;
 }
 
