@@ -1,5 +1,5 @@
 *.o
-nwk
 sandbox/*
 *.dSYM
 bits
+bin
