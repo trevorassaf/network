@@ -45,7 +45,7 @@ namespace Network {
             unsigned int socket_descriptor,
             const Network::SystemServiceModule::ListeningHosts & listening_hosts
         );
-        const Network::SystemAcceptResults * accept() override;
+        Network::SystemAcceptResults accept() override;
         const Network::SystemServiceModule::ListeningHosts & getListeningHosts() const override;
         void close() override;
     };

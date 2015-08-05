@@ -35,9 +35,8 @@ int main() {
         << host.getPort().toString() << std::endl;
   }
 
-  const Network::SystemAcceptResults * accept_results = service_module->accept();
+  Network::SystemAcceptResults accept_results = service_module->accept();
   std::cout << "Accepted!" << std::endl;
 
-  delete service_module;
   return 0;
 }

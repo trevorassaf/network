@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ip/host.h>
+#include <ip/address_family.h>
 
 #include <system_modules/abstract_modules/connection/system_read_parameters.h>
 #include <system_modules/abstract_modules/connection/system_read_results.h>

@@ -19,14 +19,6 @@ namespace Network {
             const Network::Ip::ConnecterHostConfig & connecter_host_config
         );
 
-        const Network::Ip::Host getLocalHost(int socket_descriptor) const;
-
-        const Network::Ip::Host getRemoteHost(int socket_descriptor) const;
-
-        const Network::Ip::Host deriveHost(
-            const sockaddr_storage & socket_storage
-        ) const;
-
       public:
         const Network::SystemConnectResults * connect(
             const Network::SystemConnectParameters & system_connect_parameters    

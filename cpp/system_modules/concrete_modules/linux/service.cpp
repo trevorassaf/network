@@ -3,21 +3,22 @@
 #include <ip/port.h>
 #include <ip/port_builder.h>
 
+#include <system_modules/concrete_modules/linux/connection.h>
+
 #include <system_modules/concrete_modules/linux/exceptions/get_sock_name_exception.h>
 #include <system_modules/concrete_modules/linux/exceptions/socket_accept_exception.h>
+
 #include <system_modules/abstract_modules/service/system_accept_results.h>
-#include <system_modules/abstract_modules/service/system_accept_results_builder.h>
 
 #include <stdexcept>
 #include <string>
 #include <cstring>
+#include <iostream>
 
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-
-#include <iostream>
 
 const Network::Linux::Service::OsAddressFamilyMap
 Network::Linux::Service::OS_ADDRESS_FAMILY_MAP = {
@@ -134,7 +135,7 @@ Network::Linux::Service::Service(
     _listeningHosts(listening_hosts)
 {}
 
-const Network::SystemAcceptResults * Network::Linux::Service::accept() {
+Network::SystemAcceptResults Network::Linux::Service::accept() {
   sockaddr_storage socket_storage;
   socklen_t socket_storage_length = sizeof(socket_storage);
 
@@ -152,40 +153,9 @@ const Network::SystemAcceptResults * Network::Linux::Service::accept() {
     throw Network::Linux::SocketAcceptException();   
   }
 
-  Network::SystemAcceptResultsBuilder accept_results_builder;
- 
-  int os_address_family = socket_storage.ss_family;
-
-  Network::Ip::AddressFamily address_family =
-      translateOsCodeToAddressFamily(os_address_family);
-
-  accept_results_builder.setAddressFamily(address_family);
- 
-  switch (address_family) {
-    case Network::Ip::AddressFamily::V4:
-    {
-      const sockaddr_in * ipv4_socket_address =
-          reinterpret_cast<sockaddr_in *>(&socket_storage);
-      accept_results_builder.setRemoteHost(
-          generateIpv4Host(*ipv4_socket_address)
-      );
-      break; 
-    }
-    case Network::Ip::AddressFamily::V6:
-    {
-      const sockaddr_in6 * ipv6_socket_address =
-          reinterpret_cast<sockaddr_in6 *>(&socket_storage);
-      accept_results_builder.setRemoteHost(
-          generateIpv6Host(*ipv6_socket_address)
-      );
-      break; 
-    }
-    default:
-      throw std::runtime_error("Unexpected address family!");
-      break;
-  }
-
-  return accept_results_builder.build();
+  return Network::SystemAcceptResults(
+      new Network::Linux::Connection(accept_result)    
+  ); 
 }
 
 const Network::SystemServiceModule::ListeningHosts &

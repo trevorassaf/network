@@ -10,7 +10,7 @@ namespace Network {
   class SystemServiceModule {
 
     public:
-      virtual const Network::SystemAcceptResults * accept() = 0;
+      virtual Network::SystemAcceptResults accept() = 0;
       
       typedef std::vector<Network::Ip::Host> ListeningHosts;
       virtual const ListeningHosts & getListeningHosts() const = 0; 

@@ -1,24 +1,30 @@
 #pragma once
 
 #include <ip/host.h>
+#include <ip/address_family.h>
 
 #include <system_modules/abstract_modules/connection/system_connection_module.h>
+
+#include <sys/types.h>
+#include <sys/socket.h>
 
 namespace Network {
   namespace Linux {  
     class Connection : public Network::SystemConnectionModule {
       
       private:
-        int _socketDescriptor;
+        const int _socketDescriptor;
         const Network::Ip::Host _remoteHost;
         const Network::Ip::Host _localHost;
 
+        Network::Ip::Host generateRemoteHost(int socket_descriptor) const;
+        Network::Ip::Host generateLocalHost(int socket_descriptor) const;
+        Network::Ip::Host deriveHost(
+            const sockaddr_storage & socket_storage
+        ) const;
+
       public:
-        Connection(
-            int socket_descriptor,
-            const Network::Ip::Host & remote_host,
-            const Network::Ip::Host & local_host
-        );
+        Connection(int socket_descriptor);
 
         const Network::Ip::Host & getRemoteHost() const override;
         
