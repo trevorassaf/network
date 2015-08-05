@@ -9,10 +9,10 @@ namespace Network {
     class SocketInitializationException : public Network::NetworkException {
       private:
         const std::string serializeErrorStrings(
-            const std::vector<const std::string> & error_strings
+            const std::vector<std::string> & error_strings
         ) const; 
       public:
-        SocketInitializationException(const std::vector<const std::string> & error_strings);
+        SocketInitializationException(const std::vector<std::string> & error_strings);
     };
   };
 };

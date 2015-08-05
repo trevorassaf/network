@@ -1,5 +1,8 @@
 #include "service.h"
 
+#include <ip/port.h>
+#include <ip/port_builder.h>
+
 #include <system_modules/concrete_modules/linux/exceptions/get_sock_name_exception.h>
 #include <system_modules/concrete_modules/linux/exceptions/socket_accept_exception.h>
 #include <system_modules/abstract_modules/service/system_accept_results.h>
@@ -107,15 +110,13 @@ const Network::Ip::Host Network::Linux::Service::generateLocalHost() const {
       {
         const sockaddr_in * ipv4_socket_address =
             reinterpret_cast<sockaddr_in *>(&socket_address);
-        generateIpv4Host(*ipv4_socket_address); 
-        break;
+        return generateIpv4Host(*ipv4_socket_address); 
       }
     case Network::Ip::AddressFamily::V6:
       {
         const sockaddr_in6 * ipv6_socket_address =
             reinterpret_cast<sockaddr_in6 *>(&socket_address);
-        generateIpv6Host(*ipv6_socket_address); 
-        break;
+        return generateIpv6Host(*ipv6_socket_address); 
       }
     default:
       std::cout << "Invalid address family (service): " << socket_address.ss_family 

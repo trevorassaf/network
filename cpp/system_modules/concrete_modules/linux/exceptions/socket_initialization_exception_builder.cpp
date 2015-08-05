@@ -9,7 +9,7 @@ void Network::Linux::SocketInitializationExceptionBuilder::pushErrorString(
   _errorStrings.push_back(error_string);
 }
 
-const Network::Linux::SocketInitializationException
+Network::Linux::SocketInitializationException
 Network::Linux::SocketInitializationExceptionBuilder::build() const {
   return Network::Linux::SocketInitializationException(_errorStrings);
 }

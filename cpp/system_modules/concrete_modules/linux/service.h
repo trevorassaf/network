@@ -3,6 +3,8 @@
 #include <system_modules/abstract_modules/service/system_service_module.h>
 #include <ip/address_family.h>
 #include <ip/socket_type.h>
+#include <ip/host.h>
+#include <ip/address.h>
 
 #include <unordered_map>
 #include <vector>
@@ -15,6 +17,7 @@
 namespace Network {
   namespace Linux {
     class Service : public Network::SystemServiceModule {
+      
       private:
         typedef std::unordered_map<int, Network::Ip::AddressFamily> OsAddressFamilyMap;
         static const OsAddressFamilyMap OS_ADDRESS_FAMILY_MAP;

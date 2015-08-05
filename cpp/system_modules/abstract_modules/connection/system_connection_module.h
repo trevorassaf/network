@@ -11,8 +11,6 @@ namespace Network {
   class SystemConnectionModule {
 
     public:
-      virtual ~SystemConnectionModule() = 0;
-      
       virtual const Network::Ip::Host & getRemoteHost() const = 0;
 
       virtual const Network::Ip::Host & getLocalHost() const = 0;

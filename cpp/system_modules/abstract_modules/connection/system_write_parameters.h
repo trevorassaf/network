@@ -13,8 +13,6 @@ namespace Network {
 
     public:
       template <typename T> SystemWriteParameters(const T & t);
-      SystemWriteParameters(const SystemWriteParameters & parameters) = delete;
-      SystemWriteParameters & operator=(const SystemWriteParameters & params) = delete;
       ~SystemWriteParameters();
       const uint8_t * getBuffer() const;
       size_t getBufferSize() const;

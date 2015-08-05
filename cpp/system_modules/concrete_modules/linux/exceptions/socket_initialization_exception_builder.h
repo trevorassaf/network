@@ -7,12 +7,14 @@
 namespace Network {
   namespace Linux {
     class SocketInitializationExceptionBuilder {
+      
       private:
-        std::vector<const std::string> _errorStrings;
+        std::vector<std::string> _errorStrings;
+      
       public:
         SocketInitializationExceptionBuilder();
         void pushErrorString(const std::string & error_string);
-        const Network::Linux::SocketInitializationException build() const;
+        Network::Linux::SocketInitializationException build() const;
     };
   };
 };

@@ -1,4 +1,10 @@
 #include "service_builder.h"
+
+#include <ip/port_builder.h>
+#include <ip/port.h>
+#include <ip/address_builder.h>
+#include <ip/address.h>
+
 #include <system_modules/concrete_modules/linux/exceptions/getaddrinfo_exception.h>
 #include <system_modules/concrete_modules/linux/exceptions/socket_initialization_exception_builder.h>
 #include <system_modules/concrete_modules/linux/exceptions/socket_open_exception.h>

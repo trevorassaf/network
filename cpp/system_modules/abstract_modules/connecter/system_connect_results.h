@@ -11,8 +11,6 @@ namespace Network {
       SystemConnectResults(
           Network::SystemConnectionModule * system_connection_module    
       );
-      SystemConnectResults(const SystemConnectResults & results) = delete;
-      SystemConnectResults & operator=(const SystemConnectResults & results) = delete;
       ~SystemConnectResults();
       Network::SystemConnectionModule * moveSystemConnectionModule();
   };

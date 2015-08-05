@@ -12,7 +12,7 @@ namespace Network {
     public:
       virtual const Network::SystemAcceptResults * accept() = 0;
       
-      typedef std::vector<const Network::Ip::Host> ListeningHosts;
+      typedef std::vector<Network::Ip::Host> ListeningHosts;
       virtual const ListeningHosts & getListeningHosts() const = 0; 
       
       virtual void close() = 0;

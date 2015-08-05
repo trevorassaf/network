@@ -1,7 +1,7 @@
 #include "socket_initialization_exception.h"
 
 const std::string Network::Linux::SocketInitializationException::serializeErrorStrings(
-      const std::vector<const std::string> & error_strings
+      const std::vector<std::string> & error_strings
 ) const {
   std::string serialize_error_string;
 
@@ -13,7 +13,7 @@ const std::string Network::Linux::SocketInitializationException::serializeErrorS
 }
 
 Network::Linux::SocketInitializationException::SocketInitializationException(
-    const std::vector<const std::string> & error_strings
+    const std::vector<std::string> & error_strings
 ) :
     Network::NetworkException(serializeErrorStrings(error_strings))
 {}

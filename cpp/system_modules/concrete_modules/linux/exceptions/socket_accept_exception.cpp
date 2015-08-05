@@ -1,7 +1,8 @@
 #include "socket_accept_exception.h"
 
-#include <errno.h>
-#include <stdio.h>
+#include <cerrno>
+#include <cstdio>
+#include <cstring>
 
 const int Network::Linux::SocketAcceptException::ERROR_CODE = -1;
 

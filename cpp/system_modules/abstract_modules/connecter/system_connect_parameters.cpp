@@ -18,30 +18,6 @@ Network::SystemConnectParameters::SystemConnectParameters(
     _socketType(socket_type)
 {}
 
-Network::SystemConnectParameters::SystemConnectParameters(
-    const Network::SystemConnectParameters & parameters
-) :
-    _remoteHost(parameters._remoteHost),
-    _localHostConfig(
-        (parameters._localHostConfig)
-            ? new Network::Ip::ConnecterHostConfig(*parameters._localHostConfig)
-            : nullptr
-    ),
-    _addressFamily(parameters._addressFamily),
-    _socketType(parameters._socketType)
-{}
-
-Network::SystemConnectParameters & Network::SystemConnectParameters::operator=(
-    const Network::SystemConnectParameters & parameters    
-) {
-  Network::SystemConnectParameters temp(parameters);
-  std::swap(_remoteHost, temp._remoteHost);
-  std::swap(_localHostConfig, temp._localHostConfig);
-  std::swap(_addressFamily, temp._addressFamily);
-  std::swap(_socketType, temp._socketType);
-  return *this;
-}
-
 Network::SystemConnectParameters::~SystemConnectParameters() {
   delete _localHostConfig;
   _localHostConfig = nullptr;

@@ -1,7 +1,7 @@
 #include "socket_listen_exception.h"
 
 #include <cstdio>
-#include <string>
+#include <cstring>
 
 int Network::Linux::SocketListenException::ERROR_CODE = -1;
 

@@ -1,5 +1,7 @@
 #include "system_accept_results_builder.h"
 
+#include <stdexcept>
+
 Network::SystemAcceptResultsBuilder::SystemAcceptResultsBuilder() :
     _systemConnectionModule(nullptr),
     _localHost(nullptr),

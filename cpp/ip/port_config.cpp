@@ -10,6 +10,11 @@ Network::Ip::PortConfig::PortConfig(
     _port(new Network::Ip::Port(port))
 {}
 
+Network::Ip::PortConfig::~PortConfig() {
+  delete _port;
+  _port = nullptr;
+}
+
 bool Network::Ip::PortConfig::hasPort() const {
   return _port;
 }

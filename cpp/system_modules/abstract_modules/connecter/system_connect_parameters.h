@@ -20,8 +20,6 @@ namespace Network {
           Network::Ip::AddressFamily address_family,
           Network::Ip::SocketType socket_type 
       );
-      SystemConnectParameters(const SystemConnectParameters & parameters);
-      SystemConnectParameters & operator=(const SystemConnectParameters & parameters);
       ~SystemConnectParameters();
       const Network::Ip::Host & getRemoteHost() const;
       bool hasLocalHostConfig() const;
