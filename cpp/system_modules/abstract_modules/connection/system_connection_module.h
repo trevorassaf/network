@@ -11,9 +11,6 @@ namespace Network {
   class SystemConnectionModule {
 
     public:
-      SystemConnectionModule(const SystemConnectionModule & module) = delete;
-      SystemConnectionModule & operator=(const SystemConnectionModule & module) = delete;
-
       virtual ~SystemConnectionModule() = 0;
       
       virtual const Network::Ip::Host & getRemoteHost() const = 0;
@@ -21,11 +18,11 @@ namespace Network {
       virtual const Network::Ip::Host & getLocalHost() const = 0;
 
       virtual void write(
-          const Network::SystemWriteParameters * write_params    
+          const Network::SystemWriteParameters & write_params    
       ) const = 0;
 
-      virtual const Network::SystemReadResults * read(
-          const Network::SystemReadParameters * read_parameters
+      virtual const Network::SystemReadResults read(
+          const Network::SystemReadParameters & read_parameters
       ) const = 0;
       
       virtual void close() = 0;

@@ -1,24 +1,22 @@
 #pragma once
 
 #include <cstdlib>
+#include <cstdint>
 
 namespace Network {
   
   class SystemWriteParameters {
 
     private:
-      void * _buffer;
+      uint8_t * _buffer;
       const size_t _bufferSize;
 
     public:
-      SystemWriteParameters(
-          const void * buffer,
-          size_t buffer_size
-      );
+      template <typename T> SystemWriteParameters(const T & t);
       SystemWriteParameters(const SystemWriteParameters & parameters) = delete;
       SystemWriteParameters & operator=(const SystemWriteParameters & params) = delete;
       ~SystemWriteParameters();
-      const void * getBuffer() const;
+      const uint8_t * getBuffer() const;
       size_t getBufferSize() const;
   };
 };

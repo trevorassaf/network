@@ -25,11 +25,11 @@ namespace Network {
         const Network::Ip::Host & getLocalHost() const override;
         
         void write(
-            const Network::SystemWriteParameters * write_params
+            const Network::SystemWriteParameters & write_params
         ) const override;
         
-        const Network::SystemReadResults * read(
-            const Network::SystemReadParameters * read_parameters    
+        const Network::SystemReadResults read(
+            const Network::SystemReadParameters & read_parameters    
         ) const override;
 
         void close() override;

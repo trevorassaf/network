@@ -12,8 +12,6 @@ namespace Network {
 
     public:
       SystemReadResults(const void * buffer, size_t read_buffer_size);
-      SystemReadResults(const SystemReadResults & results) = delete;
-      SystemReadResults & operator=(const SystemReadResults & results) = delete;
       ~SystemReadResults();
       template <typename T> T deserialize() const;
       size_t getBufferSize() const;

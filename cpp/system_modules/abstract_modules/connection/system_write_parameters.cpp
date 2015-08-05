@@ -3,25 +3,26 @@
 #include <stdexcept>
 #include <cstring>
 
+template <typename T>
 Network::SystemWriteParameters::SystemWriteParameters(
-    const void * buffer,
-    size_t buffer_size
+    const T & t
 ) :
-    _bufferSize(buffer_size)
+    _bufferSize(sizeof(t))
 {
-  if (!buffer) {
-    throw std::runtime_error("Write params buffer cannot be null!");
-  }
-  _buffer = new char[_bufferSize];
-  ::memcpy(_buffer, buffer, _bufferSize);
+  _buffer = new uint8_t[_bufferSize];
+  ::memcpy(
+      _buffer,
+      static_cast<const uint8_t *>(&t),
+      _bufferSize
+  );
 }
 
 Network::SystemWriteParameters::~SystemWriteParameters() {
-  delete static_cast<char *>(_buffer);
+  delete static_cast<uint8_t *>(_buffer);
   _buffer = nullptr;
 }
 
-const void * Network::SystemWriteParameters::getBuffer() const {
+const uint8_t * Network::SystemWriteParameters::getBuffer() const {
   return _buffer;
 }
 
