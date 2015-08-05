@@ -47,12 +47,17 @@ CC_FLAGS = -w -I$(SOURCE_DIR) -std=c++11
 
 # Removed files
 FILES_TO_REMOVE = \
-		$(BINARY_DIR)/* \
-		$(OBJECT_DIR)/ \
-		*.dSYM
+		$(BINARY_DIR)/ \
+		$(OBJECT_DIR)/
+
+# Create compilation directories
+.PHONY: directories
 
 # Build all binaries
-all: $(SERVER_EXEC) $(CLIENT_EXEC)
+all: directories $(SERVER_EXEC) $(CLIENT_EXEC)
+
+directories:
+	${MKDIR_P} $(BINARY_DIR)
 
 # Compile server binary
 $(SERVER_EXEC): $(SERVER_OBJECT_FILES)
