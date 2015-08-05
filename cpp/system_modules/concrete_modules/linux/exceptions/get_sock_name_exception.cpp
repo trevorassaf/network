@@ -1,7 +1,8 @@
 #include "get_sock_name_exception.h"
 
-#include <errno.h>
-#include <stdio.h>
+#include <cstring>
+#include <cerrno>
+#include <cstdio>
 
 const int Network::Linux::GetSockNameException::ERROR_CODE = -1;
 

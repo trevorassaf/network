@@ -1,10 +1,23 @@
 #include "connecter.h"
 
+#include <ip/port_builder.h>
+#include <ip/port.h>
+#include <ip/host.h>
+#include <ip/address.h>
+#include <ip/address_builder.h>
+
+#include <system_modules/concrete_modules/linux/address_family_translator.h>
+#include <system_modules/concrete_modules/linux/socket_type_translator.h>
 #include <system_modules/concrete_modules/linux/exceptions/getaddrinfo_exception.h>
 #include <system_modules/concrete_modules/linux/exceptions/socket_initialization_exception_builder.h>
 #include <system_modules/concrete_modules/linux/exceptions/socket_open_exception.h>
 #include <system_modules/concrete_modules/linux/exceptions/socket_bind_exception.h>
 #include <system_modules/concrete_modules/linux/exceptions/socket_listen_exception.h>
+#include <system_modules/concrete_modules/linux/exceptions/socket_connect_exception.h>
+#include <system_modules/concrete_modules/linux/exceptions/get_sock_name_exception.h>
+#include <system_modules/concrete_modules/linux/exceptions/get_peer_name_exception.h>
+
+#include <system_modules/concrete_modules/linux/connection.h>
 
 #include <arpa/inet.h>
 #include <sys/types.h>
@@ -12,33 +25,197 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <ifaddrs.h>
+
+#include <cerrno>
+#include <cstring>
+
+void Network::Linux::Connecter::bindLocalHostConfig(
+    int socket_descriptor,
+    const Network::Ip::ConnecterHostConfig & connecter_host_config
+) {
+  struct addrinfo hints, *serv_info;
+  ::memset(&hints, 0, sizeof(hints));
+
+  Network::Linux::AddressFamilyTranslator address_family_translator;
+  hints.ai_family = address_family_translator
+      .translateToOsCode(connecter_host_config.getAddressFamily());
+
+  Network::Linux::SocketTypeTranslator socket_type_translator;
+  hints.ai_socktype = socket_type_translator
+      .translateToOsCode(connecter_host_config.getSocketType());
+
+  hints.ai_flags = AI_PASSIVE;
+
+  const Network::Ip::AddressConfig & address_config = connecter_host_config
+      .getAddressConfig();
+  const Network::Ip::PortConfig & port_config = connecter_host_config
+      .getPortConfig();
+
+  // Fetch information on available addresses
+  int get_addr_info_result = ::getaddrinfo(
+      (address_config.hasAddress()) 
+          ? address_config.getAddress().getAddressString().c_str()
+          : nullptr,
+      (port_config.hasPort())
+          ? port_config.getPort().toString().c_str()
+          : "0",
+      &hints,
+      &serv_info
+  );
+  
+  // Check for getaddrinfo() error
+  if (Network::Linux::GetAddrInfoException::isError(get_addr_info_result)) {
+    throw Network::Linux::GetAddrInfoException(get_addr_info_result);
+  }
+
+  // Iterate through candidate local addresses until we find one to bind
+  struct addrinfo * current_serv_info = serv_info;
+
+  Network::Linux::SocketInitializationExceptionBuilder exception_builder;
+
+  while (current_serv_info) {
+    // Attempt to bind socket
+    int bind_result = ::bind(
+        socket_descriptor,
+        current_serv_info->ai_addr,
+        current_serv_info->ai_addrlen
+    );
+
+    // Check if we've successfuly bound local address
+    if (!Network::Linux::SocketBindException::isError(bind_result)) {
+      ::freeaddrinfo(serv_info); 
+      return;
+    }
+
+    // Register socket bind error
+    exception_builder.pushErrorString(
+        Network::Linux::SocketBindException::getErrorString(errno)    
+    );
+
+    current_serv_info = current_serv_info->ai_next;
+  }
+
+  // We reached here b/c we failed to bind a local interface, so throw.
+  throw exception_builder.build();
+}
+
+const Network::Ip::Host Network::Linux::Connecter::getLocalHost(
+    int socket_descriptor
+) const {
+  sockaddr_storage socket_storage;
+  socklen_t socket_storage_len = sizeof(socket_storage);
+  int getsockname_result = ::getsockname(
+      socket_descriptor,
+      reinterpret_cast<sockaddr *>(&socket_storage),
+      &socket_storage_len
+  );
+
+  if (Network::Linux::GetSockNameException::isError(getsockname_result)) {
+    throw Network::Linux::GetSockNameException();
+  }
+
+  return deriveHost(socket_storage);
+}
+
+const Network::Ip::Host Network::Linux::Connecter::getRemoteHost(
+    int socket_descriptor
+) const {
+  sockaddr_storage socket_storage;
+  socklen_t socket_storage_len = sizeof(socket_storage);
+
+  int getpeername_result = ::getpeername(
+      socket_descriptor,
+      reinterpret_cast<sockaddr *>(&socket_storage),
+      &socket_storage_len
+  );
+
+  if (Network::Linux::GetPeerNameException::isError(getpeername_result)) {
+    throw Network::Linux::GetPeerNameException();
+  }
+
+  return deriveHost(socket_storage);
+}
+
+const Network::Ip::Host Network::Linux::Connecter::deriveHost(
+    const sockaddr_storage & socket_storage    
+) const {
+  
+  Network::Ip::PortBuilder port_builder;
+  Network::Ip::AddressBuilder address_builder;
+  
+  switch (socket_storage.ss_family) {
+    case AF_INET:
+      {
+        const sockaddr_in * ipv4_socket_address = 
+            reinterpret_cast<const sockaddr_in *>(&socket_storage);
+        port_builder.setNetworkByteOrderPortNumber(
+            ipv4_socket_address->sin_port
+        );
+        
+        char ipv4_str[INET_ADDRSTRLEN+1];
+        ::bzero(ipv4_str, INET_ADDRSTRLEN+1);
+        ::inet_ntop(
+            AF_INET,
+            &ipv4_socket_address->sin_addr,
+            ipv4_str,
+            INET_ADDRSTRLEN
+        );
+
+        address_builder.setAddressString(ipv4_str);
+        break;
+      }
+    case AF_INET6:
+      {
+        const sockaddr_in6 * ipv6_socket_address = 
+            reinterpret_cast<const sockaddr_in6 *>(&socket_storage);
+        port_builder.setNetworkByteOrderPortNumber(
+            ipv6_socket_address->sin6_port
+        );
+        
+        char ipv6_str[INET6_ADDRSTRLEN+1];
+        ::bzero(ipv6_str, INET6_ADDRSTRLEN+1);
+        ::inet_ntop(
+            AF_INET6,
+            &ipv6_socket_address->sin6_addr,
+            ipv6_str,
+            INET6_ADDRSTRLEN
+        );
+
+        address_builder.setAddressString(ipv6_str);
+        break;
+      }
+    default:
+      throw std::runtime_error("Unknown address family!");
+      break;
+  }
+
+  return Network::Ip::Host(
+      address_builder.build(),
+      port_builder.build()
+  );
+}
         
 const Network::SystemConnectResults *
-Network::SystemConnecterModule::connect(
+Network::Linux::Connecter::connect(
     const Network::SystemConnectParameters & system_connect_parameters    
 ) {
-  const Network::Ip::Host & remote_host =
+  const Network::Ip::Host & remote_host_target =
       system_connect_parameters.getRemoteHost();
-  const Network::Ip::Address & address = remote_host.getAddress();
-  const Network::Ip::Port & port = remote_host.getPort();
 
-  const Network::Ip::AddressFamily address_family =
-      system_connect_parameters.getAddressFamily();
-  const Network::Ip::SocketType socket_type =
-      system_connect_parameters.getSocketType();
-
-  struct addrinfo remote_hints, *remote_addr_info;
+  struct addrinfo remote_hints, * remote_addr_info;
   ::memset(&remote_hints, 0, sizeof(remote_hints));
 
-  Network::Linux::AddressFamilyTranslator adress_family_translator;
-  remote_hints.ai_family = address_family_translator.translateToOsCode(address_family);
+  Network::Linux::AddressFamilyTranslator address_family_translator;
+  remote_hints.ai_family = address_family_translator
+      .translateToOsCode(system_connect_parameters.getAddressFamily());
   
-  Network::SocketTypeTranslator socket_family_translator;
-  remote_hints.ai_socktype = socket_type_translator.translateToOsCode(socket_type);
+  Network::Linux::SocketTypeTranslator socket_type_translator;
+  remote_hints.ai_socktype = socket_type_translator
+      .translateToOsCode(system_connect_parameters.getSocketType());
 
-  int get_remote_addr_info_result ::getaddrinfo(
-      remote_host.getAddress().toAddressString().c_str(),
-      remote_host.getPort().toString().c_str(),
+  int get_remote_addr_info_result = ::getaddrinfo(
+      remote_host_target.getAddress().getAddressString().c_str(),
+      remote_host_target.getPort().toString().c_str(),
       &remote_hints,
       &remote_addr_info
   );
@@ -54,7 +231,65 @@ Network::SystemConnecterModule::connect(
   Network::Linux::SocketInitializationExceptionBuilder exception_builder;
 
   while (current_remote_addr_info) {
-    
+    // Attempt to open socket
+    int socket_result = ::socket(
+        current_remote_addr_info->ai_family,
+        current_remote_addr_info->ai_socktype,
+        current_remote_addr_info->ai_protocol
+    );
+
+    // Check for socket open error
+    if (Network::Linux::SocketOpenException::isError(socket_result)) {
+      exception_builder.pushErrorString(
+          Network::Linux::SocketOpenException::getErrorString(errno)
+      );
+
+      // Try to initialize next iface
+      current_remote_addr_info = current_remote_addr_info->ai_next;
+      continue;
+    }
+
+    socket_descriptor = socket_result;
+
+    // Bind before connect, if local host provided 
+    if (system_connect_parameters.hasLocalHostConfig()) {
+      bindLocalHostConfig(
+          socket_descriptor,
+          system_connect_parameters.getLocalHostConfig()
+      ); 
+    }
+
+    // Connect to remote
+    int connect_result = ::connect(
+        socket_descriptor,
+        current_remote_addr_info->ai_addr,
+        current_remote_addr_info->ai_addrlen
+    );  
+
+    // Check for connect error
+    if (Network::Linux::SocketConnectException::isError(connect_result)) {
+      exception_builder.pushErrorString(
+          Network::Linux::SocketConnectException::getErrorString(errno)
+      );
+
+      // Try to initialize next iface
+      current_remote_addr_info = current_remote_addr_info->ai_next;
+      continue;
+    }
+
+    has_socket_descriptor = true;
+    ::freeaddrinfo(remote_addr_info);
+    break;
   }
 
+  const Network::Ip::Host remote_host = getRemoteHost(socket_descriptor);
+  const Network::Ip::Host local_host = getLocalHost(socket_descriptor);
+
+  return new Network::SystemConnectResults(
+      new Network::Linux::Connection(
+        socket_descriptor,
+        remote_host,
+        local_host
+      )
+  );
 }
