@@ -8,8 +8,10 @@ namespace Network {
   class SystemConnecterModule {
 
     public:
-      virtual const Network::SystemConnectResults * connect(
+      virtual const Network::SystemConnectResults connect(
           const Network::SystemConnectParameters & connect_parameters    
       ) = 0;
+
+      virtual ~SystemConnecterModule() {}
   };
 };

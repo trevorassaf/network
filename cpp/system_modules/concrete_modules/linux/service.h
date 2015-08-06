@@ -38,16 +38,24 @@ namespace Network {
         const Network::Ip::Host generateLocalHost() const;
 
         const unsigned int _socketDescriptor;
+
         const Network::SystemServiceModule::ListeningHosts _listeningHosts;
+
+        bool _isOpen;
 
       public:
         Service(
             unsigned int socket_descriptor,
             const Network::SystemServiceModule::ListeningHosts & listening_hosts
         );
+        
         Network::SystemAcceptResults accept() override;
+        
         const Network::SystemServiceModule::ListeningHosts & getListeningHosts() const override;
+
         void close() override;
+
+        ~Service() override;
     };
   };
 };

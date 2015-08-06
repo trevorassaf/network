@@ -12,7 +12,7 @@ class Network::Ip::Port {
     /**
      * Port number in host byte-order
      */
-    const uint16_t _portNumber;
+    uint16_t _portNumber;
 
   public:
     /**
@@ -20,6 +20,10 @@ class Network::Ip::Port {
      * @param number : port number in host byte-order
      */
     Port(uint16_t port_number);
+
+    Port(const Port & port);
+
+    Port & operator=(const Port & port);
 
     /**
      * getNumber()

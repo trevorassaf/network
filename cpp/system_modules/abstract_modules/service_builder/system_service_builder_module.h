@@ -11,5 +11,7 @@ namespace Network {
       virtual Network::SystemListenResults * listen(
           const Network::SystemListenParameters * listen_params    
       ) = 0;
+
+      virtual ~SystemServiceBuilderModule() {}
   };
 };

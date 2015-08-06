@@ -16,5 +16,7 @@ namespace Network {
       virtual const ListeningHosts & getListeningHosts() const = 0; 
       
       virtual void close() = 0;
+      
+      virtual ~SystemServiceModule() {}
   };
 };

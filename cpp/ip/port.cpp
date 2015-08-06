@@ -10,3 +10,16 @@ uint16_t Network::Ip::Port::getPortNumber() const {
 const std::string Network::Ip::Port::toString() const {
   return std::to_string(_portNumber);
 }
+
+Network::Ip::Port::Port(
+    const Network::Ip::Port & port
+) :
+    _portNumber(port._portNumber)
+{}
+
+Network::Ip::Port & Network::Ip::Port::operator=(
+    const Network::Ip::Port & port    
+) {
+  _portNumber = port._portNumber;
+  return *this;
+}

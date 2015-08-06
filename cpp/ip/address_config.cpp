@@ -25,3 +25,23 @@ const Network::Ip::Address & Network::Ip::AddressConfig::getAddress() const {
   }
   return *_address;
 }
+
+Network::Ip::AddressConfig::AddressConfig(
+    const Network::Ip::AddressConfig & address_config    
+) :
+    _address(
+        (address_config.hasAddress())
+            ? new Network::Ip::Address(address_config.getAddress()) 
+            : nullptr
+    )
+{}
+
+Network::Ip::AddressConfig & Network::Ip::AddressConfig::operator=(
+    const Network::Ip::AddressConfig & address_config    
+) {
+  delete _address;
+  _address = (address_config.hasAddress())
+      ? new Network::Ip::Address(address_config.getAddress())
+      : nullptr;
+  return *this;
+}

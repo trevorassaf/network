@@ -289,3 +289,5 @@ Network::SystemListenResults * Network::Linux::ServiceBuilder::listen(
       )
   );
 }
+
+Network::Linux::ServiceBuilder::~ServiceBuilder() {}

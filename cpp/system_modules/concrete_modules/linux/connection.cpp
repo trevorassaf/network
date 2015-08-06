@@ -181,8 +181,12 @@ Network::Linux::Connection::read(
 }
 
 void Network::Linux::Connection::close() {
-  int close_result = ::close(_socketDescriptor);
-  if (Network::Linux::SocketCloseException::isError(close_result)) {
-    throw Network::Linux::SocketCloseException();
+  if (_isOpen) {
+    ::close(_socketDescriptor);
+    _isOpen = false;
   }
+}
+
+Network::Linux::Connection::~Connection() {
+  this->close();
 }

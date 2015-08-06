@@ -24,6 +24,10 @@ class Network::Ip::PortConfig {
      */
     PortConfig(const Network::Ip::Port & port);
 
+    PortConfig(const Network::Ip::PortConfig & port_config);
+
+    PortConfig & operator=(const PortConfig & port_config);
+
     /**
      * ~PortConfig()
      * - Delete port memory

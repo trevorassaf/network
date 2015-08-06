@@ -10,10 +10,13 @@
 #include <ip/port_config.h>
 
 int main() {
+  const Network::Ip::Port port(3000);
+  const Network::Ip::PortConfig port_config(port);
+
   const Network::Ip::ServiceHostConfig service_host_config =
       Network::Ip::ServiceHostConfigBuilder()
           .setSocketType(Network::Ip::SocketType::STREAM)
-//          .setPortConfig(Network::Ip::PortConfig(3000))
+          .setPortConfig(port_config)
           .build();
 
   const Network::SystemListenParameters listen_parameters(service_host_config);
@@ -36,7 +39,20 @@ int main() {
   }
 
   Network::SystemAcceptResults accept_results = service_module->accept();
-  std::cout << "Accepted!" << std::endl;
+
+  Network::SystemConnectionModule * connection_module =
+      accept_results.moveSystemConnectionModule();
+
+  const Network::Ip::Host & remote_host = connection_module->getRemoteHost();
+  const Network::Ip::Host & local_host = connection_module->getLocalHost();
+
+  std::cout << "Remote host: " << remote_host.getAddress().getAddressString()
+      << remote_host.getPort().toString() << std::endl;
+  std::cout << "Local host: " << local_host.getAddress().getAddressString()
+      << local_host.getPort().toString() << std::endl;
+
+  //delete connection_module;
+  //delete service_module;
 
   return 0;
 }

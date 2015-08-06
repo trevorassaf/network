@@ -23,7 +23,9 @@ namespace Network {
       virtual const Network::SystemReadResults read(
           const Network::SystemReadParameters & read_parameters
       ) const = 0;
-      
+
       virtual void close() = 0;
+
+      virtual ~SystemConnectionModule() {}
   };
 };

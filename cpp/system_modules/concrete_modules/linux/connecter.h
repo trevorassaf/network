@@ -20,9 +20,11 @@ namespace Network {
         );
 
       public:
-        const Network::SystemConnectResults * connect(
+        const Network::SystemConnectResults connect(
             const Network::SystemConnectParameters & system_connect_parameters    
-        );
+        ) override;
+
+        ~Connecter() override;
     };
   };
 };

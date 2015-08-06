@@ -7,13 +7,13 @@ namespace Network {
   class SystemAcceptResults {
 
     private:
-      const Network::SystemConnectionModule * _systemConnectionModule;
+      Network::SystemConnectionModule * _systemConnectionModule;
 
     public:
       SystemAcceptResults(
-          const Network::SystemConnectionModule * system_connection_module
+          Network::SystemConnectionModule * system_connection_module
       );
 
-      const Network::SystemConnectionModule * moveSystemConnectionModule();
+      Network::SystemConnectionModule * moveSystemConnectionModule();
   };
 };

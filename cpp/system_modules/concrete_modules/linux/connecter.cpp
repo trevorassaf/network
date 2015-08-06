@@ -100,7 +100,7 @@ void Network::Linux::Connecter::bindLocalHostConfig(
   throw exception_builder.build();
 }
         
-const Network::SystemConnectResults *
+const Network::SystemConnectResults
 Network::Linux::Connecter::connect(
     const Network::SystemConnectParameters & system_connect_parameters    
 ) {
@@ -187,7 +187,9 @@ Network::Linux::Connecter::connect(
     break;
   }
 
-  return new Network::SystemConnectResults(
+  return Network::SystemConnectResults(
       new Network::Linux::Connection(socket_descriptor)
   );
 }
+
+Network::Linux::Connecter::~Connecter() {}

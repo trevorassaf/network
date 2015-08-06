@@ -25,6 +25,8 @@ namespace Network {
         Network::SystemListenResults * listen(
             const Network::SystemListenParameters * listen_params    
         ) override; 
+
+        ~ServiceBuilder() override;
     };
   };
 };

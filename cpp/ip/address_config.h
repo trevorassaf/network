@@ -11,6 +11,8 @@ class Network::Ip::AddressConfig {
   public:
     AddressConfig();
     AddressConfig(const Network::Ip::Address & address);
+    AddressConfig(const AddressConfig & address_config);
+    AddressConfig & operator=(const AddressConfig & address_config);
     ~AddressConfig();
 
     bool hasAddress() const;

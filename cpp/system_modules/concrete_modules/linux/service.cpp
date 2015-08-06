@@ -132,7 +132,8 @@ Network::Linux::Service::Service(
     const Network::SystemServiceModule::ListeningHosts & listening_hosts
 ) :
     _socketDescriptor(socket_descriptor),
-    _listeningHosts(listening_hosts)
+    _listeningHosts(listening_hosts),
+    _isOpen(true)
 {}
 
 Network::SystemAcceptResults Network::Linux::Service::accept() {
@@ -164,5 +165,12 @@ Network::Linux::Service::getListeningHosts() const {
 }
 
 void Network::Linux::Service::close() {
-  ::close(_socketDescriptor);
+  if (_isOpen) {
+    ::close(_socketDescriptor);
+    _isOpen = false;
+  }
+}
+
+Network::Linux::Service::~Service() {
+  this->close();
 }

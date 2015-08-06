@@ -23,6 +23,8 @@ namespace Network {
             const sockaddr_storage & socket_storage
         ) const;
 
+        bool _isOpen;
+
       public:
         Connection(int socket_descriptor);
 
@@ -39,6 +41,8 @@ namespace Network {
         ) const override;
 
         void close() override;
+
+        ~Connection() override;
     };
   };
 };
