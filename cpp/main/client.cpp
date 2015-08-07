@@ -10,6 +10,12 @@
 #include <system_modules/abstract_modules/connecter/system_connect_parameters_builder.h>
 #include <system_modules/abstract_modules/connecter/system_connect_parameters.h>
 #include <system_modules/abstract_modules/connecter/system_connect_results.h>
+#include <system_modules/abstract_modules/connection/system_write_parameters.h>
+
+#include <packets/packet.h>
+#include <packets/packet_writer.h>
+
+#include <messages/header.h>
 
 #include <cassert>
 
@@ -38,9 +44,14 @@ int main (int argc, char **argv) {
   const Network::Ip::Host & local_host = connection_module->getLocalHost();
 
   std::cout << "Remote host: " << remote_host.getAddress().getAddressString()
-      << remote_host.getPort().toString() << std::endl;
+      << ":" << remote_host.getPort().toString() << std::endl;
   std::cout << "Local host: " << local_host.getAddress().getAddressString()
-      << local_host.getPort().toString() << std::endl;
+      << ":"<< local_host.getPort().toString() << std::endl;
+
+  header_t header{1, 2};
+  const Network::Packet<header_t> header_packet(header);
+  Network::PacketWriter<header_t> packet_writer(connection_module);
+  packet_writer.write(header_packet);
 
   //delete connection_module;
   //delete system_connecter_module;

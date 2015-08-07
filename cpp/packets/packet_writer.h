@@ -2,22 +2,42 @@
 
 #include <packets/packet.h>
 
+#include <system_modules/abstract_modules/connection/system_connection_module.h>
+#include <system_modules/abstract_modules/connection/system_write_parameters.h>
+
+#include <stdexcept>
 #include <cstdlib>
 #include <cstdint>
 
 namespace Network {
-  template <class Tdata> class PacketWriter {
+  template <typename Tdata> class PacketWriter {
 
     private:
-      const Network::Packet<Tdata> & _packet;
-      size_t _bytesRemaining;
+      Network::SystemConnectionModule * _systemConnectionModule;
 
     public:
-      PacketWriter(const Network::Packet<Tdata> & packet);
-      const void * serialize() const;
-      void accumulate(size_t bytes_written);
-      void reset();
-      bool isFinished() const;
-      size_t getBytesRemaining() const;
+      PacketWriter(
+          Network::SystemConnectionModule * system_connection_module    
+      );
+
+      void write(const Network::Packet<Tdata> & packet);
   };
 };
+
+template <typename Tdata>
+Network::PacketWriter<Tdata>::PacketWriter(
+    Network::SystemConnectionModule * system_connection_module    
+) :
+    _systemConnectionModule(system_connection_module)
+{}
+
+template <typename Tdata>
+void Network::PacketWriter<Tdata>::write(
+    const Network::Packet<Tdata> & packet
+) {
+  const Network::SystemWriteParameters write_params(
+      reinterpret_cast<const uint8_t *>(&packet.getData()),
+      sizeof(packet)    
+  ); 
+  _systemConnectionModule->write(write_params);
+}

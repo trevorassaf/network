@@ -8,12 +8,14 @@ namespace Network {
   class SystemWriteParameters {
 
     private:
-      uint8_t * _buffer;
+      const uint8_t * _buffer;
       const size_t _bufferSize;
 
     public:
-      template <typename T> SystemWriteParameters(const T & t);
-      ~SystemWriteParameters();
+      SystemWriteParameters(
+          const uint8_t * buffer,
+          size_t buffer_size
+      );
       const uint8_t * getBuffer() const;
       size_t getBufferSize() const;
   };

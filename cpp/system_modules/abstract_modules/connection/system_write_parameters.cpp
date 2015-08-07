@@ -3,24 +3,13 @@
 #include <stdexcept>
 #include <cstring>
 
-template <typename T>
 Network::SystemWriteParameters::SystemWriteParameters(
-    const T & t
+    const uint8_t * buffer,
+    size_t buffer_size
 ) :
-    _bufferSize(sizeof(t))
-{
-  _buffer = new uint8_t[_bufferSize];
-  ::memcpy(
-      _buffer,
-      static_cast<const uint8_t *>(&t),
-      _bufferSize
-  );
-}
-
-Network::SystemWriteParameters::~SystemWriteParameters() {
-  delete static_cast<uint8_t *>(_buffer);
-  _buffer = nullptr;
-}
+    _buffer(buffer),
+    _bufferSize(buffer_size)
+{}
 
 const uint8_t * Network::SystemWriteParameters::getBuffer() const {
   return _buffer;

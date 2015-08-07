@@ -4,35 +4,24 @@
 #include <cstring>
 
 Network::SystemReadResults::SystemReadResults(
-    const void * buffer,
+    const uint8_t * buffer,
     size_t buffer_size
 ) : 
+    _buffer(buffer),
     _bufferSize(buffer_size)
 {
   if (!buffer && _bufferSize) {
     throw std::runtime_error("Buffer can't be null and have a non-zero buffer size!");
   }
-
-  if (!_bufferSize) {
-    _buffer = nullptr;
-  }
- 
-  _buffer = new char[_bufferSize];
-  ::memcpy(_buffer, buffer, _bufferSize);
 }
 
 Network::SystemReadResults::~SystemReadResults() {
-  delete[] static_cast<char *>(_buffer);
+  delete[] _buffer;
   _buffer = nullptr;
 }
 
-template <typename T> T Network::SystemReadResults::deserialize() const {
-  if (sizeof(T) != _bufferSize) {
-    throw std::runtime_error("Read results buffer size does not equal T size");
-  }
-  T t;
-  ::memcpy(&t, _buffer, _bufferSize);
-  return t;
+const uint8_t * Network::SystemReadResults::getBuffer() const {
+  return _buffer;
 }
 
 size_t Network::SystemReadResults::getBufferSize() const {

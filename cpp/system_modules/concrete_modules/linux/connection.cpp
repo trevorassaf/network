@@ -174,10 +174,14 @@ Network::Linux::Connection::read(
     bytes_read += read_result;
   }
 
+  // Transfer read_buffer to system-read-results
   return Network::SystemReadResults(
       read_buffer,
       read_parameters.getBufferSize()
   );
+
+  // Don't delete read_buffer b/c it's been given to system-read-results
+  read_buffer = nullptr;
 }
 
 void Network::Linux::Connection::close() {
